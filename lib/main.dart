@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import './pages/home.dart';
 import './pages/login.dart';
 
@@ -13,7 +12,7 @@ void main() {
     home: new LoginPage(),
     theme: ThemeData(
       primarySwatch: Colors.red,
-      fontFamily: 'Nunito',
+      fontFamily: 'Raleway',
     ),
     routes: routes,
     

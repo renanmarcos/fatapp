@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class Teste extends StatelessWidget {
+class Test extends StatelessWidget {
   final String pageText;
-  Teste(this.pageText);
+  Test(this.pageText);
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
