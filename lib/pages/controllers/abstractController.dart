@@ -31,7 +31,7 @@ class AbstractController {
 
   Future<String> putData(url,id,dataToPut) async{
     var response = await http.put(
-      DotEnv().env['FATAPP_API'] + url,  
+      DotEnv().env['FATAPP_API'] + url + '/' + id,  
       headers: {
         "Content-Type": "application/json"
       },
