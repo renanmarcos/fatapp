@@ -19,6 +19,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  http: ^0.12.0
+  barcode_scan: ^0.0.3
+  flutter_dotenv: ^2.0.3
+  dbcrypt: ^1.0.0
 
   cupertino_icons: ^0.1.2
   carousel_slider: ^1.3.0
@@ -49,6 +53,7 @@ flutter:
    - assets/images/banner4.jpg   
    - assets/images/profileIcon.png
    - assets/images/header.jpg
+   - .env
   
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
