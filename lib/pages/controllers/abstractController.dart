@@ -6,7 +6,7 @@ import 'appException.dart';
 import 'dart:async';
 
 class AbstractController {
-  Future<String> getData(url) async{
+  Future<String> getAllData(url) async{
     var response = await http.get(
       DotEnv().env['FATAPP_API'] + url,      
       headers: 
@@ -16,7 +16,16 @@ class AbstractController {
     );
     return messageResponse(response);
   }
-
+  Future<String> getData(url, id) async{
+    var response = await http.get(
+      DotEnv().env['FATAPP_API'] + url + '/' + id, 
+      headers: 
+      {
+        "Content-Type": "application/json"
+      }
+    );
+    return messageResponse(response);
+  }
   Future<String> postData(url,dataToPost) async{
     var response = await http.post(
       DotEnv().env['FATAPP_API'] + url,  
