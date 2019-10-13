@@ -12,8 +12,8 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="fatapp"
         android:icon="@mipmap/ic_launcher">
-        <activity android:name="com.apptreesoftware.barcodescan.BarcodeScannerActivity"/>
-        <uses-permission android:name="android.permission.CAMERA" />
+        <!-- <activity android:name="com.apptreesoftware.barcodescan.BarcrodeScannerActivity"/> -->
+        <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
