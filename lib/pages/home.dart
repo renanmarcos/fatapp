@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('FATapp'),
-        backgroundColor: Colors.red[900],
+        backgroundColor: Colors.red,
         elevation: 0,
         brightness: Brightness.light,
         // centerTitle: true,
@@ -44,8 +44,22 @@ class _HomePageState extends State<HomePage> {
                   )
               ),
             ),
+
+            new ExpansionTile(
+              title: Text('Eventos'),
+              children: <Widget>[
+                new ListTile(
+                  title: new Text('Evento Atual'),
+                  trailing: new Icon(Icons.keyboard_arrow_right),
+                ),
+                new ListTile(
+                  title: new Text('Eventos Passados'),
+                  trailing: new Icon(Icons.keyboard_arrow_right),
+                ),
+              ],
+            ),
             new ListTile(
-              title: new Text('Histórico'),
+              title: new Text('Inscrições'),
               trailing: new Icon(Icons.keyboard_arrow_right),
               onTap: () {
                 Navigator.of(context).pop();
@@ -53,21 +67,14 @@ class _HomePageState extends State<HomePage> {
                   builder: (BuildContext context) => new Test('Página de Teste')));
               }
             ),
-            new ListTile(
-              title: new Text('Evento Atual'),
-              trailing: new Icon(Icons.keyboard_arrow_right),
-            ),
-            new ListTile(
-              title: new Text('Eventos Passados'),
-              trailing: new Icon(Icons.keyboard_arrow_right),
-            ),
+           
             new Divider(),
             new ListTile( 
               title: new Text('Configurações'),
               trailing: new Icon(Icons.settings),
             ),
             new ListTile( 
-              title: new Text('Fechar'),
+              title: new Text('Sair'),
               trailing: new Icon(Icons.cancel),
               onTap: () => Navigator.of(context).pop(),
             )
@@ -79,6 +86,14 @@ class _HomePageState extends State<HomePage> {
           HomeScreenTopPart(),
           HomeScreenBottomPart(),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          //-TODO
+        },
+        label: Text('QR CODE'),
+        icon: Icon(Icons.photo_camera),
+        backgroundColor: Colors.black87,
       ),
     );
   }
@@ -99,7 +114,7 @@ class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
       children: <Widget>[
         ClipPath(
           clipper: CustomShapeClipper(),
-          child: Container(height: 150.0, color: Colors.red[900], 
+          child: Container(height: 150.0, color: Colors.red, 
           child: Column(
             children: <Widget>[
               SizedBox(height: 40.0,),
@@ -114,17 +129,28 @@ class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
                         fontFamily: 'Raleway',
                         ),
                     ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Hero(
+                        tag: "hero",
+                        child: Container(
+                          padding: EdgeInsets.only(top: 50.0),
+                          height: 80.0,
+                          width: 80.0,
+                          child: CustomLogo(),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               )
             ],
           ),
-          ),
-        )
-      ],
-    );
-  }
-
+        ),
+      )
+    ],
+  );
+}
 }
 
 int photoIndex = 0;
@@ -150,10 +176,10 @@ class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
         crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             CarouselSlider(
-              height: 400.0,
+              height: 300.0,
               initialPage: 0,
               enlargeCenterPage: true,
-              autoPlay: true,
+              autoPlay: false,
               reverse: false,
               enableInfiniteScroll: true,
               autoPlayInterval: Duration(seconds: 2),
@@ -184,6 +210,7 @@ class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
               }).toList(), 
             ),
           ],
+        
       ),
     );
   }
