@@ -1,6 +1,8 @@
+import 'package:fatapp/pages/views/eventsList.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import './common/CustomShapeClipper.dart';
+import './eventsList.dart';
 import './test.dart';
 
 class HomePage extends StatefulWidget {
@@ -54,6 +56,12 @@ class _HomePageState extends State<HomePage> {
                 new ListTile(
                   title: new Text('Eventos Passados'),
                   trailing: new Icon(Icons.keyboard_arrow_right),
+                  onTap: () {
+                   Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EventsList()),
+                  );
+                  }
                 ),
               ],
             ),
