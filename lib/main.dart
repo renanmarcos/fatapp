@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import './pages/home.dart';
-import './pages/login.dart';
+import './pages/views/home.dart';
+import './pages/views/login.dart';
 
 final routes = <String, WidgetBuilder>{
     LoginPage.tag: (context) => LoginPage(),

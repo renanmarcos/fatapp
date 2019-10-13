@@ -8,7 +8,9 @@ class Test extends StatelessWidget {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Test Page'),
-      )
+      ),
     );
   }
 }
+
+
