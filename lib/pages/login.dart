@@ -14,8 +14,8 @@ class _LoginPageState extends State<LoginPage> {
       tag: 'hero',
       child: CircleAvatar(
         backgroundColor: Colors.transparent,
-        radius: 48.0,
-        child: Image.asset('assets/images/logo.png'),
+        radius: 50.0,
+        child: Image.asset('assets/images/glaceon.png'),
       ),
     );
     
@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
         hintText: 'Email',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: InputBorder.none,
+
       ),
     );
 
