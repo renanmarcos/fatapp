@@ -32,11 +32,10 @@ class _HomePageState extends State<HomePage> {
               accountName: new Text('Beatriz Lamano'),
               accountEmail: new Text('beatrizlamano@fatec.sp.gov.br'),
               currentAccountPicture: new GestureDetector(
-                child: new CircleAvatar(
-                  backgroundImage: new AssetImage('assets/images/profileIcon.png'),
-                ),
-              )
-              ,
+                // child: new CircleAvatar(
+                //   // backgroundImage: new AssetImage('assets/images/profileIcon.png'),
+                // ),
+              ),
               decoration: new BoxDecoration(
                 image: DecorationImage(
                   image: new AssetImage('assets/images/header.jpg'),
@@ -137,7 +136,7 @@ class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
                           padding: EdgeInsets.only(top: 50.0),
                           height: 80.0,
                           width: 80.0,
-                          child: CustomLogo(),
+                          // child: logo,
                         ),
                       ),
                     ),
