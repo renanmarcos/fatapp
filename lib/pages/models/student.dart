@@ -3,7 +3,8 @@ class Student {
   int ra;
   String course;
   
-  Student.fromJson(Map<String, dynamic> json) {
+  Student.fromJson(jsonToParse) {
+    json = json.decode(jsonToParse)
     id = json['id'];
     ra = json['ra'];
     course = json['course'];
