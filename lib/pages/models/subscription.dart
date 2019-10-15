@@ -4,7 +4,8 @@ class Subscription {
   int activityId;
   int studentId;
   
-  Subscription.fromJson(Map<String, dynamic> json) {
+  Subscription.fromJson(jsonToParse) {
+    json = json.decode(jsonToParse)
     id = json['id'];
     attended = json['attended'];
     activityId = json['activity_id'];
