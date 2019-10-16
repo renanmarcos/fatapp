@@ -5,7 +5,7 @@ class Resource {
   String name;
   
   Resource({this.id, this.name});
-
+  
   Resource.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
