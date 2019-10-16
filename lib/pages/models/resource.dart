@@ -2,8 +2,7 @@ class Resource {
   int id;
   String name;
   
-  Resource.fromJson(jsonToParse) {
-    json = json.decode(jsonToParse)
+  Resource.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
   }
