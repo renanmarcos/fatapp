@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'appException.dart';
 import 'dart:async';
 
-class AbstractController {
+class Services {
   Future<String> getAllData(url) async{
     var response = await http.get(
       DotEnv().env['FATAPP_API'] + url,      
@@ -57,13 +57,10 @@ class AbstractController {
         return responseJson;
       case 400:
         throw BadRequestException(response.body.toString());
-      case 401:
-      case 403:
-        throw UnauthorisedException(response.body.toString());
-      case 500:
+      case 422:
+        throw BadRequestException(response.body.toString());
       default:
-        throw FetchDataException(
-          'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+        throw FetchDataException(response.statusCode.toString());
     }
   }
 }
