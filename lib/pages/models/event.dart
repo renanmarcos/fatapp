@@ -2,8 +2,7 @@ class Event {
   int id;
   String name;
   
-  Event.fromJson(jsonToParse) {
-    json = json.decode(jsonToParse)
+  Event.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
   }
