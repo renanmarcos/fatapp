@@ -2,7 +2,7 @@
 import 'package:fatapp/pages/controllers/abstractController.dart';
 import 'dart:async';
 
-class UserController{
+class UserController extends AbstractController {
   Future<String> index() async {
     var response = getAllData('users');
     return response;
