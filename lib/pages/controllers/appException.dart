@@ -10,18 +10,9 @@ String toString() {
 }
 
 class FetchDataException extends AppException {
-  FetchDataException([String message])
-      : super(message, "Error During Communication: ");
+  FetchDataException([String message]): super(message, "Erro durante comunicação com o servidor: ");
 }
 
 class BadRequestException extends AppException {
-  BadRequestException([message]) : super(message, "Invalid Request: ");
-}
-
-class UnauthorisedException extends AppException {
-  UnauthorisedException([message]) : super(message, "Unauthorised: ");
-}
-
-class InvalidInputException extends AppException {
-  InvalidInputException([String message]) : super(message, "Invalid Input: ");
+  BadRequestException([message]) : super(message, "Erros de validação: ");
 }
