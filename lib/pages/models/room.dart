@@ -5,9 +5,9 @@ class Room {
   String name;
   int capacity;
   String type;
-  
-  Room({this.id, this.name, this.capacity, this.type});
 
+  Room({this.id, this.name, this.capacity, this.type});
+  
   Room.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];

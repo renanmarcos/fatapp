@@ -6,7 +6,7 @@ class User {
   String email;
   String cpf;
   String password;
-  
+
   User({this.id, this.name, this.email, this.cpf, this.password});
 
   User.fromJson(Map<String, dynamic> json) {
