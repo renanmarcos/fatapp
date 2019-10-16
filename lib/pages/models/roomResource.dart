@@ -4,8 +4,7 @@ class RoomResource {
   int roomId;
   int resourceId;
   
-  RoomResource.fromJson(jsonToParse) {
-    json = json.decode(jsonToParse)
+  RoomResource.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     resourceAmmount = json['resource_amount'];
     roomId = json['room_id'];

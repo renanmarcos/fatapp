@@ -5,8 +5,7 @@ class User {
   String cpf;
   String password;
   
-  User.fromJson(jsonToParse) {
-    json = json.decode(jsonToParse)
+  User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     email = json['email'];
