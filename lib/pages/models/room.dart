@@ -4,8 +4,7 @@ class Room {
   int caapacity;
   String type;
   
-  Room.fromJson(jsonToParse) {
-    json = json.decode(jsonToParse)
+  Room.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
   }
