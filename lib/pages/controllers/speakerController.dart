@@ -3,23 +3,23 @@ import 'services.dart';
 import 'dart:async';
 
 class SpeakerController {
-  Future<String> index() async {
-    var response = Services().getAllData('speakers');
+  Future<String> index(token) async {
+    var response = Services().getAllData('speakers', token);
     return response;
   }
-  Future<String> show(id) async 
+  Future<String> show(id, token) async 
   {
-     var response = Services().getData('speakers', id);
+     var response = Services().getData('speakers', id, token);
      return response;
   }
-  Future<String> update(id, data) async 
+  Future<String> update(id, data, token) async 
   {
-     var response = Services().putData('speakers', id, data);
+     var response = Services().putData('speakers', id, data, token);
      return response;
   }
-  Future<String> create(id, data) async 
+  Future<String> create(id, data, token) async 
   {
-     var response = Services().postData('speakers', data);
+     var response = Services().postData('speakers', data, token);
      return response;
   }
 }

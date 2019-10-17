@@ -3,23 +3,24 @@ import 'services.dart';
 import 'dart:async';
 
 class UserController {
-  Future<String> index() async {
-    var response = Services().getAllData('users');
-    return response;
-  }
-  Future<String> show(id) async 
+  Future<String> show(id, token) async 
   {
-     var response = Services().getData('users', id);
+     final response = Services().getData('users', id, token);
      return response;
   }
-  Future<String> update(id, data) async 
+  Future<String> update(id, data, token) async 
   {
-     var response = Services().putData('users', id, data);
+     final response = Services().putData('users', id, data, token);
      return response;
   }
-  Future<String> create(id, data) async 
+  Future<String> login(data) async 
   {
-     var response = Services().postData('users', data);
+     final response = Services().postData('auth/token', data, null);
+     return response;
+  }
+  Future<String> create(data) async 
+  {
+     final response = Services().postData('users', data, null);
      return response;
   }
 }

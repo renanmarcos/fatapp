@@ -3,23 +3,23 @@ import 'services.dart';
 import 'dart:async';
 
 class SubscriptionController {
-  Future<String> index() async {
-    var response = Services().getAllData('subscriptions');
+  Future<String> index(token) async {
+    var response = Services().getAllData('subscriptions', token);
     return response;
   }
-  Future<String> show(id) async 
+  Future<String> show(id, token) async 
   {
-     var response = Services().getData('subscriptions', id);
+     var response = Services().getData('subscriptions', id, token);
      return response;
   }
-  Future<String> update(id, data) async 
+  Future<String> update(id, data, token) async 
   {
-     var response = Services().putData('subscriptions', id, data);
+     var response = Services().putData('subscriptions', id, data, token);
      return response;
   }
-  Future<String> create(id, data) async 
+  Future<String> create(id, data, token) async 
   {
-     var response = Services().postData('subscriptions', data);
+     var response = Services().postData('subscriptions', data, token);
      return response;
   }
 }
