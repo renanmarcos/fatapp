@@ -6,6 +6,7 @@ class User {
   String email;
   String cpf;
   String password;
+  String token;
 
   User({this.id, this.name, this.email, this.cpf, this.password});
 
