@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class User {
   int id;
   String name;
@@ -16,9 +14,5 @@ class User {
     email = json['email'];
     cpf = json['cpf'];
     password = json['password'];
-  }
-  List<User> userList(String body) {
-    final list = json.decode(body).cast<Map<String, dynamic>>();
-    return list.map<User>((json) => User.fromJson(json)).toList();
   }
 }

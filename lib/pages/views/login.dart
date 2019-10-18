@@ -1,4 +1,6 @@
 import 'package:fatapp/pages/controllers/userController.dart';
+import 'package:fatapp/pages/models/token.dart';
+import 'package:fatapp/pages/views/register.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import './home.dart';
@@ -10,7 +12,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  @override
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Widget build(BuildContext context) {
@@ -71,6 +72,16 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () {},
     );
 
+    final registerLabel = FlatButton(
+      child: Text(
+        'Não tem uma conta? Cadastre-se',
+        style: TextStyle(color: Colors.black54),
+      ),
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
+      }
+    );
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Form(
@@ -85,8 +96,9 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 8.0),
             password,
             SizedBox(height: 24.0),
+            forgotLabel,
             loginButton,
-            forgotLabel
+            registerLabel
           ],
         ),
       ),
@@ -96,19 +108,20 @@ class _LoginPageState extends State<LoginPage> {
     final formState = _formKey.currentState;
     if(formState.validate()) {
       formState.save();
-      var jsonData = '{ "email" : $_email, "password" : $_password  }';
+      var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
       try {
-        UserController().login(jsonData);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
-      } catch(e) {
-          Fluttertoast.showToast(
-            msg: e.Message,
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIos: 2,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0
+        final response = await UserController().login(jsonData);
+        Token token = Token.fromJson(response);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(token : token)));
+      } catch(e) {      
+        Fluttertoast.showToast(
+          msg: e.message(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
         );
       }
     }

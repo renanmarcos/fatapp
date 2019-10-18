@@ -12,9 +12,12 @@ class Course{
   Course(this.id,this.name);
 
   static List<Course> getList(){
-    return<Course>[Course(1,'ADSMA1'),Course(2,'ADSMA2'),Course(4,'ADSMA3'),Course(4,'ADSMA4'),Course(4,'ADSMA5'),Course(4,'ADSMA6'),Course(4,'ADSVA1'),Course(4,'ADSVA2'),Course(4,'ADSVA3'),Course(4,'ADSVA4'),Course(4,'ADSVA5'),Course(4,'ADSVA6'),
-                  Course(4,'SEGMA1'),Course(4,'SEGMA2'),Course(4,'SEGMA3'),Course(4,'SEGMA4'),Course(4,'SEGMA5'),Course(4,'SEGMA6'),Course(4,'SEGNA1'),Course(4,'SEGNA2'),Course(4,'SEGNA3'),Course(4,'SEGNA4'),Course(4,'SEGNA5'),Course(4,'SEGNA6'),
-                  Course(4,'COMEX1'),Course(4,'COMEX2'),Course(4,'COMEX3'),Course(4,'COMEX4'),Course(4,'COMEX5'),Course(4,'COMEX6'),Course(4,'JOGNA1'),Course(4,'JOGNA2'),Course(4,'JOGNA3'),Course(4,'JOGNA4'),Course(4,'JOGNA5'),Course(4,'JOGNA6')] ;
+    return<Course>[Course(1,'ADSMA1'),Course(2,'ADSMA2'),Course(4,'ADSMA3'),Course(4,'ADSMA4'),Course(4,'ADSMA5'),Course(4,'ADSMA6'),
+    Course(4,'ADSVA1'),Course(4,'ADSVA2'),Course(4,'ADSVA3'),Course(4,'ADSVA4'),Course(4,'ADSVA5'),Course(4,'ADSVA6'),
+    Course(4,'SEGMA1'),Course(4,'SEGMA2'),Course(4,'SEGMA3'),Course(4,'SEGMA4'),Course(4,'SEGMA5'),Course(4,'SEGMA6'),
+    Course(4,'SEGNA1'),Course(4,'SEGNA2'),Course(4,'SEGNA3'),Course(4,'SEGNA4'),Course(4,'SEGNA5'),Course(4,'SEGNA6'),
+    Course(4,'COMEX1'),Course(4,'COMEX2'),Course(4,'COMEX3'),Course(4,'COMEX4'),Course(4,'COMEX5'),Course(4,'COMEX6'),
+    Course(4,'JOGNA1'),Course(4,'JOGNA2'),Course(4,'JOGNA3'),Course(4,'JOGNA4'),Course(4,'JOGNA5'),Course(4,'JOGNA6')] ;
   }
 
 }
@@ -56,9 +59,9 @@ class _SignupPageState extends State<SignupPage> {
                 Container(
                   padding: EdgeInsets.fromLTRB(15.0, 110.0, 0.0, 0.0),
                   child: Text(
-                    'Signup',
+                    'Cadastro',
                     style:
-                        TextStyle(fontSize: 80.0, fontWeight: FontWeight.bold),
+                        TextStyle(fontSize: 50.0, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Container(
@@ -68,7 +71,7 @@ class _SignupPageState extends State<SignupPage> {
                     style: TextStyle(
                         fontSize: 80.0,
                         fontWeight: FontWeight.bold,
-                        color: Colors.green),
+                        color: Colors.redAccent),
                   ),
                 )
               ],
@@ -128,8 +131,8 @@ class _SignupPageState extends State<SignupPage> {
                     child: Center(
                     child:Column(
                       children:<Widget>[
-                        Text("Selecione Sua Turma"),
-                        SizedBox(height:20.0,),
+                        //Text("Selecione Sua Turma"),
+                        SizedBox(height:20.0),
                         DropdownButton(
                           value: _selectedCourse,
                           items: _dropdownMenuItems, onChanged: (Course value) {},
@@ -143,8 +146,7 @@ class _SignupPageState extends State<SignupPage> {
                       height: 40.0,
                       child: Material(
                         borderRadius: BorderRadius.circular(20.0),
-                        shadowColor: Colors.greenAccent,
-                        color: Colors.green,
+                        color: Colors.redAccent,
                         elevation: 7.0,
                         child: GestureDetector(
                           onTap: () {},
