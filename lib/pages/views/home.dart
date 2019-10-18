@@ -1,3 +1,4 @@
+import 'package:fatapp/pages/models/token.dart';
 import 'package:fatapp/pages/views/eventsList.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -6,6 +7,10 @@ import './eventsList.dart';
 import './test.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({
+    this.token
+  });
+  final Token token;
   static String tag = 'home-page'; 
   @override 
   _HomePageState createState() => new _HomePageState();

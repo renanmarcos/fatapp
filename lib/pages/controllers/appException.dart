@@ -9,10 +9,14 @@ String toString() {
   }
 }
 
-class FetchDataException extends AppException {
-  FetchDataException([String message]): super(message, "Erro durante comunicação com o servidor: ");
+class BadRequestException extends AppException {
+  BadRequestException() : super("", "Erro interno");
 }
 
-class BadRequestException extends AppException {
-  BadRequestException([message]) : super(message, "Erros de validação: ");
+class NotFoundException extends AppException {
+  NotFoundException() : super("", "Cadastro inválido");
+}
+
+class UnprocessableException extends AppException {
+  UnprocessableException([message]) : super("Erros de validação: \n", message);
 }
