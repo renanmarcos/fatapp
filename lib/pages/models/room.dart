@@ -15,7 +15,9 @@ class Room {
     type = json['type'];
   }
   List<Room> roomList(String body) {
-    final list = json.decode(body).cast<Map<String, dynamic>>();
-    return list.map<Room>((json) => Room.fromJson(json)).toList();
+    final list = json.decode(body)
+      .map((data) =>Room.fromJson(data))
+      .toList();
+    return list;
   }
 }

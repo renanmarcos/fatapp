@@ -10,8 +10,10 @@ class Event {
     id = json['id'];
     name = json['name'];
   }
-    List<Event> eventList(String body) {
-    final list = json.decode(body).cast<Map<String, dynamic>>();
-    return list.map<Event>((json) => Event.fromJson(json)).toList();
+  List<Event> eventList(String body) {
+    final list = json.decode(body)
+      .map((data) => Event.fromJson(data))
+      .toList();
+    return list;
   }
 }

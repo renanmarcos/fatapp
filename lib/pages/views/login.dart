@@ -1,3 +1,6 @@
+import 'package:fatapp/pages/controllers/userController.dart';
+import 'package:fatapp/pages/models/token.dart';
+import 'package:fatapp/pages/views/register.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import './home.dart';
@@ -9,7 +12,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  @override
+  String _email, _password;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Widget build(BuildContext context) {
     final logo = Hero(
       tag: 'hero',
@@ -24,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
       initialValue: 'beatrizlamano@fatec.sp.gov.br',
+      onSaved: (input) => _email = input,
       decoration: InputDecoration(
         hintText: 'Email',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -36,6 +41,7 @@ class _LoginPageState extends State<LoginPage> {
       autofocus: false,
       initialValue: 'some password',
       obscureText: true,
+      onSaved: (input) => _password = input,
       decoration: InputDecoration(
         hintText: 'Password',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -50,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: BorderRadius.circular(10),
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(HomePage.tag);
+          signIn();
         },
         padding: EdgeInsets.all(20),
         color: Colors.redAccent,
@@ -66,9 +72,20 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () {},
     );
 
+    final registerLabel = FlatButton(
+      child: Text(
+        'Não tem uma conta? Cadastre-se',
+        style: TextStyle(color: Colors.black54),
+      ),
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
+      }
+    );
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
+      body: Form(
+        key: _formKey,
         child: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.only(left: 24.0, right: 24.0),
@@ -79,11 +96,34 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 8.0),
             password,
             SizedBox(height: 24.0),
+            forgotLabel,
             loginButton,
-            forgotLabel
+            registerLabel
           ],
         ),
       ),
     );
+  }
+  Future<void> signIn() async {
+    final formState = _formKey.currentState;
+    if(formState.validate()) {
+      formState.save();
+      var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
+      try {
+        final response = await UserController().login(jsonData);
+        Token token = Token.fromJson(response);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(token : token)));
+      } catch(e) {      
+        Fluttertoast.showToast(
+          msg: e.message(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+        );
+      }
+    }
   }
 }

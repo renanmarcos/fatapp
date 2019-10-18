@@ -16,8 +16,10 @@ class Activity {
     speaker = json['speaker'];
     description = json['description'];
   }
-  List<Activity> userList(String body) {
-    final list = json.decode(body).cast<Map<String, dynamic>>();
-    return list.map<Activity>((json) => Activity.fromJson(json)).toList();
+  List<Activity> activityList(String body) {
+    final list = json.decode(body)
+      .map((data) =>Activity.fromJson(data))
+      .toList();
+    return list;
   }
 }
