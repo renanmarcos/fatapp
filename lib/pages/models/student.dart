@@ -13,7 +13,9 @@ class Student {
     course = json['course'];
   }
   List<Student> studentList(String body) {
-    final list = json.decode(body).cast<Map<String, dynamic>>();
-    return list.map<Student>((json) => Student.fromJson(json)).toList();
+    final list = json.decode(body)
+      .map((data) =>Student.fromJson(data))
+      .toList();
+    return list;
   }
 }
