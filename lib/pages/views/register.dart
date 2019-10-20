@@ -187,25 +187,16 @@ class _SignupPageState extends State<SignupPage> {
 
     var jsonData = '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password" }';
     print(jsonData);
-    if(visibilityRA) {
-      var student = '{ "ra" : "$_ra", "course" : "$_course" }';
-      try {
-        await StudentController().create(student, null);
-      } catch(e) {      
-        Fluttertoast.showToast(
-          msg: e.toString(),
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIos: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
-        );
-      }
-    }
     try {
-      final response = await UserController().create(jsonData);
-      User user = User.fromJson(response);
+      final created = await UserController().create(jsonData);
+      var tokenJson = '{ "email" : "$_email", "password" : "$_password" }';
+      final login = await UserController().login(tokenJson);
+      User token = User.token(login);
+      User user = User.fromJson(created);
+      if(visibilityRA) {
+        var student = '{ "ra" : "$_ra", "course" : "$_course" }';
+        await StudentController().create(student, token.token);
+      }
       Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
     } catch(e) {      
       Fluttertoast.showToast(

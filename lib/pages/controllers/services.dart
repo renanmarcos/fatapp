@@ -40,6 +40,7 @@ class Services {
       },
       body: dataToPost
     );
+    print(response.statusCode);
     return _response(response);
   }
 
@@ -60,6 +61,9 @@ class Services {
   {
     switch (response.statusCode) {
       case 200:
+        var responseJson = jsonDecode(response.body);
+        return responseJson;
+      case 201:
         var responseJson = jsonDecode(response.body);
         return responseJson;
       case 422:
