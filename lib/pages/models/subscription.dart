@@ -15,7 +15,9 @@ class Subscription {
     studentId = json['student_id'];
   }
   List<Subscription> subscriptionList(String body) {
-    final list = json.decode(body).cast<Map<String, dynamic>>();
-    return list.map<Subscription>((json) => Subscription.fromJson(json)).toList();
+    final list = json.decode(body)
+      .map((data) =>Subscription.fromJson(data))
+      .toList();
+    return list;
   }
 }
