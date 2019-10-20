@@ -1,5 +1,6 @@
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/eventsList.dart';
+import 'package:fatapp/pages/views/login.dart';
 import 'package:fatapp/pages/views/qrCodeScan.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -89,7 +90,7 @@ class _HomePageState extends State<HomePage> {
             new ListTile( 
               title: new Text('Sair'),
               trailing: new Icon(Icons.cancel),
-              onTap: () => Navigator.of(context).pop(),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage())),
             )
           ],
         ),
