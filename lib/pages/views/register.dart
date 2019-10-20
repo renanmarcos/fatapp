@@ -1,52 +1,23 @@
+import 'package:fatapp/pages/controllers/userController.dart';
+import 'package:fatapp/pages/models/user.dart';
+import 'package:fatapp/pages/views/home.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:masked_text/masked_text.dart';
 
 class SignupPage extends StatefulWidget {
   @override
   _SignupPageState createState() => _SignupPageState();
 }
 
-class Course{
-  int id;
-  String name;
-
-  Course(this.id,this.name);
-
-  static List<Course> getList(){
-    return<Course>[Course(1,'ADSMA1'),Course(2,'ADSMA2'),Course(4,'ADSMA3'),Course(4,'ADSMA4'),Course(4,'ADSMA5'),Course(4,'ADSMA6'),
-    Course(4,'ADSVA1'),Course(4,'ADSVA2'),Course(4,'ADSVA3'),Course(4,'ADSVA4'),Course(4,'ADSVA5'),Course(4,'ADSVA6'),
-    Course(4,'SEGMA1'),Course(4,'SEGMA2'),Course(4,'SEGMA3'),Course(4,'SEGMA4'),Course(4,'SEGMA5'),Course(4,'SEGMA6'),
-    Course(4,'SEGNA1'),Course(4,'SEGNA2'),Course(4,'SEGNA3'),Course(4,'SEGNA4'),Course(4,'SEGNA5'),Course(4,'SEGNA6'),
-    Course(4,'COMEX1'),Course(4,'COMEX2'),Course(4,'COMEX3'),Course(4,'COMEX4'),Course(4,'COMEX5'),Course(4,'COMEX6'),
-    Course(4,'JOGNA1'),Course(4,'JOGNA2'),Course(4,'JOGNA3'),Course(4,'JOGNA4'),Course(4,'JOGNA5'),Course(4,'JOGNA6')] ;
-  }
-
-}
-
 class _SignupPageState extends State<SignupPage> {
-
-  List<Course> _CourseList = Course.getList();
-  List<DropdownMenuItem<Course>> _dropdownMenuItems;
-  Course _selectedCourse;
-  @override
-  void initState(){
-    _dropdownMenuItems = buildDropdownMenuItems(_CourseList);
-    _selectedCourse = _dropdownMenuItems[0].value;
+  bool visibilityRA = false;
+  String _email, _password, _name, _cpf, _ra;
+  void _changed(bool visibility) {
+    setState(() {
+      visibilityRA = visibility;
+    });
   }
-
-  List<DropdownMenuItem<Course>> buildDropdownMenuItems(List courseList){
-    List<DropdownMenuItem<Course>> items = List();
-    for (Course course in courseList){
-      items.add(DropdownMenuItem(
-        value: course,
-        child: Text(course.name),
-      ),
-      );
-    }
-    return items;
-  }
-
-
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -63,16 +34,6 @@ class _SignupPageState extends State<SignupPage> {
                     style:
                         TextStyle(fontSize: 50.0, fontWeight: FontWeight.bold),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(260.0, 125.0, 0.0, 0.0),
-                  child: Text(
-                    '.',
-                    style: TextStyle(
-                        fontSize: 80.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.redAccent),
-                  ),
                 )
               ],
             ),
@@ -82,21 +43,21 @@ class _SignupPageState extends State<SignupPage> {
               child: Column(
                 children: <Widget>[
                   TextField(
+                    onChanged: (input) => _name = input,
                     decoration: InputDecoration(
                         labelText: 'Nome Completo',
                         labelStyle: TextStyle(
                             fontFamily: 'Montserrat',
                             fontWeight: FontWeight.bold,
                             color: Colors.grey),
-                        // hintText: 'Nome Completo',
-                        // hintStyle: ,
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.green))),
                   ),
                   SizedBox(height: 10.0),
                   TextField(
+                    onChanged: (input) => _email = input,
                     decoration: InputDecoration(
-                        labelText: 'Email ',
+                        labelText: 'Email',
                         labelStyle: TextStyle(
                             fontFamily: 'Montserrat',
                             fontWeight: FontWeight.bold,
@@ -106,6 +67,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: 10.0),
                   TextField(
+                    onChanged: (input) => _password = input,
                     decoration: InputDecoration(
                         labelText: 'Senha',
                         labelStyle: TextStyle(
@@ -117,9 +79,13 @@ class _SignupPageState extends State<SignupPage> {
                     obscureText: true,
                   ),
                   SizedBox(height: 10.0),
-                  TextField(
-                    decoration: InputDecoration(
-                        labelText: 'RA',
+                  MaskedTextField(
+                    onChange: (input) => _cpf = input,
+                    mask: "xxx.xxx.xxx-xx",
+                    maxLength: 12,
+                    keyboardType: TextInputType.number,
+                    inputDecoration: new InputDecoration(
+                        labelText: 'CPF',
                         labelStyle: TextStyle(
                             fontFamily: 'Montserrat',
                             fontWeight: FontWeight.bold,
@@ -127,19 +93,18 @@ class _SignupPageState extends State<SignupPage> {
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.green))),
                   ),
-                  new Container(
-                    child: Center(
-                    child:Column(
-                      children:<Widget>[
-                        //Text("Selecione Sua Turma"),
-                        SizedBox(height:20.0),
-                        DropdownButton(
-                          value: _selectedCourse,
-                          items: _dropdownMenuItems, onChanged: (Course value) {},
-                        ),
-                      ]
-                    )
-                  )
+                  MaskedTextField(
+                    onChange: (input) => _ra = input,
+                    maxLength: 12,
+                    keyboardType: TextInputType.number,
+                    inputDecoration: new InputDecoration(
+                        labelText: 'RA',
+                        labelStyle: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.green))),
                   ),
                   SizedBox(height: 50.0),
                   Container(
@@ -149,7 +114,9 @@ class _SignupPageState extends State<SignupPage> {
                         color: Colors.redAccent,
                         elevation: 7.0,
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            register();
+                          },
                           child: Center(
                             child: Text(
                               'Cadastrar',
@@ -165,5 +132,24 @@ class _SignupPageState extends State<SignupPage> {
                 // ],
               // )),
         ]))]));
+  }
+  Future<void> register() async {
+    var jsonData = '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password" }';
+    print(jsonData);
+    try {
+      final response = await UserController().create(jsonData);
+      User user = User.fromJson(response);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
+    } catch(e) {      
+      Fluttertoast.showToast(
+        msg: e.toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
+    }
   }
 }
