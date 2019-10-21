@@ -20,7 +20,7 @@ class Services {
   }
   Future<Map<String, dynamic>> getData(url, id, token) async {
     final response = await http.Client().get(
-      DotEnv().env['FATAPP_API'] + url + '/' + id, 
+      DotEnv().env['FATAPP_API'] + url + '/' + id.toString(), 
       headers: 
       {
         "Content-Type": "application/json",
@@ -40,12 +40,13 @@ class Services {
       },
       body: dataToPost
     );
+    print(response.statusCode);
     return _response(response);
   }
 
   Future<Map<String, dynamic>> putData(url, id, dataToPut, token) async {
     final response = await http.Client().put(
-      DotEnv().env['FATAPP_API'] + url + '/' + id,  
+      DotEnv().env['FATAPP_API'] + url + '/' + id.toString(),  
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -62,8 +63,13 @@ class Services {
       case 200:
         var responseJson = jsonDecode(response.body);
         return responseJson;
+      case 201:
+        var responseJson = jsonDecode(response.body);
+        return responseJson;
       case 422:
         throw UnprocessableException(response.body.toString());
+      case 401:
+        throw NotFoundException();
       case 404:
         throw NotFoundException();
       default:
