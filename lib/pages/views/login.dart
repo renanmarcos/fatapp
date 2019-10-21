@@ -1,5 +1,5 @@
 import 'package:fatapp/pages/controllers/userController.dart';
-import 'package:fatapp/pages/models/token.dart';
+import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/register.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -27,7 +27,6 @@ class _LoginPageState extends State<LoginPage> {
     final email = TextFormField(
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
-      initialValue: 'beatrizlamano@fatec.sp.gov.br',
       onSaved: (input) => _email = input,
       decoration: InputDecoration(
         hintText: 'Email',
@@ -39,11 +38,10 @@ class _LoginPageState extends State<LoginPage> {
 
     final password = TextFormField(
       autofocus: false,
-      initialValue: 'some password',
       obscureText: true,
       onSaved: (input) => _password = input,
       decoration: InputDecoration(
-        hintText: 'Password',
+        hintText: 'Senha',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: InputBorder.none,
       ),
@@ -66,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final forgotLabel = FlatButton(
       child: Text(
-        'Forgot password?',
+        'Esqueceu a senha?',
         style: TextStyle(color: Colors.black54),
       ),
       onPressed: () {},
@@ -110,12 +108,14 @@ class _LoginPageState extends State<LoginPage> {
       formState.save();
       var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
       try {
-        final response = await UserController().login(jsonData);
-        Token token = Token.fromJson(response);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(token : token)));
+        final tokenResponse = await UserController().login(jsonData);
+        User token = User.token(tokenResponse);
+        final userResponse = await UserController().show(token.id, token.token);
+        User user = User.fromJson(userResponse);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
       } catch(e) {      
         Fluttertoast.showToast(
-          msg: e.message(),
+          msg: e.toString(),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIos: 2,

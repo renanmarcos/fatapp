@@ -11,6 +11,7 @@ class UserController {
   Future<Map<String, dynamic>> update(id, data, token) async 
   {
      final response = Services().putData('users', id, data, token);
+     
      return response;
   }
   Future<Map<String, dynamic>> login(data) async 
