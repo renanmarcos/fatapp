@@ -1,5 +1,7 @@
-import 'package:fatapp/pages/models/token.dart';
+import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/eventsList.dart';
+import 'package:fatapp/pages/views/login.dart';
+import 'package:fatapp/pages/views/qrCodeScan.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import './common/CustomShapeClipper.dart';
@@ -8,9 +10,9 @@ import './test.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
-    this.token
+    this.user
   });
-  final Token token;
+  final User user;
   static String tag = 'home-page'; 
   @override 
   _HomePageState createState() => new _HomePageState();
@@ -36,8 +38,8 @@ class _HomePageState extends State<HomePage> {
         child: new ListView(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-              accountName: new Text('Beatriz Lamano'),
-              accountEmail: new Text('beatrizlamano@fatec.sp.gov.br'),
+              accountName: new Text(widget.user.name),
+              accountEmail: new Text(widget.user.email),
               currentAccountPicture: new GestureDetector(
                 // child: new CircleAvatar(
                 //   // backgroundImage: new AssetImage('assets/images/profileIcon.png'),
@@ -88,7 +90,7 @@ class _HomePageState extends State<HomePage> {
             new ListTile( 
               title: new Text('Sair'),
               trailing: new Icon(Icons.cancel),
-              onTap: () => Navigator.of(context).pop(),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage())),
             )
           ],
         ),
@@ -101,7 +103,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          //-TODO
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ScanScreen()));
         },
         label: Text('QR CODE'),
         icon: Icon(Icons.photo_camera),
