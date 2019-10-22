@@ -5,7 +5,7 @@ import 'package:fatapp/pages/views/qrCodeScan.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import './common/CustomShapeClipper.dart';
-import './eventsList.dart';
+import './eventsList2.dart';
 import './test.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('FATapp'),
+        // title: new Text('FATapp'),
         backgroundColor: Colors.red,
         elevation: 0,
         brightness: Brightness.light,
@@ -47,31 +47,43 @@ class _HomePageState extends State<HomePage> {
               ),
               decoration: new BoxDecoration(
                 image: DecorationImage(
-                  image: new AssetImage('assets/images/header.jpg'),
+                  image: new AssetImage('assets/images/fatec-saocaetano.jpg'),
                   fit: BoxFit.fitWidth
                   )
               ),
             ),
 
-            new ExpansionTile(
-              title: Text('Eventos'),
-              children: <Widget>[
-                new ListTile(
-                  title: new Text('Evento Atual'),
-                  trailing: new Icon(Icons.keyboard_arrow_right),
-                ),
-                new ListTile(
-                  title: new Text('Eventos Passados'),
-                  trailing: new Icon(Icons.keyboard_arrow_right),
-                  onTap: () {
-                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => EventsList()),
-                  );
-                  }
-                ),
-              ],
+            new ListTile(
+              title: new Text('Eventos'),
+              trailing: new Icon(Icons.keyboard_arrow_right),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => new EventsList()),
+                );
+              }
             ),
+
+            // new ExpansionTile(
+            //   title: Text('Eventos'),
+            //   children: <Widget>[
+            //     new ListTile(
+            //       title: new Text('Evento Atual'),
+            //       trailing: new Icon(Icons.keyboard_arrow_right),
+            //     ),
+            //     new ListTile(
+            //       title: new Text('Eventos Passados'),
+            //       trailing: new Icon(Icons.keyboard_arrow_right),
+            //       onTap: () {
+            //        Navigator.push(
+            //         context,
+            //         MaterialPageRoute(builder: (context) => EventsList()),
+            //       );
+            //       }
+            //     ),
+            //   ],
+            // ),
             new ListTile(
               title: new Text('Inscrições'),
               trailing: new Icon(Icons.keyboard_arrow_right),
@@ -105,7 +117,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => ScanScreen()));
         },
-        label: Text('QR CODE'),
+        label: Text('PRESENÇA'),
         icon: Icon(Icons.photo_camera),
         backgroundColor: Colors.black87,
       ),
@@ -120,7 +132,7 @@ class HomeScreenTopPart extends StatefulWidget {
 }
 
 class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
-  String welcomeMessage = "Fatec app";
+  String title = "FATapp";
   
   @override
   Widget build(BuildContext context) {
@@ -131,12 +143,12 @@ class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
           child: Container(height: 150.0, color: Colors.red, 
           child: Column(
             children: <Widget>[
-              SizedBox(height: 40.0,),
+              SizedBox(height: 5.0,),
               Padding(
                 padding: const EdgeInsets.fromLTRB(60.0, 5.0, 60.0, 10.0),
                 child: Row(
                   children: <Widget>[
-                    Text(welcomeMessage,
+                    Text(title,
                       style: TextStyle(fontWeight: FontWeight.w800,    
                         fontSize: 24.0,
                         color: Colors.white,
