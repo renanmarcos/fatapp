@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
       var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
       try {
         final tokenResponse = await UserController().login(jsonData);
-        User token = User.token(tokenResponse);
+        User token = User.fromJson(tokenResponse);
         final userResponse = await UserController().show(token.id, token.token);
         User user = User.fromJson(userResponse);
         Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));

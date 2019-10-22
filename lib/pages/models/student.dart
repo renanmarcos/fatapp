@@ -1,21 +1,20 @@
-import 'dart:convert';
+import 'package:fatapp/pages/models/course.dart';
+import 'package:fatapp/pages/models/user.dart';
 
-class Student {
+class Student extends User {
   int id;
   int ra;
-  String course;
+  String token;
+  Course course;
+  User user;
   
-  Student({this.id, this.ra, this.course});
+  Student({this.token, this.id, this.ra, this.course, this.user});
 
   Student.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    ra = json['ra'];
-    course = json['course'];
-  }
-  List<Student> studentList(String body) {
-    final list = json.decode(body)
-      .map((data) =>Student.fromJson(data))
-      .toList();
-    return list;
+    token = json['token'];
+    id = json['student']['id'];
+    ra = json['student']['ra'];
+    course = Course.fromJson(json['course']);
+    user = User.fromJson(json['user']);
   }
 }

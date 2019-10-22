@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:fatapp/pages/controllers/courseController.dart';
 import 'package:fatapp/pages/controllers/studentController.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/user.dart';
@@ -13,8 +16,6 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
 
-  static const courses = ["ADS", "COMEX", "SEG",'JOG'];
-  var _course;
 
   bool visibilityRA = false;
   bool visibilityCourse = false;
@@ -28,6 +29,7 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return new Scaffold(
         resizeToAvoidBottomPadding: false,
         body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
@@ -178,24 +180,26 @@ class _SignupPageState extends State<SignupPage> {
               // )),
         ]))]));
   }
+  Future <void> getCourse() async {
+    final getCourses = await CourseController().show(null);
+    var _courses = json.decode(getCourses);
+    return var _course;
+  }
   Future<void> register() async {
     var _name = _textNameController.text, 
         _cpf = _textCPFController.text, 
         _password = _textPasswordController.text,
         _email = _textEmailController.text,
         _ra = _textRAController.text;
-
     var jsonData = '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password" }';
-    print(jsonData);
     try {
-      final created = await UserController().create(jsonData);
-      var tokenJson = '{ "email" : "$_email", "password" : "$_password" }';
-      final login = await UserController().login(tokenJson);
-      User token = User.token(login);
-      User user = User.fromJson(created);
       if(visibilityRA) {
         var student = '{ "ra" : "$_ra", "course" : "$_course" }';
         await StudentController().create(student, token.token);
+      }
+      else {
+        final created = await UserController().create(jsonData);
+        User user = User.fromJson(created);
       }
       Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
     } catch(e) {      

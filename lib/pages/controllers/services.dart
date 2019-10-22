@@ -57,23 +57,4 @@ class Services {
     );
     return _response(response);
   }
-  Map<String, dynamic> _response(http.Response response) 
-  {
-    switch (response.statusCode) {
-      case 200:
-        var responseJson = jsonDecode(response.body);
-        return responseJson;
-      case 201:
-        var responseJson = jsonDecode(response.body);
-        return responseJson;
-      case 422:
-        throw UnprocessableException(response.body.toString());
-      case 401:
-        throw NotFoundException();
-      case 404:
-        throw NotFoundException();
-      default:
-        throw BadRequestException();
-    }
-  }
 }
