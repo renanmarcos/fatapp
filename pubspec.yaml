@@ -58,6 +58,7 @@ flutter:
    - assets/images/profileIcon.png
    - assets/images/header.jpg
    - assets/images/glaceon.png
+   - assets/images/fatec-saocaetano.jpg
    - .env
   
   # An image asset can refer to one or more resolution-specific "variants", see
