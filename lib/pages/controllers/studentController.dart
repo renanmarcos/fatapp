@@ -13,9 +13,9 @@ class StudentController {
      var response = Services().putData('students', id, data, token);
      return response;
   }
-  Future<Map<String, dynamic>> create(data, token) async 
+  Future<Map<String, dynamic>> create(data) async 
   {
-     var response = Services().postData('students', data, token);
+     var response = Services().postData('students', data, null);
      return response;
   }
 }

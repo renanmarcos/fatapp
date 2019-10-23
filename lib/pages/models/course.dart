@@ -10,5 +10,4 @@ class Course {
     name = json['name'];
     acronym = json['acronym'];
   }
-  <
 }

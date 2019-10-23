@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:fatapp/pages/controllers/courseController.dart';
-import 'package:fatapp/pages/controllers/studentController.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/home.dart';
@@ -9,13 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:masked_text/masked_text.dart';
 
-class SignupPage extends StatefulWidget {
+class UpdateUserPage extends StatefulWidget {
+  const UpdateUserPage({
+    this.user
+  });
   @override
-  _SignupPageState createState() => _SignupPageState();
+  final User user;
+  _UpdateUserPageState createState() => _UpdateUserPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _UpdateUserPageState extends State<UpdateUserPage> {
 
+  static const courses = ["ADS", "COMEX", "SEG",'JOG'];
+  var _course;
 
   bool visibilityRA = false;
   bool visibilityCourse = false;
@@ -29,7 +34,6 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     return new Scaffold(
         resizeToAvoidBottomPadding: false,
         body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
@@ -40,7 +44,7 @@ class _SignupPageState extends State<SignupPage> {
                 Container(
                   padding: EdgeInsets.fromLTRB(15.0, 80.0, 0.0, 0.0),
                   child: Text(
-                    'Cadastro',
+                    'Perfil',
                     style:
                       TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
                   ),
@@ -95,6 +99,7 @@ class _SignupPageState extends State<SignupPage> {
                     maxLength: 14,
                     keyboardType: TextInputType.number,
                     inputDecoration: new InputDecoration(
+                        enabled: false,
                         labelText: 'CPF',
                         labelStyle: TextStyle(
                             fontFamily: 'Montserrat',
@@ -161,11 +166,11 @@ class _SignupPageState extends State<SignupPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           onPressed: () {
-                            register();
+                            update();
                           },
                           color: Colors.redAccent,
                           child: Center(
-                            child: Text('Cadastrar',
+                            child: Text('Atualizar',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -180,27 +185,19 @@ class _SignupPageState extends State<SignupPage> {
               // )),
         ]))]));
   }
-  Future <void> getCourse() async {
+  Future <void> getCourses() async {
     final getCourses = await CourseController().show(null);
     var _courses = json.decode(getCourses);
     return _courses;
   }
-  Future<void> register() async {
-    var _name = _textNameController.text, 
-        _cpf = _textCPFController.text, 
+  Future<void> update() async {
+    var _name = _textNameController.text,
         _password = _textPasswordController.text,
-        _email = _textEmailController.text,
-        _ra = _textRAController.text;
-    var jsonData = '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password" }';
+        _email = _textEmailController.text;
+    var jsonData = '{ "name" : "$_name", "email" : "$_email", "password" : "$_password" }';
     try {
-      if(visibilityRA) {
-        var student = '{ "ra" : "$_ra", "course" : "$_course" }';
-        await StudentController().create(student);
-      }
-      else {
-        final created = await UserController().create(jsonData);
-        User user = User.fromJson(created);
-      }
+      final update = await UserController().update(widget.user.id, jsonData, widget.user.token);
+      User user = User.fromJson(update);
       Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
     } catch(e) {      
       Fluttertoast.showToast(
@@ -214,4 +211,4 @@ class _SignupPageState extends State<SignupPage> {
       );
     }
   }
-}
+} 

@@ -1,8 +1,8 @@
 
 import 'dart:convert';
+import 'package:fatapp/pages/controllers/responseHandling.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'appException.dart';
 import 'dart:async';
 
 class Services {
@@ -16,7 +16,7 @@ class Services {
         "token": token
       }
     );
-    return _response(response);
+    return ResponseHandling().handling(response);
   }
   Future<Map<String, dynamic>> getData(url, id, token) async {
     final response = await http.Client().get(
@@ -28,7 +28,7 @@ class Services {
         "token": token
       }
     );
-    return _response(response);
+    return ResponseHandling().handling(response);
   }
   Future<Map<String, dynamic>> postData(url, dataToPost, token) async {
     final response = await http.Client().post(
@@ -40,8 +40,7 @@ class Services {
       },
       body: dataToPost
     );
-    print(response.statusCode);
-    return _response(response);
+    return ResponseHandling().handling(response);
   }
 
   Future<Map<String, dynamic>> putData(url, id, dataToPut, token) async {
@@ -55,6 +54,6 @@ class Services {
       body: dataToPut
 
     );
-    return _response(response);
+    return ResponseHandling().handling(response);
   }
 }
