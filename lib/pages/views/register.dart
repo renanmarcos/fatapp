@@ -29,7 +29,7 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController _textCPFController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
-    List<dynamic> list = this.courses();
+    List<Course> list = CourseController().getCourses();
     return new Scaffold(
         resizeToAvoidBottomPadding: false,
         body: Column(
@@ -128,12 +128,12 @@ class _SignupPageState extends State<SignupPage> {
                               _course = newValue;
                             });
                           },
-                          items: list.map((dynamic value) {
+                          items: list.map(dynamic value) {
                             return DropdownMenuItem<String>(
                               value: value.acronym,
                               child: Text(value.acronym),
                             );
-                          }).toList(),
+                          }.toList(),
                         )),
                     Visibility(
                         visible: visibilityRA,
@@ -181,10 +181,6 @@ class _SignupPageState extends State<SignupPage> {
                     // )),
                   ]))
             ]));
-  }
-  courses() async {
-    final response = await CourseController().getCourses();
-    return response;
   }
   Future<void> register() async {
     try {
