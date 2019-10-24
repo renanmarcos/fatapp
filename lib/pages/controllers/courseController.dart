@@ -1,9 +1,11 @@
+import 'package:fatapp/pages/models/course.dart';
+
 import 'services.dart';
-import 'dart:async';
 
 class CourseController {
-  Future<Map<String, dynamic>> show(token) async {
-    final response = await Services().getAllData('courses', token);
-    return response; 
+  getCourses() async {
+    final response = await Services().getAllData('courses', null);
+    final items = (response as List).map((i) => new Course.fromJson(i));
+    return items;
   }
 }

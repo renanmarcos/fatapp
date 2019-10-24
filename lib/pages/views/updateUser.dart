@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:fatapp/pages/controllers/courseController.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/home.dart';
@@ -19,8 +16,8 @@ class UpdateUserPage extends StatefulWidget {
 
 class _UpdateUserPageState extends State<UpdateUserPage> {
 
-  static const courses = ["ADS", "COMEX", "SEG",'JOG'];
-  var _course;
+  //static const courses = ["ADS", "COMEX", "SEG",'JOG'];
+  //var _course;
 
   bool visibilityRA = false;
   bool visibilityCourse = false;
@@ -123,7 +120,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                       }
                    });
                   }),
-                  Visibility(visible: visibilityCourse, child:DropdownButton(
+                  /*Visibility(visible: visibilityCourse, child:DropdownButton(
                     value: _course,
                     hint: Text("Escolha seu curso"),
                     onChanged: (newValue) {
@@ -137,7 +134,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                         child: Text(value),
                       );
                     }).toList(),
-                  )),
+                  )),*/
                   Visibility(
                     visible: visibilityRA, child: MaskedTextField(
                       maskedTextFieldController: _textRAController,
@@ -184,11 +181,6 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                 // ],
               // )),
         ]))]));
-  }
-  Future <void> getCourses() async {
-    final getCourses = await CourseController().show(null);
-    var _courses = json.decode(getCourses);
-    return _courses;
   }
   Future<void> update() async {
     var _name = _textNameController.text,
