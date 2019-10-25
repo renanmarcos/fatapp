@@ -1,4 +1,6 @@
+import 'package:fatapp/pages/controllers/courseController.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
+import 'package:fatapp/pages/models/course.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/home.dart';
 import 'package:flutter/material.dart';

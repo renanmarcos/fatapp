@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 class ResponseHandling extends AppException {
   
   handling(http.Response response) {
-    var responseJson = jsonDecode(response.body);
+    var responseJson = json.decode(response.body);
     if (response.statusCode >= 200 && response.statusCode <= 300) {
       return responseJson;
     }

@@ -4,7 +4,11 @@ import 'services.dart';
 class CourseController {
   Future<List<Course>> getCourses() async {
     final response = await Services().getAllData('courses', null);
-    final items = (response as List).map((i) => new Course.fromJson(i));
-    return items;
+    //final items = response.map((i)=>Course.fromJson(i)).toList();
+    List<Course> allCourses = [];
+    for (var json in response) {
+      allCourses.add(Course.fromJson(json));
+    }
+    return allCourses;
   }
 }
