@@ -191,7 +191,7 @@ class _SignupPageState extends State<SignupPage> {
   }
   Future<void> register() async {
     try {
-      createUser();
+      this.createUser();
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => HomePage(user: this.user)));
     } catch (e) {

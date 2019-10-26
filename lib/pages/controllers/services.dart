@@ -16,6 +16,7 @@ class Services {
           //"token": token
         }
       );
+      print(response);
       return ResponseHandling().handling(response);
     } catch(e)  {
       Fluttertoast.showToast(
@@ -58,7 +59,7 @@ class Services {
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "token": token
+          //"token": token
         },
         body: dataToPost
       );

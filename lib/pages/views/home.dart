@@ -84,8 +84,8 @@ class _HomePageState extends State<HomePage> {
            
             new Divider(),
             new ListTile( 
-              title: new Text('Configurações'),
-              trailing: new Icon(Icons.settings),
+              title: new Text('Perfil'),
+              trailing: new Icon(Icons.person),
             ),
             new ListTile( 
               title: new Text('Sair'),

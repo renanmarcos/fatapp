@@ -16,4 +16,8 @@ class User {
     cpf = json['user']['cpf'];
     password = json['user']['password'];
   }
+  User.token(Map<String, dynamic> json) {
+    id = json['id'];
+    token = json['token'];
+  }
 }

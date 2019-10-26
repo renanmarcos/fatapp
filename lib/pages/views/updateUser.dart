@@ -11,15 +11,13 @@ class UpdateUserPage extends StatefulWidget {
   const UpdateUserPage({
     this.user
   });
-  @override
   final User user;
+  @override
   _UpdateUserPageState createState() => _UpdateUserPageState();
 }
 
 class _UpdateUserPageState extends State<UpdateUserPage> {
-
-  //static const courses = ["ADS", "COMEX", "SEG",'JOG'];
-  //var _course;
+  Course _course;
 
   bool visibilityRA = false;
   bool visibilityCourse = false;
@@ -33,6 +31,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
 
   @override
   Widget build(BuildContext context) {
+    this.getValues();
     return new Scaffold(
         resizeToAvoidBottomPadding: false,
         body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
@@ -122,21 +121,32 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                       }
                    });
                   }),
-                  /*Visibility(visible: visibilityCourse, child:DropdownButton(
-                    value: _course,
-                    hint: Text("Escolha seu curso"),
-                    onChanged: (newValue) {
-                      setState(() {
-                        _course = newValue;
-                      });
-                    },
-                    items: courses.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  )),*/
+                    FutureBuilder<List<Course>>(
+                      future: CourseController().getCourses(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(child: CircularProgressIndicator());
+                        } else {     
+                          List<Course> courseList = snapshot.data;
+                          return Visibility(
+                              visible: visibilityCourse,
+                              child: DropdownButton<Course>(
+                                hint: Text('Escolha seu curso'),
+                                value: _course,
+                                onChanged: (Course course) {
+                                  setState(() {
+                                    _course = course;
+                                  });
+                                },
+                                items: courseList.map((Course course) {
+                                  return DropdownMenuItem(
+                                    value: course,
+                                    child: Text(course.acronym),
+                                  );
+                                }).toList(),
+                              ));
+                          }
+                    }),
                   Visibility(
                     visible: visibilityRA, child: MaskedTextField(
                       maskedTextFieldController: _textRAController,
@@ -184,6 +194,15 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
               // )),
         ]))]));
   }
+  Future<void> getValues() async {
+     final getUser = await UserController().show(widget.user.id, widget.user.token);
+      User values = User.fromJson(getUser);
+      _textNameController.text = values.name;
+      _textCPFController.text = values.cpf;
+      _textPasswordController.text = values.password;
+      _textEmailController.text = values.email;
+  }
+
   Future<void> update() async {
     var _name = _textNameController.text,
         _password = _textPasswordController.text,
