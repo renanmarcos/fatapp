@@ -1,4 +1,5 @@
 import 'package:fatapp/pages/controllers/courseController.dart';
+import 'package:fatapp/pages/controllers/responseHandling.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/course.dart';
 import 'package:fatapp/pages/models/user.dart';
@@ -121,7 +122,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                       }
                    });
                   }),
-                    FutureBuilder<List<Course>>(
+                  FutureBuilder<List<Course>>(
                       future: CourseController().getCourses(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (!snapshot.hasData) {
@@ -196,7 +197,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
   }
   Future<void> getValues() async {
      final getUser = await UserController().show(widget.user.id, widget.user.token);
-      User values = User.fromJson(getUser);
+     User values = User.fromJson(getUser, widget.user.token);
       _textNameController.text = values.name;
       _textCPFController.text = values.cpf;
       _textPasswordController.text = values.password;
@@ -207,11 +208,15 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
     var _name = _textNameController.text,
         _password = _textPasswordController.text,
         _email = _textEmailController.text;
-    var jsonData = '{ "name" : "$_name", "email" : "$_email", "password" : "$_password" }';
+
+    ResponseHandling().validateEmail(_email);
+    ResponseHandling().validatePassword(_password);
+
     try {
-      final update = await UserController().update(widget.user.id, jsonData, widget.user.token);
-      User user = User.fromJson(update);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
+        var jsonData = '{ "name" : "$_name", "email" : "$_email", "password" : "$_password" }';
+        final update = await UserController().update(widget.user.id, jsonData, widget.user.token);
+        User user = User.fromJson(update, widget.user.token);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
     } catch(e) {      
       Fluttertoast.showToast(
         msg: e.toString(),

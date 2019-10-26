@@ -19,5 +19,5 @@ class LoginException extends AppException {
 
 
 class ValidateException extends AppException {
-  ValidateException([message]) : super(message);
+  ValidateException([message]) : super("", message);
 }

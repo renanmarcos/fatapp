@@ -13,6 +13,9 @@ class ResponseHandling extends AppException {
     else if (response.statusCode == 400) {
       validateCPF(responseJson);
     }
+    else if (response.statusCode == 401) {
+      throw LoginException();
+    }
     else {
       throw InternException();
     }
@@ -22,11 +25,16 @@ class ResponseHandling extends AppException {
       throw ValidateException("Email inválido");
     }
   }
-  validateCPF(dynamic body) {
+  validatePassword(String string) {
+    if(string.length < 6) {
+      throw ValidateException("Senha inválida");
+    }
+  }
+  validateCPF(body) {
     if (body.toString() == "CPF Já Existe") {
       throw ValidateException(body.toString());
     } else {
-      throw LoginException();
+      throw InternException();
     }
   }
 }

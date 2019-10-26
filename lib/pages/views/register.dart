@@ -1,4 +1,5 @@
 import 'package:fatapp/pages/controllers/courseController.dart';
+import 'package:fatapp/pages/controllers/responseHandling.dart';
 import 'package:fatapp/pages/controllers/studentController.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/course.dart';
@@ -16,7 +17,6 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   Course _course;
-  User user;
 
   bool visibilityRA = false;
   bool visibilityCourse = false;
@@ -128,7 +128,7 @@ class _SignupPageState extends State<SignupPage> {
                               child: DropdownButton<Course>(
                                 hint: Text('Escolha seu curso'),
                                 value: _course,
-                                onChanged: (Course course) {
+                                onChanged: (Course course) {      
                                   setState(() {
                                     _course = course;
                                   });
@@ -190,10 +190,30 @@ class _SignupPageState extends State<SignupPage> {
         ]));
   }
   Future<void> register() async {
+    User user;
+    var _name = _textNameController.text,
+        _cpf = _textCPFController.text,
+        _password = _textPasswordController.text,
+        _email = _textEmailController.text,
+        _ra = _textRAController.text;
+      
+    ResponseHandling().validateEmail(_email);
+    ResponseHandling().validatePassword(_password);
     try {
-      this.createUser();
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => HomePage(user: this.user)));
+      if (visibilityRA) {
+        int courseId = _course.id;
+        var jsonStudent =
+          '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password", "ra" : "$_ra", "courseId" : "$courseId"}';
+        final created = await StudentController().create(jsonStudent);
+        Student student = Student.fromJson(created);
+        user = student.user;
+      } else {
+        var jsonUser =
+            '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password" }';
+        final created = await UserController().create(jsonUser);
+        user = User.create(created);
+      }
+      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: user)));
     } catch (e) {
       Fluttertoast.showToast(
           msg: e.toString(),
@@ -203,27 +223,6 @@ class _SignupPageState extends State<SignupPage> {
           backgroundColor: Colors.red,
           textColor: Colors.white,
           fontSize: 16.0);
-    }
-  }
-
-  Future<void> createUser() async {
-    var _name = _textNameController.text,
-        _cpf = _textCPFController.text,
-        _password = _textPasswordController.text,
-        _email = _textEmailController.text,
-        _ra = _textRAController.text;
-    int courseId = _course.id;
-    if (visibilityRA) {
-      var jsonStudent =
-        '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password", "ra" : "$_ra", "courseId" : "$courseId"}';
-      final created = await StudentController().create(jsonStudent);
-      Student student = Student.fromJson(created);
-      this.user = student.user;
-    } else {
-      var jsonUser =
-          '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password" }';
-      final created = await UserController().create(jsonUser);
-      this.user = User.fromJson(created);
     }
   }
 }
