@@ -1,5 +1,4 @@
 import 'package:fatapp/pages/models/user.dart';
-import 'package:fatapp/pages/views/eventsList.dart';
 import 'package:fatapp/pages/views/login.dart';
 import 'package:fatapp/pages/views/qrCodeScan.dart';
 import 'package:flutter/material.dart';
