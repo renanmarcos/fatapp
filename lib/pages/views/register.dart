@@ -16,8 +16,8 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  Course _course;
-
+  String _course;
+  List<Course> courseList;
   bool visibilityRA = false;
   bool visibilityCourse = false;
   bool _isChecked = false;
@@ -122,20 +122,20 @@ class _SignupPageState extends State<SignupPage> {
                         if (!snapshot.hasData) {
                           return Center(child: CircularProgressIndicator());
                         } else {     
-                          List<Course> courseList = snapshot.data;
+                          courseList = snapshot.data;
                           return Visibility(
                               visible: visibilityCourse,
-                              child: DropdownButton<Course>(
+                              child: DropdownButton<String>(
                                 hint: Text('Escolha seu curso'),
                                 value: _course,
-                                onChanged: (Course course) {      
+                                onChanged: (String course) {      
                                   setState(() {
                                     _course = course;
                                   });
                                 },
                                 items: courseList.map((Course course) {
-                                  return DropdownMenuItem(
-                                    value: course,
+                                  return DropdownMenuItem<String>(
+                                    value: course.acronym,
                                     child: Text(course.acronym),
                                   );
                                 }).toList(),
@@ -146,7 +146,7 @@ class _SignupPageState extends State<SignupPage> {
                     visible: visibilityRA,
                     child: MaskedTextField(
                         maskedTextFieldController: _textRAController,
-                        maxLength: 12,
+                        maxLength: 13,
                         keyboardType: TextInputType.number,
                         inputDecoration: new InputDecoration(
                           labelText: 'RA',
@@ -201,7 +201,12 @@ class _SignupPageState extends State<SignupPage> {
     ResponseHandling().validatePassword(_password);
     try {
       if (visibilityRA) {
-        int courseId = _course.id;
+        int courseId;
+        for (var course in courseList) {
+          if (course.acronym == _course) {
+            courseId = course.id;
+          }
+        }
         var jsonStudent =
           '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password", "ra" : "$_ra", "courseId" : "$courseId"}';
         final created = await StudentController().create(jsonStudent);
