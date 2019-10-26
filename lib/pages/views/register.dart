@@ -159,7 +159,7 @@ class _SignupPageState extends State<SignupPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           onPressed: () {
-                            register();
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
                           },
                           color: Colors.redAccent,
                           child: Center(
@@ -178,7 +178,7 @@ class _SignupPageState extends State<SignupPage> {
               // )),
         ]))]));
   }
-  Future<void> register() async {
+  /*Future<void> register() async {
     var _name = _textNameController.text, 
         _cpf = _textCPFController.text, 
         _password = _textPasswordController.text,
@@ -209,5 +209,5 @@ class _SignupPageState extends State<SignupPage> {
         fontSize: 16.0
       );
     }
-  }
+  }*/
 }
