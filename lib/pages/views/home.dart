@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
             new ListTile( 
               title: new Text('Perfil'),
               trailing: new Icon(Icons.person),
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateUserPage())),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateUserPage(user: widget.user,))),
             ),
             new ListTile( 
               title: new Text('Sair'),

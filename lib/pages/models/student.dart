@@ -3,7 +3,7 @@ import 'package:fatapp/pages/models/user.dart';
 
 class Student extends User {
   int id;
-  int ra;
+  String ra;
   String token;
   Course course;
   User user;
