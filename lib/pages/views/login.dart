@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: BorderRadius.circular(10),
         ),
         onPressed: () {
-          signIn();
+          Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
         },
         padding: EdgeInsets.all(20),
         color: Colors.redAccent,
@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  Future<void> signIn() async {
+  /*Future<void> signIn() async {
     final formState = _formKey.currentState;
     if(formState.validate()) {
       formState.save();
@@ -129,5 +129,5 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     }
-  }
+  }*/
 }

@@ -172,13 +172,22 @@ class _SignupPageState extends State<SignupPage> {
                           register();
                         },
                         color: Colors.redAccent,
-                        child: Center(
-                          child: Text(
-                            'Cadastrar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Montserrat'),
+                        elevation: 7.0,
+                        child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          onPressed: () {
+                            register();
+                          },
+                          color: Colors.redAccent,
+                          child: Center(
+                            child: Text('Cadastrar',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Montserrat'),
+                            ),
                           ),
                         ),
                       ),
