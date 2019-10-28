@@ -11,7 +11,7 @@ final routes = <String, WidgetBuilder>{
 void main() {
   DotEnv().load('.env');
   runApp(new MaterialApp(
-    home: new HomePage(),
+    home: new LoginPage(),
     theme: ThemeData(
       primarySwatch: Colors.red,
       fontFamily: 'Raleway',
