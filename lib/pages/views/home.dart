@@ -9,6 +9,10 @@ import './eventsList2.dart';
 import './test.dart';
 
 class HomePage extends StatefulWidget {
+    const HomePage({
+    this.user
+  });
+  final User user;
   static String tag = 'home-page'; 
   @override 
   _HomePageState createState() => new _HomePageState();
@@ -34,8 +38,8 @@ class _HomePageState extends State<HomePage> {
         child: new ListView(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-              accountName: new Text("Teste"),
-              accountEmail: new Text("Email"),
+              accountName: new Text(widget.user.name),
+              accountEmail: new Text(widget.user.email),
               currentAccountPicture: new GestureDetector(
                 // child: new CircleAvatar(
                 //   // backgroundImage: new AssetImage('assets/images/profileIcon.png'),
