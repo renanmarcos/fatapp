@@ -53,10 +53,8 @@ class _HomePageState extends State<HomePage> {
               trailing: new Icon(Icons.keyboard_arrow_right),
               onTap: () {
                 Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => new EventsList()),
-                );
+                Navigator.of(context).push(new MaterialPageRoute(
+                  builder: (BuildContext context) => new EventsList()));
               }
             ),
 
