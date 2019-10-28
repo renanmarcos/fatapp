@@ -1,3 +1,4 @@
+import 'package:fatapp/pages/controllers/responseHandling.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/register.dart';
@@ -86,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
         key: _formKey,
         child: ListView(
           shrinkWrap: true,
-          padding: EdgeInsets.only(left: 24.0, right: 24.0),
+          padding: EdgeInsets.only(top: 100.0, left: 24.0, right: 24.0, bottom: 50.0),
           children: <Widget>[
             logo,
             SizedBox(height: 48.0),
@@ -106,12 +107,15 @@ class _LoginPageState extends State<LoginPage> {
     final formState = _formKey.currentState;
     if(formState.validate()) {
       formState.save();
+      ResponseHandling().validateEmail(_email);
+      ResponseHandling().validatePassword(_password);
+
       var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
       try {
         final tokenResponse = await UserController().login(jsonData);
         User token = User.token(tokenResponse);
         final userResponse = await UserController().show(token.id, token.token);
-        User user = User.fromJson(userResponse);
+        User user = User.fromJson(userResponse, token.token);
         Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
       } catch(e) {      
         Fluttertoast.showToast(

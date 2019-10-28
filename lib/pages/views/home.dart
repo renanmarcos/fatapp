@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/models/user.dart';
-import 'package:fatapp/pages/views/eventsList.dart';
 import 'package:fatapp/pages/views/login.dart';
 import 'package:fatapp/pages/views/qrCodeScan.dart';
+import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,7 +13,7 @@ import './eventsList2.dart';
 import './test.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({
+    const HomePage({
     this.user
   });
   final User user;
@@ -92,10 +92,8 @@ class _HomePageState extends State<HomePage> {
               trailing: new Icon(Icons.keyboard_arrow_right),
               onTap: () {
                 Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => new EventsList()),
-                );
+                Navigator.of(context).push(new MaterialPageRoute(
+                  builder: (BuildContext context) => new EventsList()));
               }
             ),
 
@@ -130,8 +128,9 @@ class _HomePageState extends State<HomePage> {
            
             new Divider(),
             new ListTile( 
-              title: new Text('Configurações'),
-              trailing: new Icon(Icons.settings),
+              title: new Text('Perfil'),
+              trailing: new Icon(Icons.person),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateUserPage(user: widget.user,))),
             ),
             new ListTile( 
               title: new Text('Sair'),
