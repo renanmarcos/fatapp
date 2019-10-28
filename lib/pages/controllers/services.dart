@@ -78,6 +78,41 @@ class Services {
     return ResponseHandling().handling(response);
   }
 
+
+
+  Future<Map<String, dynamic>> putDataAttendee(id, dataToPut, token) async {
+    final response = await http.Client().put(
+      DotEnv().env['FATAPP_API'] + "activities" + '/' + id.toString() + "/attendee",  
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "token": token
+      },
+      body: dataToPut
+
+    );
+    return _response(response);
+  }
+
+
+  Map<String, dynamic> _response(http.Response response) 
+  {
+    switch (response.statusCode) {
+      case 200:
+        var responseJson = jsonDecode(response.body);
+        return responseJson;
+      case 201:
+        var responseJson = jsonDecode(response.body);
+        return responseJson;
+      case 422:
+        throw UnprocessableException(response.body.toString());
+      case 401:
+        throw NotFoundException();
+      case 404:
+        throw NotFoundException();
+      default:
+        throw BadRequestException();
+        
   putData(url, id, dataToPut, token) async {
     var response;
     try {
@@ -98,7 +133,6 @@ class Services {
        timeInSecForIos: 2,
         backgroundColor: Colors.red,
         textColor: Colors.white,
-        fontSize: 16.0);
     }
     return ResponseHandling().handling(response);
   }

@@ -1,9 +1,13 @@
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:fatapp/pages/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:fatapp/pages/controllers/activityController.dart';
 
 class ScanScreen extends StatefulWidget {
   @override
@@ -54,6 +58,7 @@ class _ScanState extends State<ScanScreen> {
     try {
       String barcode = await BarcodeScanner.scan();
       setState(() => this.barcode = barcode);
+      saveUrl(barcode);
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
@@ -68,4 +73,15 @@ class _ScanState extends State<ScanScreen> {
       setState(() => this.barcode = 'Unknown error: $e');
     }
   }
+
+  
+
+  saveUrl(urlToSave) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/url.txt');
+    await file.writeAsString(urlToSave);
+    print('saved');
+      }
+
+
 }
