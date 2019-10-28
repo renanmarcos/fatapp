@@ -1,6 +1,7 @@
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/login.dart';
 import 'package:fatapp/pages/views/qrCodeScan.dart';
+import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import './common/CustomShapeClipper.dart';
@@ -95,8 +96,9 @@ class _HomePageState extends State<HomePage> {
            
             new Divider(),
             new ListTile( 
-              title: new Text('Configurações'),
-              trailing: new Icon(Icons.settings),
+              title: new Text('Perfil'),
+              trailing: new Icon(Icons.person),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateUserPage(user: widget.user,))),
             ),
             new ListTile( 
               title: new Text('Sair'),
