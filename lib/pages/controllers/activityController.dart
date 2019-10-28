@@ -22,12 +22,4 @@ class ActivityController {
      var response = Services().postData('activities', data, token);
      return response;
   }
-
-  Future<Map<String, dynamic>> attendee(id, data, token) async 
-  {
- 
-     var response = Services().putDataAttendee( id, data, token);
-     
-     return response;
-  }
 }
