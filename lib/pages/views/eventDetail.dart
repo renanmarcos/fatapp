@@ -1,16 +1,40 @@
+import 'package:fatapp/pages/views/activitiesList.dart';
 import 'package:flutter/material.dart';
 import 'common/CustomShapeClipper.dart';
 
+// class EventDetail extends StatefulWidget {
+//   EventDetail({Key key}) : super(key: key);
 
-class ActivityDetailTopPart extends StatefulWidget {
-  ActivityDetailTopPart({Key key}) : super(key: key);
+//   @override
+//   _EventDetailState createState() => _EventDetailState();
+// }
+
+// class _EventDetailState extends State<EventDetail> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return new Scaffold(
+//       appBar: new AppBar(
+//         // title: new Text('Palestras e Atividades'),
+//         backgroundColor: Colors.red,
+//       ),
+//       body: Column(
+//         children: <Widget>[
+//           EventDetailTopPart(),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+class EventDetailTopPart extends StatefulWidget {
+  EventDetailTopPart({Key key}) : super(key: key);
 
   @override
-  _ActivityDetailTopPartState createState() => _ActivityDetailTopPartState();
+  _EventDetailTopPartState createState() => _EventDetailTopPartState();
 }
 
-class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
-  String title = "Palestra X";
+class _EventDetailTopPartState extends State<EventDetailTopPart> {
+ String title = "Fatecnologia";
   
   @override
   Widget build(BuildContext context) {
@@ -57,8 +81,7 @@ class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
 }
 }
 
-
-class ActivityDetail extends StatelessWidget {
+class EventDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget titleSection = Container(
@@ -74,22 +97,22 @@ class ActivityDetail extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    'Nome da Palestra',
+                    'Nome do Evento',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Raleway',
                     ),
                   ),
                 ),
+                // Text(
+                //   'Nome do Palestrante',
+                //   style: TextStyle(
+                //     color: Colors.grey[500],
+                //     fontFamily: 'Raleway',
+                //   ),
+                // ),
                 Text(
-                  'Nome do Palestrante',
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                    fontFamily: 'Raleway',
-                  ),
-                ),
-                Text(
-                  '14:00',
+                  'Ano',
                   style: TextStyle(
                     color: Colors.grey[500],
                   ),
@@ -98,26 +121,46 @@ class ActivityDetail extends StatelessWidget {
             ),
           ),
           /*3*/
-          Icon(
-            Icons.star,
-            color: Colors.yellow[500],
+         
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ActivitiesList()),
+                );
+            },
+            child: Container(
+              
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildButtonColumn(Colors.grey[500], Icons.event, 'Palestras'),
+                  // _buildButtonColumn(color, Icons.share, 'Compartilhe'),
+                ],
+              ),
+            ),
           ),
-          Text('5'),
+          
+          // Icon(
+          //   Icons.star,
+          //   color: Colors.yellow[500],
+          // ),
+          // Text('5'),
         ],
       ),
     );
 
-    Color color = Theme.of(context).primaryColor;
+    // Color color = Theme.of(context).primaryColor;
 
-    Widget buttonSection = Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildButtonColumn(color, Icons.event, 'Inscreva-se'),
-          _buildButtonColumn(color, Icons.share, 'Compartilhe'),
-        ],
-      ),
-    );
+    // Widget buttonSection = Container(
+    //   child: Row(
+    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //     children: [
+    //       _buildButtonColumn(color, Icons.event, 'Palestras'),
+    //       // _buildButtonColumn(color, Icons.share, 'Compartilhe'),
+    //     ],
+    //   ),
+    // );
 
     Widget textSection = Container(
       
@@ -127,7 +170,7 @@ class ActivityDetail extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 50.0),
           child: new Text(
-            'Palestra super legal',
+            'Evento super legal',
             softWrap: true,
             
           ),
@@ -142,20 +185,20 @@ class ActivityDetail extends StatelessWidget {
       // title: 'Palestra X',
       // home: Scaffold(
         appBar: AppBar(
-          // title: Text('Palestra X'),
+          title: Text('Evento X'),
           backgroundColor: Colors.red,
         ),
         body: ListView(
           children: <Widget> [
-            ActivityDetailTopPart(),
-            // Image.asset(
-            //   'images/lake.jpg',
-            //   width: 600,
-            //   height: 240,
-            //   fit: BoxFit.cover,
-            // ),
+            // EventDetailTopPart(),
+              Image.asset(
+              'assets/images/header.jpg',
+              width: 600,
+              height: 240,
+              fit: BoxFit.cover,
+            ),
             titleSection,
-            buttonSection,
+            // buttonSection,
             textSection,
           ],
         ),
