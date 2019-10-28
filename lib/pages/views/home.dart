@@ -1,13 +1,9 @@
-import 'dart:io';
-
-import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/login.dart';
 import 'package:fatapp/pages/views/qrCodeScan.dart';
 import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:path_provider/path_provider.dart';
 import './common/CustomShapeClipper.dart';
 import './eventsList2.dart';
 import './test.dart';
@@ -22,37 +18,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => new _HomePageState();
 }
 
-readUrlFile(userId,userToken) async {
-  try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        try {
-          final directory = await getApplicationDocumentsDirectory();
-          final file = File('${directory.path}/url.txt');
-          List<String> text = await file.readAsLines();
-          for (var item in text) {
-            var jsonData = '{ "userId" : "$userId"}';
-          
-            ActivityController().attendee(item, jsonData, userToken);
-            
-          }
-        } catch (e) {
-      print("Não foi possível ler o arquivo");
-      }
-    }
-  } on SocketException catch (_) {
-      print('Sem conexão com a internet');
-    }
-        
-  }
-
 class _HomePageState extends State<HomePage> {
-
-  @override
-  void initState() {
-    readUrlFile(widget.user.id,widget.user.token);
-    super.initState();
-  }
   
 
   @override 
