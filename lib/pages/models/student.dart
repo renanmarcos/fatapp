@@ -14,7 +14,7 @@ class Student extends User {
     token = json['token'];
     id = json['student']['id'];
     ra = json['student']['ra'];
-    course = Course.fromJson(json['course']);
-    user = User.fromJson(json['user'], token);
+    course = Course.fromJson(json['student']['course']);
+    user = User.fromJson(json['student']['user'], token);
   }
 }

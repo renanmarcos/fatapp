@@ -115,9 +115,7 @@ class _LoginPageState extends State<LoginPage> {
         var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
         try {
           final tokenResponse = await UserController().login(jsonData);
-          User token = User.token(tokenResponse);
-          final userResponse = await UserController().show(token.id, token.token);
-          User user = User.fromJson(userResponse, token.token);
+          User user = User.create(tokenResponse);
           Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
         } catch(e) {      
           Fluttertoast.showToast(

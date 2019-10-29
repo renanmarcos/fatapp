@@ -23,7 +23,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => new _HomePageState();
 }
 
-readUrlFile(userId,userToken) async {
+readUrlFile(userId, userToken) async {
   try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
