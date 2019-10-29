@@ -3,6 +3,7 @@ import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/register.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import './home.dart';
 
@@ -104,30 +105,34 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
   Future<void> signIn() async {
-    final formState = _formKey.currentState;
-    if(formState.validate()) {
-      formState.save();
-      ResponseHandling().validateEmail(_email);
-      ResponseHandling().validatePassword(_password);
+    if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
+      final formState = _formKey.currentState;
+      if(formState.validate()) {
+        formState.save();
+        ResponseHandling().validateEmail(_email);
+        ResponseHandling().validatePassword(_password);
 
-      var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
-      try {
-        final tokenResponse = await UserController().login(jsonData);
-        User token = User.token(tokenResponse);
-        final userResponse = await UserController().show(token.id, token.token);
-        User user = User.fromJson(userResponse, token.token);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
-      } catch(e) {      
-        Fluttertoast.showToast(
-          msg: e.toString(),
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIos: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
-        );
+        var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
+        try {
+          final tokenResponse = await UserController().login(jsonData);
+          User token = User.token(tokenResponse);
+          final userResponse = await UserController().show(token.id, token.token);
+          User user = User.fromJson(userResponse, token.token);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
+        } catch(e) {      
+          Fluttertoast.showToast(
+            msg: e.toString(),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 2,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+          );
+        }
       }
+    } else {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
     }
   }
 }
