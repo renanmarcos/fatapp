@@ -77,20 +77,6 @@ class Services {
     }
     return ResponseHandling().handling(response);
   }
-
-  Future<Map<String, dynamic>> putDataAttendee(id, dataToPut, token) async {
-    final response = await http.Client().put(
-      DotEnv().env['FATAPP_API'] + "activities" + '/' + id.toString() + "/attendee",  
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "token": token
-      },
-      body: dataToPut
-
-    );
-    return ResponseHandling().handling(response);
-  }
   putData(url, id, dataToPut, token, [complementation]) async {
     var response;
     try {
