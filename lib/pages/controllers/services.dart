@@ -77,12 +77,11 @@ class Services {
     }
     return ResponseHandling().handling(response);
   }
-
-  putData(url, id, dataToPut, token) async {
+  putData(url, id, dataToPut, token, [complementation]) async {
     var response;
     try {
       response = await http.Client().put(
-        DotEnv().env['FATAPP_API'] + url + '/' + id.toString(),  
+        DotEnv().env['FATAPP_API'] + url + '/' + id.toString() + complementation,  
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -95,10 +94,9 @@ class Services {
         msg: "Não há conexão com o servidor",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
-       timeInSecForIos: 2,
+        timeInSecForIos: 2,
         backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
+        textColor: Colors.white);
     }
     return ResponseHandling().handling(response);
   }
