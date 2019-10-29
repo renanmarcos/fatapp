@@ -18,7 +18,8 @@ class UpdateUserPage extends StatefulWidget {
 }
 
 class _UpdateUserPageState extends State<UpdateUserPage> {
-  Course _course;
+  String _course;
+  List<Course> courseList;
 
   bool visibilityRA = false;
   bool visibilityCourse = false;
@@ -122,26 +123,26 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                       }
                    });
                   }),
-                  FutureBuilder<List<Course>>(
+                    FutureBuilder<List<Course>>(
                       future: CourseController().getCourses(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (!snapshot.hasData) {
                           return Center(child: CircularProgressIndicator());
                         } else {     
-                          List<Course> courseList = snapshot.data;
+                          courseList = snapshot.data;
                           return Visibility(
                               visible: visibilityCourse,
-                              child: DropdownButton<Course>(
+                              child: DropdownButton<String>(
                                 hint: Text('Escolha seu curso'),
                                 value: _course,
-                                onChanged: (Course course) {
+                                onChanged: (String course) {      
                                   setState(() {
                                     _course = course;
                                   });
                                 },
                                 items: courseList.map((Course course) {
-                                  return DropdownMenuItem(
-                                    value: course,
+                                  return DropdownMenuItem<String>(
+                                    value: course.acronym,
                                     child: Text(course.acronym),
                                   );
                                 }).toList(),

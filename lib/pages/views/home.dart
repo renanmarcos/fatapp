@@ -4,6 +4,7 @@ import 'package:fatapp/pages/views/qrCodeScan.dart';
 import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './common/CustomShapeClipper.dart';
 import './eventsList2.dart';
 import './test.dart';
@@ -38,8 +39,8 @@ class _HomePageState extends State<HomePage> {
         child: new ListView(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-              accountName: new Text(widget.user.name),
-              accountEmail: new Text(widget.user.email),
+              accountName: this.getName(),
+              accountEmail: this.getEmail(),
               currentAccountPicture: new GestureDetector(
                 // child: new CircleAvatar(
                 //   // backgroundImage: new AssetImage('assets/images/profileIcon.png'),
@@ -122,6 +123,20 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+  getEmail() {
+    if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
+      return new Text(widget.user.email);
+    } else {
+      return new Text('teste@gmail.com');
+    }
+  }
+  getName() {
+    if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
+      return new Text(widget.user.name);
+    } else {
+      return new Text('Teste');
+    }
+  }
 }
 
 
@@ -174,8 +189,7 @@ class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
         ),
       )
     ],
-  );
-}
+  );}
 }
 
 int photoIndex = 0;
