@@ -1,25 +1,25 @@
 
-import 'package:fatapp/pages/controllers/abstractController.dart';
+import 'package:fatapp/pages/controllers/services.dart';
 import 'dart:async';
 
-class StudentsController extends AbstractController {
-  Future<String> index() async {
-    var response = getAllData('students');
+class StudentsController  {
+  Future<String> index(token) async {
+    var response = Services().getAllData('students', token);
     return response;
   }
-  Future<String> show(id) async 
+  Future<String> show(id, token) async 
   {
-     var response = getData('students', id);
+     var response = Services().getData('students', id, token);
      return response;
   }
-  Future<String> update(id, data) async 
+  Future<String> update(id, data, token) async 
   {
-     var response = putData('students', id, data);
+     var response = Services().putData('students', id, data, token);
      return response;
   }
   Future<String> create(id, data) async 
   {
-     var response = postData('students', data);
+     var response = Services().postData('students', data, null);
      return response;
   }
 }

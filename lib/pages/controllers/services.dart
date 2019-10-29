@@ -78,8 +78,6 @@ class Services {
     return ResponseHandling().handling(response);
   }
 
-
-
   Future<Map<String, dynamic>> putDataAttendee(id, dataToPut, token) async {
     final response = await http.Client().put(
       DotEnv().env['FATAPP_API'] + "activities" + '/' + id.toString() + "/attendee",  
@@ -91,33 +89,13 @@ class Services {
       body: dataToPut
 
     );
-    return _response(response);
+    return ResponseHandling().handling(response);
   }
-
-
-  Map<String, dynamic> _response(http.Response response) 
-  {
-    switch (response.statusCode) {
-      case 200:
-        var responseJson = jsonDecode(response.body);
-        return responseJson;
-      case 201:
-        var responseJson = jsonDecode(response.body);
-        return responseJson;
-      case 422:
-        throw UnprocessableException(response.body.toString());
-      case 401:
-        throw NotFoundException();
-      case 404:
-        throw NotFoundException();
-      default:
-        throw BadRequestException();
-        
-  putData(url, id, dataToPut, token) async {
+  putData(url, id, dataToPut, token, [complementation]) async {
     var response;
     try {
       response = await http.Client().put(
-        DotEnv().env['FATAPP_API'] + url + '/' + id.toString(),  
+        DotEnv().env['FATAPP_API'] + url + '/' + id.toString() + complementation,  
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -130,9 +108,9 @@ class Services {
         msg: "Não há conexão com o servidor",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
-       timeInSecForIos: 2,
+        timeInSecForIos: 2,
         backgroundColor: Colors.red,
-        textColor: Colors.white,
+        textColor: Colors.white);
     }
     return ResponseHandling().handling(response);
   }
