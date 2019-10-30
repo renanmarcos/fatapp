@@ -117,31 +117,31 @@ class _SignupPageState extends State<SignupPage> {
                         }
                       });
                     }),
-                    FutureBuilder<List<Course>>(
-                      future: CourseController().getCourses(),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
-                        } else {     
-                          courseList = snapshot.data;
-                          return Visibility(
-                              visible: visibilityCourse,
-                              child: DropdownButton<String>(
-                                hint: Text('Escolha seu curso'),
-                                value: _course,
-                                onChanged: (String course) {      
-                                  setState(() {
-                                    _course = course;
-                                  });
-                                },
-                                items: courseList.map((Course course) {
-                                  return DropdownMenuItem<String>(
-                                    value: course.acronym,
-                                    child: Text(course.acronym),
-                                  );
-                                }).toList(),
-                              ));
-                          }
+                FutureBuilder<List<Course>>(
+                    future: CourseController().getCourses(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(child: CircularProgressIndicator());
+                      } else {
+                        courseList = snapshot.data;
+                        return Visibility(
+                            visible: visibilityCourse,
+                            child: DropdownButton<String>(
+                              hint: Text('Escolha seu curso'),
+                              value: _course,
+                              onChanged: (String course) {
+                                setState(() {
+                                  _course = course;
+                                });
+                              },
+                              items: courseList.map((Course course) {
+                                return DropdownMenuItem<String>(
+                                  value: course.acronym,
+                                  child: Text(course.acronym),
+                                );
+                              }).toList(),
+                            ));
+                      }
                     }),
                 Visibility(
                     visible: visibilityRA,
@@ -183,7 +183,8 @@ class _SignupPageState extends State<SignupPage> {
                           },
                           color: Colors.redAccent,
                           child: Center(
-                            child: Text('Cadastrar',
+                            child: Text(
+                              'Cadastrar',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -199,6 +200,7 @@ class _SignupPageState extends State<SignupPage> {
               ]))
         ]));
   }
+
   Future<void> register() async {
     if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
       User user;
@@ -207,7 +209,7 @@ class _SignupPageState extends State<SignupPage> {
           _password = _textPasswordController.text,
           _email = _textEmailController.text,
           _ra = _textRAController.text;
-        
+
       ResponseHandling().validateEmail(_email);
       ResponseHandling().validatePassword(_password);
       try {
@@ -219,7 +221,7 @@ class _SignupPageState extends State<SignupPage> {
             }
           }
           var jsonStudent =
-            '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password", "ra" : "$_ra", "courseId" : "$courseId"}';
+              '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password", "ra" : "$_ra", "courseId" : "$courseId"}';
           final created = await StudentController().create(jsonStudent);
           Student student = Student.fromJson(created);
           user = student.user;
@@ -229,7 +231,8 @@ class _SignupPageState extends State<SignupPage> {
           final created = await UserController().create(jsonUser);
           user = User.create(created);
         }
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: user)));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => HomePage(user: user)));
       } catch (e) {
         Fluttertoast.showToast(
             msg: e.toString(),
@@ -241,7 +244,8 @@ class _SignupPageState extends State<SignupPage> {
             fontSize: 16.0);
       }
     } else {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
     }
   }
 }
