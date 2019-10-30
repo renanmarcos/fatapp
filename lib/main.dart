@@ -4,8 +4,8 @@ import './pages/views/home.dart';
 import './pages/views/login.dart';
 
 final routes = <String, WidgetBuilder>{
-    LoginPage.tag: (context) => LoginPage(),
-    HomePage.tag: (context) => HomePage(),
+  LoginPage.tag: (context) => LoginPage(),
+  HomePage.tag: (context) => HomePage(),
 };
 
 void main() {
@@ -17,6 +17,5 @@ void main() {
       fontFamily: 'Raleway',
     ),
     routes: routes,
-    
   ));
 }

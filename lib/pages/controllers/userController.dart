@@ -1,26 +1,22 @@
-
 import 'services.dart';
 import 'dart:async';
 
 class UserController {
-  Future<dynamic> show(id, token) async 
-  {
-     final response = Services().getData('users', id, token);
-     return response;
+  final _resource = "users";
+
+  Future<dynamic> show(id, token) async {
+    return Services().getData(this._resource, id, token);
   }
-  Future<dynamic> update(id, data, token) async 
-  {
-     final response = Services().putData('users', id, data, token);
-     return response;
+
+  Future<dynamic> update(id, data, token) async {
+    return Services().putData(this._resource, id, data, token);
   }
-  Future<dynamic> login(data) async 
-  {
-     final response = Services().postData('auth/token', data, null);
-     return response;
+
+  Future<dynamic> create(data) async {
+    return Services().postData(this._resource, data, null);
   }
-  Future<dynamic> create(data) async 
-  {
-     final response = Services().postData('users', data, null);
-     return response;
+
+  Future<dynamic> login(data) async {
+    return Services().postData('auth/token', data, null);
   }
 }
