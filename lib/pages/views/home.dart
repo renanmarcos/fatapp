@@ -7,6 +7,7 @@ import 'package:fatapp/pages/views/qrCodeScan.dart';
 import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './common/CustomShapeClipper.dart';
@@ -58,17 +59,21 @@ class _HomePageState extends State<HomePage> {
 
   @override 
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        // title: new Text('FATapp'),
-        backgroundColor: Colors.red,
-        elevation: 0,
-        brightness: Brightness.light,
-        // centerTitle: true,
-        // actions: <Widget>[
-        //   Icon(Icons.notifications),
-        // ],
-      ),
+    return WillPopScope(
+        onWillPop: () {
+          exit(0);
+        },
+        child:Scaffold(
+          appBar: new AppBar(
+            // title: new Text('FATapp'),
+            backgroundColor: Colors.red,
+            elevation: 0,
+            brightness: Brightness.light,
+            // centerTitle: true,
+            // actions: <Widget>[
+            //   Icon(Icons.notifications),
+            // ],
+          ),
       drawer: new Drawer(
         child: new ListView(
           children: <Widget>[
@@ -155,7 +160,7 @@ class _HomePageState extends State<HomePage> {
         icon: Icon(Icons.photo_camera),
         backgroundColor: Colors.black87,
       ),
-    );
+    ));
   }
   getEmail() {
     if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {

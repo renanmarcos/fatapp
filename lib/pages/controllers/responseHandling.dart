@@ -1,17 +1,18 @@
 import 'dart:convert';
 import 'package:fatapp/pages/controllers/exception/appException.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:validators/validators.dart';
 import 'package:http/http.dart' as http;
 
 class ResponseHandling extends AppException {
   
   handling(http.Response response) {
-    var responseJson = json.decode(response.body);
     if (response.statusCode >= 200 && response.statusCode <= 300) {
-      return responseJson;
+      return json.decode(response.body);
     }
     else if (response.statusCode == 400) {
-      validateCPF(responseJson);
+      validateCPF(response.body);
     }
     else if (response.statusCode == 401) {
       throw LoginException();
@@ -22,17 +23,34 @@ class ResponseHandling extends AppException {
   }
   validateEmail(String string) {
     if (!isEmail(string)) {
-      throw ValidateException("Email inválido");
+      Fluttertoast.showToast(
+        msg: "Email Inválido",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
     }
   }
   validatePassword(String string) {
     if(string.length < 6) {
-      throw ValidateException("Senha inválida");
+      Fluttertoast.showToast(
+        msg: "Senha Inválida",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
     }
   }
+
   validateCPF(body) {
-    if (body.toString() == "CPF Já Existe") {
-      throw ValidateException(body.toString());
+    if (body.toString().compareTo("CPF Já Existe") == 0) {
+      throw ValidateException("CPF Já Existe");
     } else {
       throw InternException();
     }
