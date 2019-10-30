@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fatapp/pages/controllers/responseHandling.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/user.dart';
@@ -5,6 +7,7 @@ import 'package:fatapp/pages/views/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Widget build(BuildContext context) {
+    this.checkLogin();
     final logo = Hero(
       tag: 'hero',
       child: CircleAvatar(
@@ -104,6 +108,14 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+  Future<void> checkLogin() async {
+    SharedPreferences sharedUser = await SharedPreferences.getInstance();
+    if(sharedUser.getString('user') != null) {
+      Map userMap = jsonDecode(sharedUser.getString('user'));
+      User user = User.create(userMap);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
+    }
+  }
   Future<void> signIn() async {
     if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
       final formState = _formKey.currentState;
@@ -117,6 +129,10 @@ class _LoginPageState extends State<LoginPage> {
           final tokenResponse = await UserController().login(jsonData);
           User user = User.create(tokenResponse);
           Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
+
+          SharedPreferences sharedUser = await SharedPreferences.getInstance();
+          String userString = jsonEncode(user);
+          sharedUser.setString('user', userString);
         } catch(e) {      
           Fluttertoast.showToast(
             msg: e.toString(),
