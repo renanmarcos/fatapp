@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import './eventDetail.dart';
+
 class CurrentEvent extends StatelessWidget {
   const CurrentEvent({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return ListView(
       children: ListTile.divideTiles(
         context: context,
@@ -17,15 +17,18 @@ class CurrentEvent extends StatelessWidget {
               splashColor: Colors.blue.withAlpha(30),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => EventDetail()),
+                  context,
+                  MaterialPageRoute(builder: (context) => EventDetail()),
                 );
               },
-            child: ListTile(
-              title: Text('Fatecnologia',
-              style: TextStyle(color: Colors.black, fontFamily: 'Raleway', fontSize: 18.0)),
+              child: ListTile(
+                title: Text('Fatecnologia',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Raleway',
+                        fontSize: 18.0)),
+              ),
             ),
-          ),
           ),
         ],
       ).toList(),

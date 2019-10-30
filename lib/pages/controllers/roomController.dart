@@ -1,25 +1,22 @@
-
 import 'services.dart';
 import 'dart:async';
 
 class RoomController {
+  final _resource = "rooms";
+
   Future<Map<String, dynamic>> index(token) async {
-    var response = Services().getAllData('rooms', token);
-    return response;
+    return Services().getAllData(this._resource, token);
   }
-  Future<Map<String, dynamic>> show(id, token) async 
-  {
-     var response = Services().getData('rooms', id, token);
-     return response;
+
+  Future<Map<String, dynamic>> show(id, token) async {
+    return Services().getData(this._resource, id, token);
   }
-  Future<Map<String, dynamic>> update(id, data, token) async 
-  {
-     var response = Services().putData('rooms', id, data, token);
-     return response;
+
+  Future<Map<String, dynamic>> update(id, data, token) async {
+    return Services().putData(this._resource, id, data, token);
   }
-  Future<Map<String, dynamic>> create(id, data, token) async 
-  {
-     var response = Services().postData('rooms', data, token);
-     return response;
+
+  Future<Map<String, dynamic>> create(id, data, token) async {
+    return Services().postData(this._resource, data, token);
   }
 }
