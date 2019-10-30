@@ -163,7 +163,9 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
       _textNameController.text = widget.user.name;
       _textCPFController.text = widget.user.cpf;
       _textEmailController.text = widget.user.email;
-      if(widget.user.student.ra != null) {
+      print(widget.user.student);
+      if(widget.user.student != null) {
+        print(1);
         _textRAController.text = widget.user.student.ra;
       }
   }

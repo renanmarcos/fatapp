@@ -14,7 +14,7 @@ class Services {
         {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          //"token": token
+          "Token": token
         }
       );
     } catch(e)  {
@@ -38,7 +38,7 @@ class Services {
         {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "token": token
+          "Token": token
         }
       );
     } catch(e)  {
@@ -61,7 +61,7 @@ class Services {
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          //"token": token
+          "Token": token
         },
         body: dataToPost
       );
@@ -85,7 +85,7 @@ class Services {
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "token": token
+          "Token": token
         },
         body: dataToPut
       );

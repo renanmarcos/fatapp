@@ -9,6 +9,9 @@ class ResponseHandling extends AppException {
   
   handling(http.Response response) {
     if (response.statusCode >= 200 && response.statusCode <= 300) {
+      if(response.statusCode == 204) {
+        return true;
+      }
       return json.decode(response.body);
     }
     else if (response.statusCode == 400) {

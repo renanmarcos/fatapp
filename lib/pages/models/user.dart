@@ -18,7 +18,9 @@ class User {
     email = json['user']['email'];
     cpf = json['user']['cpf'];
     password = json['user']['password'];
-    student = Student(id: json['user']['student']['id'], ra: json['user']['student']['ra']);
+    if(json['user']['student'] != null) {
+      student = Student.fromUser(json['user']['student']);
+    }
   }
   User.fromJson(Map<String, dynamic> json, String token) {
     token = token;

@@ -1,6 +1,7 @@
 import 'package:fatapp/pages/controllers/responseHandling.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/user.dart';
+import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -73,13 +74,24 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     ));
   }
   Future<void> updatePassword() async {
+    print(widget.user.token);
     var _password = _textPasswordController.text,
         _newPassword = _textNewPasswordController.text;
 
     ResponseHandling().validatePassword(_newPassword);
     try {
-        var jsonData = '{ "oldPassword" : "$_password", "newPassword" : "$_newPassword", "password" : "$_password" }';
+        var jsonData = '{ "oldPassword" : "$_password", "newPassword" : "$_newPassword"}';
         await UserController().changePassword(jsonData, widget.user.token);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateUserPage(user : widget.user)));
+        Fluttertoast.showToast(
+          msg: "Senha alterada com sucesso",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
     } catch(e) {      
       Fluttertoast.showToast(
         msg: e.toString(),
