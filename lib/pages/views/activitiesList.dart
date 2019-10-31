@@ -94,7 +94,6 @@ class ActivitiesListContent extends StatelessWidget {
       'Gabriel Ulisses',
       'Soraya de Campos'
     ];
-    final time = ['09:00', '10:00', '11:00', '12:00'];
     // final rooms = ['01', '02', '04', '07'];
 
     return ListView.builder(

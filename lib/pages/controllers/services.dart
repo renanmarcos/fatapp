@@ -8,12 +8,12 @@ class Services {
   getAllData(url, token) async {
     var response;
     try {
-      response =
-          await http.Client().get(DotEnv().env['FATAPP_API'] + url, headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        //"token": token
-      });
+      response = await http.Client().get(DotEnv().env['FATAPP_API'] + url,
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Token": token
+          });
     } catch (e) {
       Fluttertoast.showToast(
           msg: "Não há conexão com o servidor",
@@ -35,7 +35,7 @@ class Services {
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "token": token
+            "Token": token
           });
     } catch (e) {
       Fluttertoast.showToast(
@@ -53,14 +53,14 @@ class Services {
   postData(url, dataToPost, token) async {
     var response;
     try {
-      response = await http.Client()
-          .post(Uri.encodeFull(DotEnv().env['FATAPP_API'] + url),
-              headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                //"token": token
-              },
-              body: dataToPost);
+      response = await http.Client().post(
+          Uri.encodeFull(DotEnv().env['FATAPP_API'] + url),
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Token": token
+          },
+          body: dataToPost);
     } catch (e) {
       Fluttertoast.showToast(
           msg: "Não há conexão com o servidor",
@@ -86,7 +86,7 @@ class Services {
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "token": token
+            "Token": token
           },
           body: dataToPut);
     } catch (e) {

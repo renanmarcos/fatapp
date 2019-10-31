@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'dart:io' show File, InternetAddress, SocketException, exit;
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/login.dart';
@@ -7,8 +6,10 @@ import 'package:fatapp/pages/views/qrCodeScan.dart';
 import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './common/CustomShapeClipper.dart';
 import './eventsList2.dart';
 import './test.dart';
@@ -23,7 +24,8 @@ class HomePage extends StatefulWidget {
 
 readUrlFile(userId, userToken) async {
   try {
-    final result = await InternetAddress.lookup('google.com');
+    final result = await InternetAddress.lookup(DotEnv().env['FATAPP_API']);
+
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       try {
         final directory = await getApplicationDocumentsDirectory();
@@ -52,109 +54,121 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        // title: new Text('FATapp'),
-        backgroundColor: Colors.red,
-        elevation: 0,
-        brightness: Brightness.light,
-        // centerTitle: true,
-        // actions: <Widget>[
-        //   Icon(Icons.notifications),
-        // ],
-      ),
-      drawer: new Drawer(
-        child: new ListView(
-          children: <Widget>[
-            new UserAccountsDrawerHeader(
-              accountName: this.getName(),
-              accountEmail: this.getEmail(),
-              currentAccountPicture: new GestureDetector(
-                  // child: new CircleAvatar(
-                  //   // backgroundImage: new AssetImage('assets/images/profileIcon.png'),
-                  // ),
-                  ),
-              decoration: new BoxDecoration(
-                  image: DecorationImage(
-                      image:
-                          new AssetImage('assets/images/fatec-saocaetano.jpg'),
-                      fit: BoxFit.fitWidth)),
-            ),
-
-            new ListTile(
-                title: new Text('Eventos'),
-                trailing: new Icon(Icons.keyboard_arrow_right),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (BuildContext context) => new EventsList()));
-                }),
-
-            // new ExpansionTile(
-            //   title: Text('Eventos'),
-            //   children: <Widget>[
-            //     new ListTile(
-            //       title: new Text('Evento Atual'),
-            //       trailing: new Icon(Icons.keyboard_arrow_right),
-            //     ),
-            //     new ListTile(
-            //       title: new Text('Eventos Passados'),
-            //       trailing: new Icon(Icons.keyboard_arrow_right),
-            //       onTap: () {
-            //        Navigator.push(
-            //         context,
-            //         MaterialPageRoute(builder: (context) => EventsList()),
-            //       );
-            //       }
-            //     ),
-            //   ],
-            // ),
-            new ListTile(
-                title: new Text('Inscrições'),
-                trailing: new Icon(Icons.keyboard_arrow_right),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          new Test('Página de Teste')));
-                }),
-
-            new Divider(),
-            new ListTile(
-              title: new Text('Perfil'),
-              trailing: new Icon(Icons.person),
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => UpdateUserPage(
-                            user: widget.user,
-                          ))),
-            ),
-            new ListTile(
-              title: new Text('Sair'),
-              trailing: new Icon(Icons.cancel),
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginPage())),
-            )
-          ],
-        ),
-      ),
-      body: Column(
-        children: <Widget>[
-          HomeScreenTopPart(),
-          HomeScreenBottomPart(),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ScanScreen()));
+    return new WillPopScope(
+        onWillPop: () async {
+          exit(0);
+          return true;
         },
-        label: Text('PRESENÇA'),
-        icon: Icon(Icons.photo_camera),
-        backgroundColor: Colors.black87,
-      ),
-    );
+        child: new Scaffold(
+          appBar: new AppBar(
+            // title: new Text('FATapp'),
+            backgroundColor: Colors.red,
+            elevation: 0,
+            brightness: Brightness.light,
+            // centerTitle: true,
+            // actions: <Widget>[
+            //   Icon(Icons.notifications),
+            // ],
+          ),
+          drawer: new Drawer(
+            child: new ListView(
+              children: <Widget>[
+                new UserAccountsDrawerHeader(
+                  accountName: this.getName(),
+                  accountEmail: this.getEmail(),
+                  currentAccountPicture: new GestureDetector(
+                      // child: new CircleAvatar(
+                      //   // backgroundImage: new AssetImage('assets/images/profileIcon.png'),
+                      // ),
+                      ),
+                  decoration: new BoxDecoration(
+                      image: DecorationImage(
+                          image: new AssetImage(
+                              'assets/images/fatec-saocaetano.jpg'),
+                          fit: BoxFit.fitWidth)),
+                ),
+
+                new ListTile(
+                    title: new Text('Eventos'),
+                    trailing: new Icon(Icons.keyboard_arrow_right),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(new MaterialPageRoute(
+                          builder: (BuildContext context) => new EventsList()));
+                    }),
+
+                // new ExpansionTile(
+                //   title: Text('Eventos'),
+                //   children: <Widget>[
+                //     new ListTile(
+                //       title: new Text('Evento Atual'),
+                //       trailing: new Icon(Icons.keyboard_arrow_right),
+                //     ),
+                //     new ListTile(
+                //       title: new Text('Eventos Passados'),
+                //       trailing: new Icon(Icons.keyboard_arrow_right),
+                //       onTap: () {
+                //        Navigator.push(
+                //         context,
+                //         MaterialPageRoute(builder: (context) => EventsList()),
+                //       );
+                //       }
+                //     ),
+                //   ],
+                // ),
+                new ListTile(
+                    title: new Text('Inscrições'),
+                    trailing: new Icon(Icons.keyboard_arrow_right),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(new MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              new Test('Página de Teste')));
+                    }),
+
+                new Divider(),
+                new ListTile(
+                  title: new Text('Perfil'),
+                  trailing: new Icon(Icons.person),
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UpdateUserPage(
+                                user: widget.user,
+                              ))),
+                ),
+                new ListTile(
+                    title: new Text('Sair'),
+                    trailing: new Icon(Icons.cancel),
+                    onTap: () async {
+                      this.deletePreferences();
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    })
+              ],
+            ),
+          ),
+          body: Column(
+            children: <Widget>[
+              HomeScreenTopPart(),
+              HomeScreenBottomPart(),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ScanScreen()));
+            },
+            label: Text('PRESENÇA'),
+            icon: Icon(Icons.photo_camera),
+            backgroundColor: Colors.black87,
+          ),
+        ));
+  }
+
+  Future<void> deletePreferences() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.clear();
   }
 
   getEmail() {
@@ -258,7 +272,9 @@ class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
           CarouselSlider(
             height: 300.0,
             initialPage: 0,
+            aspectRatio: 16 / 9,
             enlargeCenterPage: true,
+            autoPlayCurve: Curves.fastOutSlowIn,
             autoPlay: false,
             reverse: false,
             enableInfiniteScroll: true,
@@ -276,9 +292,11 @@ class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
                 builder: (BuildContext context) {
                   return Container(
                     width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.symmetric(horizontal: 10.0),
+                    margin:
+                        EdgeInsets.symmetric(vertical: 18.0, horizontal: 4.0),
                     decoration: BoxDecoration(
                       color: Colors.red,
+                      shape: BoxShape.circle,
                     ),
                     child: Image.asset(
                       imgUrl,
