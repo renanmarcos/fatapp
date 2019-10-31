@@ -10,6 +10,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './common/CustomShapeClipper.dart';
 import './eventsList2.dart';
 import './test.dart';
@@ -139,8 +140,10 @@ class _HomePageState extends State<HomePage> {
                 new ListTile(
                   title: new Text('Sair'),
                   trailing: new Icon(Icons.cancel),
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginPage())),
+                  onTap: () async {
+                    this.deletePreferences();
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                  }
                 )
               ],
             ),
@@ -162,7 +165,10 @@ class _HomePageState extends State<HomePage> {
           ),
         ));
   }
-
+  Future<void> deletePreferences() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.clear();
+  }
   getEmail() {
     if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
       return new Text(widget.user.email);
@@ -255,6 +261,7 @@ class HomeScreenBottomPart extends StatefulWidget {
 
 class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
   @override
+  
   Widget build(BuildContext context) {
     return Container(
       child: Column(
@@ -264,7 +271,9 @@ class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
           CarouselSlider(
             height: 300.0,
             initialPage: 0,
+            aspectRatio: 16/9,
             enlargeCenterPage: true,
+            autoPlayCurve: Curves.fastOutSlowIn,
             autoPlay: false,
             reverse: false,
             enableInfiniteScroll: true,
@@ -282,9 +291,10 @@ class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
                 builder: (BuildContext context) {
                   return Container(
                     width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.symmetric(horizontal: 10.0),
+                    margin: EdgeInsets.symmetric(vertical: 18.0, horizontal: 4.0),
                     decoration: BoxDecoration(
                       color: Colors.red,
+                      shape: BoxShape.circle,
                     ),
                     child: Image.asset(
                       imgUrl,

@@ -111,9 +111,9 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> checkLogin() async {
     SharedPreferences sharedUser = await SharedPreferences.getInstance();
     if(sharedUser.getString('user') != null) {
-      Map userMap = jsonDecode(sharedUser.getString('user'));
+      Map userMap = json.decode(sharedUser.getString('user'));
       User user = User.create(userMap);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
     }
   }
   Future<void> signIn() async {
@@ -127,12 +127,13 @@ class _LoginPageState extends State<LoginPage> {
         var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
         try {
           final tokenResponse = await UserController().login(jsonData);
-          User user = User.create(tokenResponse);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
-
+          
           SharedPreferences sharedUser = await SharedPreferences.getInstance();
-          String userString = jsonEncode(user);
+          String userString = json.encode(tokenResponse);
           sharedUser.setString('user', userString);
+
+          User user = User.create(tokenResponse);
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
         } catch(e) {      
           Fluttertoast.showToast(
             msg: e.toString(),

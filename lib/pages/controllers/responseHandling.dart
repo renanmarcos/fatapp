@@ -17,7 +17,7 @@ class ResponseHandling extends AppException {
     else if (response.statusCode == 400) {
       validateCPF(response.body);
     }
-    else if (response.statusCode == 401) {
+    else if (response.statusCode == 401 || response.statusCode == 404) {
       throw LoginException();
     }
     else {
