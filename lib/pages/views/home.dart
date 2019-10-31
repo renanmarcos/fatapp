@@ -1,5 +1,4 @@
 import 'dart:io' show File, InternetAddress, SocketException, exit;
-
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/login.dart';
@@ -26,6 +25,7 @@ class HomePage extends StatefulWidget {
 readUrlFile(userId, userToken) async {
   try {
     final result = await InternetAddress.lookup(DotEnv().env['FATAPP_API']);
+
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       try {
         final directory = await getApplicationDocumentsDirectory();
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return new WillPopScope(
         onWillPop: () async {
           exit(0);
           return true;
@@ -138,13 +138,13 @@ class _HomePageState extends State<HomePage> {
                               ))),
                 ),
                 new ListTile(
-                  title: new Text('Sair'),
-                  trailing: new Icon(Icons.cancel),
-                  onTap: () async {
-                    this.deletePreferences();
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
-                  }
-                )
+                    title: new Text('Sair'),
+                    trailing: new Icon(Icons.cancel),
+                    onTap: () async {
+                      this.deletePreferences();
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    })
               ],
             ),
           ),
@@ -165,10 +165,12 @@ class _HomePageState extends State<HomePage> {
           ),
         ));
   }
+
   Future<void> deletePreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
   }
+
   getEmail() {
     if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
       return new Text(widget.user.email);
@@ -261,7 +263,6 @@ class HomeScreenBottomPart extends StatefulWidget {
 
 class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
   @override
-  
   Widget build(BuildContext context) {
     return Container(
       child: Column(
@@ -271,7 +272,7 @@ class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
           CarouselSlider(
             height: 300.0,
             initialPage: 0,
-            aspectRatio: 16/9,
+            aspectRatio: 16 / 9,
             enlargeCenterPage: true,
             autoPlayCurve: Curves.fastOutSlowIn,
             autoPlay: false,
@@ -291,7 +292,8 @@ class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
                 builder: (BuildContext context) {
                   return Container(
                     width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.symmetric(vertical: 18.0, horizontal: 4.0),
+                    margin:
+                        EdgeInsets.symmetric(vertical: 18.0, horizontal: 4.0),
                     decoration: BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,
