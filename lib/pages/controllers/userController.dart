@@ -15,6 +15,10 @@ class UserController {
   Future<dynamic> create(data) async {
     return Services().postData(this._resource, data, null);
   }
+  
+  Future<dynamic> changePassword(data, token) async {
+     return Services().postData('auth/change-password', data, token);
+  }
 
   Future<dynamic> login(data) async {
     return Services().postData('auth/token', data, null);
