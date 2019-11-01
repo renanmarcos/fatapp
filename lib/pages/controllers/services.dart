@@ -74,7 +74,7 @@ class Services {
     return ResponseHandling().handling(response);
   }
 
-  putData(url, id, dataToPut, token, [complementation]) async {
+  putData(url, id, dataToPut, token, [complementation = ""]) async {
     var response;
     try {
       response = await http.Client().put(
