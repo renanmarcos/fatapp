@@ -12,8 +12,7 @@ class ResponseHandling extends AppException {
     }
 
     if (response.statusCode >= 200 && response.statusCode <= 300) {
-      var responseJson = json.decode(response.body);
-      return responseJson;
+      return json.decode(response.body);
     }
 
     if (response.statusCode == 400) {

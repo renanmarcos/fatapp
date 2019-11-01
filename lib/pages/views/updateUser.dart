@@ -20,7 +20,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
   String _course;
   List<Course> courseList;
   bool _isChecked = false;
-  
+
   TextEditingController _textRAController = new TextEditingController();
   TextEditingController _textEmailController = new TextEditingController();
   TextEditingController _textNameController = new TextEditingController();
@@ -29,20 +29,18 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
     this.getValues();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    
     return new Scaffold(
         appBar: new AppBar(
-          title: new 
-            Text('Perfil', 
-            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)
-          )
-        ),
+            title: new Text('Perfil',
+                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold))),
         resizeToAvoidBottomPadding: false,
-        body:  SingleChildScrollView(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-            Widget>[
+        body: SingleChildScrollView(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+                    Widget>[
           Container(
               padding: EdgeInsets.only(top: 15.0, left: 20.0, right: 20.0),
               child: Column(children: <Widget>[
@@ -188,9 +186,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                       ),
                     )),
               ]))
-        ])
-      )
-    );
+        ])));
   }
 
   getValues() {
@@ -219,9 +215,8 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
           timeInSecForIos: 2,
           backgroundColor: Colors.green,
           textColor: Colors.white,
-          fontSize: 16.0
-      );
-        Navigator.pushReplacement(context,
+          fontSize: 16.0);
+      Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => HomePage(user: user)));
       //Falta ajustar estudante
     } catch (e) {

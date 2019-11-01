@@ -95,7 +95,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       );
       Navigator.pop(context);
     } catch(e) {      
-      print(e);
       Fluttertoast.showToast(
         msg: e.toString(),
         toastLength: Toast.LENGTH_SHORT,
