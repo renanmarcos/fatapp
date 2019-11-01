@@ -31,25 +31,17 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: new AppBar(
+          title: new 
+            Text('Cadastro', 
+            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)
+          )
+        ),
         resizeToAvoidBottomPadding: false,
         body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
             Widget>[
           Container(
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.fromLTRB(15.0, 80.0, 0.0, 0.0),
-                  child: Text(
-                    'Cadastro',
-                    style:
-                        TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-              padding: EdgeInsets.only(top: 15.0, left: 20.0, right: 20.0),
+              padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
               child: Column(children: <Widget>[
                 TextField(
                   controller: _textNameController,

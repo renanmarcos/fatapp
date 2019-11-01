@@ -1,7 +1,6 @@
 import 'package:fatapp/pages/controllers/responseHandling.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/user.dart';
-import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -20,15 +19,19 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: new AppBar(
+          title: new 
+            Text('Mudar senha', 
+            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)
+          )
+        ),
         backgroundColor: Colors.white,
         body: Form(
           child: ListView(
             shrinkWrap: true,
             padding: EdgeInsets.only(top: 100.0, left: 24.0, right: 24.0, bottom: 50.0),
             children: <Widget>[
-               new Text('Mudar senha',style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
-                  ),
-          SizedBox(height: 70.0),
+          SizedBox(height: 50.0),
           TextField(
             controller: _textPasswordController,
             decoration: InputDecoration(
@@ -41,7 +44,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             borderSide: BorderSide(color: Colors.green))),
             obscureText: true,
           ),
-          SizedBox(height: 10.0),
+          SizedBox(height: 20.0),
           TextField(
             controller: _textNewPasswordController,
             decoration: InputDecoration(
@@ -54,7 +57,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             borderSide: BorderSide(color: Colors.green))),
             obscureText: true,
           ),
-          SizedBox(height: 24.0),
+          SizedBox(height: 30.0),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 16.0),
             child: RaisedButton(
@@ -66,7 +69,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               },
               padding: EdgeInsets.all(20),
               color: Colors.redAccent,
-              child: Text('Mudar senha', style: TextStyle(color: Colors.white)),
+              child: Text('Atualizar', style: TextStyle(color: Colors.white)),
             ),
           )
         ]
@@ -74,15 +77,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     ));
   }
   Future<void> updatePassword() async {
-    print(widget.user.token);
     var _password = _textPasswordController.text,
         _newPassword = _textNewPasswordController.text;
-
+        
     ResponseHandling().validatePassword(_newPassword);
     try {
         var jsonData = '{ "oldPassword" : "$_password", "newPassword" : "$_newPassword"}';
         await UserController().changePassword(jsonData, widget.user.token);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateUserPage(user : widget.user)));
         Fluttertoast.showToast(
           msg: "Senha alterada com sucesso",
           toastLength: Toast.LENGTH_SHORT,
@@ -92,7 +93,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           textColor: Colors.white,
           fontSize: 16.0
       );
+      Navigator.pop(context);
     } catch(e) {      
+      print(e);
       Fluttertoast.showToast(
         msg: e.toString(),
         toastLength: Toast.LENGTH_SHORT,

@@ -7,13 +7,12 @@ import 'package:validators/validators.dart';
 
 class ResponseHandling extends AppException {
   handling(Response response) {
-    var responseJson = json.decode(response.body);
-
     if (response.statusCode == 204) {
       return true;
     }
 
     if (response.statusCode >= 200 && response.statusCode <= 300) {
+      var responseJson = json.decode(response.body);
       return responseJson;
     }
 

@@ -75,6 +75,9 @@ class Services {
   }
 
   putData(url, id, dataToPut, token, [complementation]) async {
+    if(complementation == null) {
+      complementation = "";
+    }
     var response;
     try {
       response = await http.Client().put(
