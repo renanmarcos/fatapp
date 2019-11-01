@@ -38,7 +38,8 @@ class _SignupPageState extends State<SignupPage> {
           )
         ),
         resizeToAvoidBottomPadding: false,
-        body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+        body: SingleChildScrollView(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
             Widget>[
           Container(
               padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
@@ -190,7 +191,7 @@ class _SignupPageState extends State<SignupPage> {
                 // ],
                 // )),
               ]))
-        ]));
+        ])));
   }
 
   Future<void> register() async {
