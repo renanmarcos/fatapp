@@ -1,12 +1,17 @@
+import 'package:fatapp/pages/models/acitivity.dart';
+import 'package:fatapp/pages/models/user.dart';
 import 'package:flutter/material.dart';
 import './common/CustomShapeClipper.dart';
 import './activityDetail.dart';
+import 'package:fatapp/pages/controllers/activityController.dart';
 
 class ActivitiesList extends StatelessWidget {
-  const ActivitiesList({Key key}) : super(key: key);
+  const ActivitiesList({this.user});
+  final User user;
 
   @override
   Widget build(BuildContext context) {
+    
     return new Scaffold(
       appBar: new AppBar(
         // title: new Text('Palestras e Atividades'),
@@ -29,7 +34,7 @@ class ActivitiesListTopPart extends StatefulWidget {
 }
 
 class _ActivitiesListTopPartState extends State<ActivitiesListTopPart> {
-  String title = "Palestras e Atividades";
+  String title = "Atividades";
 
   @override
   Widget build(BuildContext context) {
@@ -82,24 +87,34 @@ class _ActivitiesListTopPartState extends State<ActivitiesListTopPart> {
   }
 }
 
-class ActivitiesListContent extends StatelessWidget {
-  const ActivitiesListContent({Key key}) : super(key: key);
+class ActivitiesListContent extends StatefulWidget {
+  @override
+  _ActivitiesListContentState createState() => _ActivitiesListContentState();
+}
+
+class _ActivitiesListContentState extends State<ActivitiesListContent> {
+  List<Activity> activities = List();
+  var isLoading = true;
+
+  _fetchData() async {
+    activities = await ActivityController().index("");
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final events = ['Database', 'Bigdata', 'React Native', 'Flutter'];
-    final professors = [
-      'Rogerio Albino',
-      'Flávia Amaral',
-      'Gabriel Ulisses',
-      'Soraya de Campos'
-    ];
-    // final rooms = ['01', '02', '04', '07'];
+    _fetchData();
+
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
 
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: events.length,
-      itemBuilder: (context, index) {
+      itemCount: activities.length,
+      itemBuilder: (BuildContext context, int index) {
         return Card(
           elevation: 2.0,
           margin: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
@@ -113,12 +128,12 @@ class ActivitiesListContent extends StatelessWidget {
             },
             child: ListTile(
               leading: Icon(Icons.remove_red_eye),
-              title: Text(events[index],
+              title: Text(activities[index].title,
                   style: TextStyle(
                       color: Colors.black,
                       fontFamily: 'Raleway',
                       fontSize: 18.0)),
-              subtitle: Text(professors[index]),
+              subtitle: Text(activities[index].speaker.name),
             ),
           ),
         );

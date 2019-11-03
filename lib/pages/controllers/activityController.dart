@@ -1,11 +1,13 @@
+import 'package:fatapp/pages/models/acitivity.dart';
 import 'services.dart';
 import 'dart:async';
 
 class ActivityController {
   final _resource = "activities";
 
-  Future<Map<String, dynamic>> index(token) async {
-    return Services().getAllData(_resource, token);
+  Future<List<Activity>> index(String token) async {
+    final response = await Services().getAllData(_resource, token);
+    return Activity().fromJsonList(response);
   }
 
   Future<Map<String, dynamic>> show(id, token) async {
