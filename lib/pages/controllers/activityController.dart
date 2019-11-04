@@ -12,9 +12,9 @@ class ActivityController {
      var response = Services().getData('activities', id, token);
      return response;
   }
-  Future<Map<String, dynamic>> update(id, data, token) async 
+  Future<Map<String, dynamic>> update(id, data, token,[complementation]) async 
   {
-     var response = Services().putData('activities', id, data, token);
+     var response = Services().putData('activities', id, data, token,complementation);
      return response;
   }
   Future<Map<String, dynamic>> create(id, data, token) async 

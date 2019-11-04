@@ -1,5 +1,8 @@
 import 'dart:io';
 
+
+import 'dart:async';
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/login.dart';
@@ -7,11 +10,12 @@ import 'package:fatapp/pages/views/qrCodeScan.dart';
 import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './common/CustomShapeClipper.dart';
 import './eventsList2.dart';
 import './test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
     const HomePage({
@@ -23,35 +27,63 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => new _HomePageState();
 }
 
-readUrlFile(userId,userToken) async {
-  try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        try {
-          final directory = await getApplicationDocumentsDirectory();
-          final file = File('${directory.path}/url.txt');
-          List<String> text = await file.readAsLines();
-          for (var item in text) {
+  // lógica do qrCode a partir daqui
+  Future scan() async {
+    try {
+      String barcode = await BarcodeScanner.scan();
+      saveUrl(barcode);
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.CameraAccessDenied) {
+          print('The user did not grant the camera permission!');
+      } else {
+        print('Unknown error: $e');
+      }
+    } on FormatException{
+      print('null (User returned using the "back"-button before scanning anything. Result)');
+    } catch (e) {
+      print('Unknown error: $e');
+    }
+  }
+
+  read(userId,userToken) async {
+      final prefs = await SharedPreferences.getInstance();
+      final key = 'qrCodeKeys';
+      final value = prefs.getStringList(key) ?? [];
+      for (var item in value) {
             var jsonData = '{ "userId" : "$userId"}';
           
-            ActivityController().attendee(item, jsonData, userToken);
+            ActivityController().update(item, jsonData, userToken,'/attendee');
             
           }
-        } catch (e) {
-      print("Não foi possível ler o arquivo");
+      prefs.setStringList(key, []);
+      print('read: $value');
       }
-    }
-  } on SocketException catch (_) {
-      print('Sem conexão com a internet');
-    }
-        
-  }
+
+  
+
+  saveUrl(urlToSave) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'qrCodeKeys';
+    final value = prefs.getStringList(key) ?? [];
+    value.add(urlToSave['id']);
+    prefs.setStringList(key, value);
+    print('saved $value');
+      }
+
+    //cabo lógica do qrCode taokey
 
 class _HomePageState extends State<HomePage> {
 
   @override
-  void initState() {
-    readUrlFile(widget.user.id,widget.user.token);
+  Future initState() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        read(widget.user.id,widget.user.token);
+      }
+    } on SocketException catch (_) {
+      print('Sem conexão com a internet');
+    }
     super.initState();
   }
   

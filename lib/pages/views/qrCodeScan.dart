@@ -1,11 +1,10 @@
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ScanScreen extends StatefulWidget {
   @override
@@ -72,13 +71,22 @@ class _ScanState extends State<ScanScreen> {
     }
   }
 
+  read() async {
+      final prefs = await SharedPreferences.getInstance();
+      final key = 'qrCodeKeys';
+      final value = prefs.getStringList(key) ?? [];
+      print('read: $value');
+      }
+
   
 
   saveUrl(urlToSave) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/url.txt');
-    await file.writeAsString(urlToSave);
-    print('saved');
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'qrCodeKeys';
+    final value = prefs.getStringList(key) ?? [];
+    value.add(urlToSave['id']);
+    prefs.setStringList(key, value);
+    print('saved $value');
       }
 
 
