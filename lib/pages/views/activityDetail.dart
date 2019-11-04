@@ -1,5 +1,6 @@
 import 'package:fatapp/pages/models/acitivity.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'common/CustomShapeClipper.dart';
 import 'package:intl/intl.dart';
 
@@ -121,8 +122,8 @@ class ActivityDetail extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildButtonColumn(color, Icons.event, 'Inscreva-se'),
-          _buildButtonColumn(color, Icons.share, 'Compartilhe'),
+          _buildButtonColumn(color, Icons.event, 'Inscreva-se', subscribe),
+          _buildButtonColumn(color, Icons.share, 'Compartilhe', share),
         ],
       ),
     );
@@ -154,8 +155,34 @@ class ActivityDetail extends StatelessWidget {
     );
   }
 
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
-    return Column(
+  dynamic share() {
+    Fluttertoast.showToast(
+            msg: "Ola",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+          );
+  }
+
+  dynamic subscribe() {
+Fluttertoast.showToast(
+            msg: "abc",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+          );
+  }
+
+  GestureDetector _buildButtonColumn(Color color, IconData icon, String label, dynamic funcao) {
+    return GestureDetector(
+      onTap: () { funcao(); },      
+      child: Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -169,9 +196,9 @@ class ActivityDetail extends StatelessWidget {
               fontWeight: FontWeight.w400,
               color: Colors.black54,
             ),
-          ),
+          )
         ),
       ],
-    );
+    ));
   }
 }
