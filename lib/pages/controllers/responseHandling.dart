@@ -27,6 +27,16 @@ class ResponseHandling extends AppException {
   }
 
   void validateEmail(String string) {
+    if(string.isEmpty) {
+      Fluttertoast.showToast(
+        msg: "Email precisa ser preenchido",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    }
     if (!isEmail(string)) {
       Fluttertoast.showToast(
           msg: "Email Inválido",
@@ -40,6 +50,16 @@ class ResponseHandling extends AppException {
   }
 
   void validatePassword(String string) {
+    if(string.isEmpty) {
+      Fluttertoast.showToast(
+        msg: "Senha precisa ser preenchida",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    }
     if (string.length < 6) {
       Fluttertoast.showToast(
           msg: "Senha Inválida",
@@ -59,4 +79,5 @@ class ResponseHandling extends AppException {
 
     throw InternalException();
   }
+
 }

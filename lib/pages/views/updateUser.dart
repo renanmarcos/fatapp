@@ -201,13 +201,28 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
   }
 
   Future<void> update() async {
-    var _name = _textNameController.text, _email = _textEmailController.text;
+    var _name = _textNameController.text, 
+        _email = _textEmailController.text,
+        _ra = _textRAController.text;
     ResponseHandling().validateEmail(_email);
     try {
-      var jsonData = '{ "name" : "$_name", "email" : "$_email" }';
+      var jsonData = '{ "name" : "$_name", "email" : "$_email"';
+      if (widget.user.student == null && _isChecked) {
+        int courseId;
+          for (var course in courseList) {
+            if (course.acronym == _course) {
+              courseId = course.id;
+            }
+        }
+        if (_course.isNotEmpty && _ra.isNotEmpty) {
+          jsonData += ', "ra" : "$_ra, "courseId" : "$courseId"';
+        }
+      }
+      jsonData += ' }';
       final update = await UserController()
-          .update(widget.user.id, jsonData, widget.user.token);
+        .update(widget.user.id, jsonData, widget.user.token);
       User user = User.fromJson(update, widget.user.token);
+
       Fluttertoast.showToast(
           msg: "Cadastro atualizado com sucesso",
           toastLength: Toast.LENGTH_SHORT,
@@ -218,7 +233,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
           fontSize: 16.0);
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => HomePage(user: user)));
-      //Falta ajustar estudante
+
     } catch (e) {
       Fluttertoast.showToast(
           msg: e.toString(),

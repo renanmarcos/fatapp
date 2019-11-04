@@ -1,5 +1,7 @@
 import 'dart:io' show File, InternetAddress, SocketException, exit;
 import 'package:fatapp/pages/controllers/activityController.dart';
+import 'package:fatapp/pages/controllers/eventController.dart';
+import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/login.dart';
 import 'package:fatapp/pages/views/qrCodeScan.dart';
@@ -46,6 +48,7 @@ readUrlFile(userId, userToken) async {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Event> eventList;
   @override
   void initState() {
     readUrlFile(widget.user.id, widget.user.token);
@@ -97,25 +100,6 @@ class _HomePageState extends State<HomePage> {
                           builder: (BuildContext context) => new EventsList()));
                     }),
 
-                // new ExpansionTile(
-                //   title: Text('Eventos'),
-                //   children: <Widget>[
-                //     new ListTile(
-                //       title: new Text('Evento Atual'),
-                //       trailing: new Icon(Icons.keyboard_arrow_right),
-                //     ),
-                //     new ListTile(
-                //       title: new Text('Eventos Passados'),
-                //       trailing: new Icon(Icons.keyboard_arrow_right),
-                //       onTap: () {
-                //        Navigator.push(
-                //         context,
-                //         MaterialPageRoute(builder: (context) => EventsList()),
-                //       );
-                //       }
-                //     ),
-                //   ],
-                // ),
                 new ListTile(
                     title: new Text('Inscrições'),
                     trailing: new Icon(Icons.keyboard_arrow_right),
@@ -150,20 +134,65 @@ class _HomePageState extends State<HomePage> {
           ),
           body: Column(
             children: <Widget>[
-              HomeScreenTopPart(),
-              HomeScreenBottomPart(),
-            ],
+            FutureBuilder<List<Event>>(
+              future: EventController().index(widget.user.token),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  eventList = snapshot.data;
+                  return CarouselSlider(
+                    height: 300.0,
+                    initialPage: 0,
+                    aspectRatio: 16 / 9,
+                    enlargeCenterPage: true,
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    autoPlay: false,
+                    reverse: false,
+                    enableInfiniteScroll: true,
+                    autoPlayInterval: Duration(seconds: 2),
+                    autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                    pauseAutoPlayOnTouch: Duration(seconds: 10),
+                    scrollDirection: Axis.horizontal,
+                    onPageChanged: (index) {
+                      setState(() {
+                        photoIndex = index;
+                      });
+                    },
+                    items: imgList.map((imgUrl) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin:
+                              EdgeInsets.symmetric(vertical: 18.0, horizontal: 4.0),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Image.asset(
+                              imgUrl,
+                              fit: BoxFit.fill,
+                            ),
+                        );
+                      },
+                    );
+                  }).toList(),
+                );
+              }}
+            )]
           ),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ScanScreen()));
+              MaterialPageRoute(builder: (context) => ScanScreen()));
             },
             label: Text('PRESENÇA'),
             icon: Icon(Icons.photo_camera),
             backgroundColor: Colors.black87,
           ),
-        ));
+        )
+      );
   }
 
   Future<void> deletePreferences() async {
@@ -255,60 +284,3 @@ List imgList = [
   'assets/images/banner3.jpg',
   'assets/images/banner4.jpg',
 ];
-
-class HomeScreenBottomPart extends StatefulWidget {
-  @override
-  _HomeScreenBottomPartState createState() => _HomeScreenBottomPartState();
-}
-
-class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          CarouselSlider(
-            height: 300.0,
-            initialPage: 0,
-            aspectRatio: 16 / 9,
-            enlargeCenterPage: true,
-            autoPlayCurve: Curves.fastOutSlowIn,
-            autoPlay: false,
-            reverse: false,
-            enableInfiniteScroll: true,
-            autoPlayInterval: Duration(seconds: 2),
-            autoPlayAnimationDuration: Duration(milliseconds: 2000),
-            pauseAutoPlayOnTouch: Duration(seconds: 10),
-            scrollDirection: Axis.horizontal,
-            onPageChanged: (index) {
-              setState(() {
-                photoIndex = index;
-              });
-            },
-            items: imgList.map((imgUrl) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin:
-                        EdgeInsets.symmetric(vertical: 18.0, horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Image.asset(
-                      imgUrl,
-                      fit: BoxFit.fill,
-                    ),
-                  );
-                },
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-}
