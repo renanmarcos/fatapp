@@ -1,3 +1,5 @@
+import 'package:fatapp/pages/models/student.dart';
+
 class User {
   int id;
   String name;
@@ -5,28 +7,29 @@ class User {
   String cpf;
   String password;
   String token;
+  Student student;
 
-  User({this.token, this.id, this.name, this.email, this.cpf, this.password});
+  User({this.token, this.id, this.name, this.email, this.cpf, this.password, this.student});
 
   User.create(Map<String, dynamic> json) {
-    token = json['token'];
-    id = json['user']['id'];
-    name = json['user']['name'];
-    email = json['user']['email'];
-    cpf = json['user']['cpf'];
-    password = json['user']['password'];
-  }
-  User.fromJson(Map<String, dynamic> json, String token) {
-    token = token;
-    id = json['id'];
-    name = json['name'];
-    email = json['email'];
-    cpf = json['cpf'];
-    password = json['password'];
+    this.token = json['token'];
+    this.id = json['user']['id'];
+    this.name = json['user']['name'];
+    this.email = json['user']['email'];
+    this.cpf = json['user']['cpf'];
+    this.password = json['user']['password'];
+    
+    if(json['user']['student'] != null) {
+      student = Student.fromUser(json['user']['student']);
+    }
   }
 
-  User.token(Map<String, dynamic> json) {
-    id = json['id'];
-    token = json['token'];
+  User.fromJson(Map<String, dynamic> json, String token) {
+    this.token = token;
+    this.id = json['id'];
+    this.name = json['name'];
+    this.email = json['email'];
+    this.cpf = json['cpf'];
+    this.password = json['password'];
   }
 }

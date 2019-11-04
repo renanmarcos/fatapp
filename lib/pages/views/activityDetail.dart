@@ -1,64 +1,73 @@
+import 'package:fatapp/pages/models/acitivity.dart';
 import 'package:flutter/material.dart';
 import 'common/CustomShapeClipper.dart';
-
+import 'package:intl/intl.dart';
 
 class ActivityDetailTopPart extends StatefulWidget {
-  ActivityDetailTopPart({Key key}) : super(key: key);
+  ActivityDetailTopPart(this.title);
+  final String title;
 
   @override
   _ActivityDetailTopPartState createState() => _ActivityDetailTopPartState();
 }
 
 class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
-  String title = "Palestra X";
-  
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
         ClipPath(
           clipper: CustomShapeClipper(),
-          child: Container(height: 150.0, color: Colors.red, 
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 5.0,),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(60.0, 5.0, 60.0, 10.0),
-                child: Row(
-                  children: <Widget>[
-                    Text(title,
-                      style: TextStyle(fontWeight: FontWeight.w800,    
-                        fontSize: 24.0,
-                        color: Colors.white,
-                        fontFamily: 'Raleway',
-                        ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Hero(
-                        tag: "hero",
-                        child: Container(
-                          padding: EdgeInsets.only(top: 50.0),
-                          height: 80.0,
-                          width: 80.0,
-                          // child: logo,
+          child: Container(
+            height: 150.0,
+            color: Colors.red,
+            child: Wrap(
+              children: <Widget>[
+                SizedBox(
+                  height: 5.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(60.0, 5.0, 60.0, 10.0),
+                  child: Wrap(
+                    spacing: 8.0,
+                    runSpacing: 4.0,
+                    direction: Axis.horizontal,
+                    children: <Widget>[
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 24.0,
+                          color: Colors.white,
+                          fontFamily: 'Raleway',
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            ],
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Hero(
+                          tag: "hero",
+                          child: Container(
+                              padding: EdgeInsets.only(top: 50.0),
+                              height: 80.0,
+                              width: 80.0),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-      )
-    ],
-  );
+        )
+      ],
+    );
+  }
 }
-}
-
 
 class ActivityDetail extends StatelessWidget {
+  const ActivityDetail(this.activity);
+  final Activity activity;
+
   @override
   Widget build(BuildContext context) {
     Widget titleSection = Container(
@@ -66,30 +75,35 @@ class ActivityDetail extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            /*1*/
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /*2*/
                 Container(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    'Nome da Palestra',
+                    this.activity.speaker.name,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Raleway',
                     ),
                   ),
                 ),
-                Text(
-                  'Nome do Palestrante',
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                    fontFamily: 'Raleway',
+                Container(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    this.activity.speaker.curriculum,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w100,
+                      fontFamily: 'Raleway',
+                    ),
                   ),
                 ),
                 Text(
-                  '14:00',
+                  DateFormat("dd/MM 'às' HH:mm")
+                          .format(this.activity.initialDate.toLocal()) +
+                      " até " +
+                      DateFormat("dd/MM 'às' HH:mm")
+                          .format(this.activity.finalDate.toLocal()),
                   style: TextStyle(
                     color: Colors.grey[500],
                   ),
@@ -97,12 +111,6 @@ class ActivityDetail extends StatelessWidget {
               ],
             ),
           ),
-          /*3*/
-          Icon(
-            Icons.star,
-            color: Colors.yellow[500],
-          ),
-          Text('5'),
         ],
       ),
     );
@@ -120,46 +128,30 @@ class ActivityDetail extends StatelessWidget {
     );
 
     Widget textSection = Container(
-      
       padding: const EdgeInsets.all(32),
-      
       child: Card(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 50.0),
-          child: new Text(
-            'Palestra super legal',
-            softWrap: true,
-            
-          ),
-        )
-        
-        // 'Palestra super foda',
-        // 
-      ),
+          child: Padding(
+        padding: EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 50.0),
+        child: new Text(
+          this.activity.description,
+          softWrap: true,
+        ),
+      )),
     );
 
     return new Scaffold(
-      // title: 'Palestra X',
-      // home: Scaffold(
-        appBar: AppBar(
-          // title: Text('Palestra X'),
-          backgroundColor: Colors.red,
-        ),
-        body: ListView(
-          children: <Widget> [
-            ActivityDetailTopPart(),
-            // Image.asset(
-            //   'images/lake.jpg',
-            //   width: 600,
-            //   height: 240,
-            //   fit: BoxFit.cover,
-            // ),
-            titleSection,
-            buttonSection,
-            textSection,
-          ],
-        ),
-      );
+      appBar: AppBar(
+        backgroundColor: Colors.red,
+      ),
+      body: ListView(
+        children: <Widget>[
+          ActivityDetailTopPart(this.activity.title),
+          titleSection,
+          buttonSection,
+          textSection,
+        ],
+      ),
+    );
   }
 
   Column _buildButtonColumn(Color color, IconData icon, String label) {

@@ -1,33 +1,18 @@
-
+import 'package:fatapp/pages/models/acitivity.dart';
+import 'package:fatapp/pages/models/event.dart';
 import 'services.dart';
 import 'dart:async';
 
 class ActivityController {
-  Future<Map<String, dynamic>> index(token) async {
-    var response = Services().getAllData('activities', token);
-    return response;
-  }
-  Future<Map<String, dynamic>> show(id, token) async 
-  {
-     var response = Services().getData('activities', id, token);
-     return response;
-  }
-  Future<Map<String, dynamic>> update(id, data, token,[complementation]) async 
-  {
-     var response = Services().putData('activities', id, data, token,complementation);
-     return response;
-  }
-  Future<Map<String, dynamic>> create(id, data, token) async 
-  {
-     var response = Services().postData('activities', data, token);
-     return response;
+
+  final String _resource = "activities";
+
+  Future<List<Activity>> indexFromEvent(Event event, String token) async {
+    final response = await Services().getAllData("events/${event.id}/" + _resource, token);
+    return Activity().fromJsonList(response);
   }
 
-  Future<Map<String, dynamic>> attendee(id, data, token) async 
-  {
- 
-     var response = Services().putData(id, data, token, '/attendee');
-     
-     return response;
+  Future<Map<String, dynamic>> attendee(id, data, token) async {
+    return Services().putData(_resource, id, data, token, '/attendee');
   }
 }

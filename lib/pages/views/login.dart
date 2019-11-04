@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:fatapp/pages/controllers/responseHandling.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/user.dart';
@@ -5,6 +6,7 @@ import 'package:fatapp/pages/views/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Widget build(BuildContext context) {
+    this.checkLogin();
     final logo = Hero(
       tag: 'hero',
       child: CircleAvatar(
@@ -25,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Image.asset('assets/images/glaceon.png'),
       ),
     );
-    
+
     final email = TextFormField(
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
@@ -34,7 +37,6 @@ class _LoginPageState extends State<LoginPage> {
         hintText: 'Email',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: InputBorder.none,
-
       ),
     );
 
@@ -73,14 +75,14 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final registerLabel = FlatButton(
-      child: Text(
-        'Não tem uma conta? Cadastre-se',
-        style: TextStyle(color: Colors.black54),
-      ),
-      onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
-      }
-    );
+        child: Text(
+          'Não tem uma conta? Cadastre-se',
+          style: TextStyle(color: Colors.black54),
+        ),
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => SignupPage()));
+        });
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -88,7 +90,8 @@ class _LoginPageState extends State<LoginPage> {
         key: _formKey,
         child: ListView(
           shrinkWrap: true,
-          padding: EdgeInsets.only(top: 100.0, left: 24.0, right: 24.0, bottom: 50.0),
+          padding: EdgeInsets.only(
+              top: 100.0, left: 24.0, right: 24.0, bottom: 50.0),
           children: <Widget>[
             logo,
             SizedBox(height: 48.0),
@@ -104,10 +107,21 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  Future<void> checkLogin() async {
+    SharedPreferences sharedUser = await SharedPreferences.getInstance();
+    if (sharedUser.getString('user') != null) {
+      Map userMap = json.decode(sharedUser.getString('user'));
+      User user = User.create(userMap);
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => HomePage(user: user)));
+    }
+  }
+
   Future<void> signIn() async {
     if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
       final formState = _formKey.currentState;
-      if(formState.validate()) {
+      if (formState.validate()) {
         formState.save();
         ResponseHandling().validateEmail(_email);
         ResponseHandling().validatePassword(_password);
@@ -115,24 +129,28 @@ class _LoginPageState extends State<LoginPage> {
         var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
         try {
           final tokenResponse = await UserController().login(jsonData);
-          User token = User.token(tokenResponse);
-          final userResponse = await UserController().show(token.id, token.token);
-          User user = User.fromJson(userResponse, token.token);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user : user)));
-        } catch(e) {      
+
+          SharedPreferences sharedUser = await SharedPreferences.getInstance();
+          String userString = json.encode(tokenResponse);
+          sharedUser.setString('user', userString);
+
+          User user = User.create(tokenResponse);
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => HomePage(user: user)));
+        } catch (e) {
           Fluttertoast.showToast(
-            msg: e.toString(),
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIos: 2,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0
-          );
+              msg: e.toString(),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIos: 2,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     } else {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
     }
   }
 }
