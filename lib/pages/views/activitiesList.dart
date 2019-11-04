@@ -1,29 +1,28 @@
 import 'package:fatapp/pages/models/acitivity.dart';
+import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import './common/CustomShapeClipper.dart';
 import './activityDetail.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
 
 class ActivitiesList extends StatelessWidget {
-  const ActivitiesList({this.user});
+  const ActivitiesList(this.user, this.event);
   final User user;
+  final Event event;
 
   @override
   Widget build(BuildContext context) {
-    
     return new Scaffold(
       appBar: new AppBar(
         // title: new Text('Palestras e Atividades'),
         backgroundColor: Colors.red,
       ),
-      body: Column(
-        children: <Widget>[
-          ActivitiesListTopPart(),
-          ActivityFilter(),
-          ActivitiesListContent(),
-        ],
-      ),
+      body: Column(children: <Widget>[
+        ActivitiesListTopPart(),
+        ActivitiesContainer(this.user, this.event)
+      ]),
     );
   }
 }
@@ -34,7 +33,7 @@ class ActivitiesListTopPart extends StatefulWidget {
 }
 
 class _ActivitiesListTopPartState extends State<ActivitiesListTopPart> {
-  String title = "Atividades";
+  final String title = "Atividades";
 
   @override
   Widget build(BuildContext context) {
@@ -87,17 +86,23 @@ class _ActivitiesListTopPartState extends State<ActivitiesListTopPart> {
   }
 }
 
-class ActivitiesListContent extends StatefulWidget {
+class ActivitiesContainer extends StatefulWidget {
+  ActivitiesContainer(this.user, this.event);
+  final User user;
+  final Event event;
+
   @override
-  _ActivitiesListContentState createState() => _ActivitiesListContentState();
+  _ActivitiesContainerState createState() => _ActivitiesContainerState();
 }
 
-class _ActivitiesListContentState extends State<ActivitiesListContent> {
+class _ActivitiesContainerState extends State<ActivitiesContainer> {
   List<Activity> activities = List();
   var isLoading = true;
 
   _fetchData() async {
-    activities = await ActivityController().index("");
+    // precisa ser dinamico, quando existir a tela de eventos
+    activities = await ActivityController()
+        .indexFromEvent(Event(id: 2, name: "fatecnologia"), widget.user.token);
     setState(() {
       isLoading = false;
     });
@@ -111,54 +116,37 @@ class _ActivitiesListContentState extends State<ActivitiesListContent> {
       return Center(child: CircularProgressIndicator());
     }
 
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: activities.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Card(
-          elevation: 2.0,
-          margin: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
-          child: InkWell(
-            splashColor: Colors.red.withAlpha(30),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ActivityDetail()),
-              );
-            },
-            child: ListTile(
-              leading: Icon(Icons.remove_red_eye),
-              title: Text(activities[index].title,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Raleway',
-                      fontSize: 18.0)),
-              subtitle: Text(activities[index].speaker.name),
-            ),
-          ),
-        );
-      },
-    );
+    return ActivityFilter(this.activities);
   }
 }
 
 class ActivityFilter extends StatefulWidget {
-  ActivityFilter({Key key}) : super(key: key);
+  ActivityFilter(this.activities);
+  final List<Activity> activities;
 
   @override
   _ActivityFilterState createState() => new _ActivityFilterState();
 }
 
 class _ActivityFilterState extends State<ActivityFilter> {
-  List _dates = ["17/04", "18/04"];
-
+  List _dates;
+  List _filteredActivities;
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _currentDate;
 
   @override
   void initState() {
+    _dates = widget.activities
+        .map((activity) =>
+            DateFormat("dd/MM").format(activity.initialDate.toLocal()))
+        .toList();
     _dropDownMenuItems = getDropDownMenuItems();
     _currentDate = _dropDownMenuItems[0].value;
+    _filteredActivities = widget.activities
+        .where((activity) =>
+            DateFormat("dd/MM").format(activity.initialDate.toLocal()) ==
+            _currentDate)
+        .toList();
     super.initState();
   }
 
@@ -172,32 +160,93 @@ class _ActivityFilterState extends State<ActivityFilter> {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      padding: EdgeInsets.fromLTRB(0.0, 0.0, 40.0, 30.0),
-      child: new Center(
-          child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          new Text('Escolha uma data',
-              style: TextStyle(
-                  color: Colors.black, fontFamily: 'Raleway', fontSize: 18.0)),
-          new Container(
-            padding: new EdgeInsets.all(5.0),
-          ),
-          new DropdownButton(
-            value: _currentDate,
-            items: _dropDownMenuItems,
-            onChanged: changedDropDownItem,
-          )
-        ],
-      )),
-    );
+    return Column(children: [
+      Container(
+        padding: EdgeInsets.fromLTRB(0.0, 0.0, 40.0, 30.0),
+        child: Center(
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Escolha uma data',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Raleway',
+                    fontSize: 18.0)),
+            Container(
+              padding: EdgeInsets.all(5.0),
+            ),
+            DropdownButton(
+              value: _currentDate,
+              items: _dropDownMenuItems,
+              onChanged: changedDropDownItem,
+            )
+          ],
+        )),
+      ),
+      ActivitiesListContent(_filteredActivities)
+    ]);
   }
 
-  void changedDropDownItem(String selectedCity) {
+  void changedDropDownItem(String selectedDate) {
     setState(() {
-      _currentDate = selectedCity;
+      _currentDate = selectedDate;
+      _filteredActivities = widget.activities
+          .where((activity) =>
+              DateFormat("dd/MM").format(activity.initialDate.toLocal()) ==
+              _currentDate)
+          .toList();
     });
+  }
+}
+
+class ActivitiesListContent extends StatefulWidget {
+  ActivitiesListContent(this.activities);
+  final List<Activity> activities;
+
+  @override
+  _ActivitiesListContentState createState() => _ActivitiesListContentState();
+}
+
+class _ActivitiesListContentState extends State<ActivitiesListContent> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: widget.activities.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Card(
+          elevation: 2.0,
+          margin: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
+          child: InkWell(
+            splashColor: Colors.red.withAlpha(30),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ActivityDetail(widget.activities[index])),
+              );
+            },
+            child: ListTile(
+              title: Text(widget.activities[index].title,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Raleway',
+                      fontSize: 18.0)),
+              subtitle: Text(widget.activities[index].speaker.name),
+              trailing: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(Icons.access_time),
+                    Text(DateFormat("HH:mm")
+                        .format(widget.activities[index].initialDate.toLocal()))
+                  ]),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

@@ -1,8 +1,12 @@
+import 'package:fatapp/pages/models/user.dart';
 import 'package:flutter/material.dart';
 import './currenEvent.dart';
 import './pastEvents.dart';
 
 class EventsList extends StatelessWidget {
+  const EventsList({this.user});
+  final User user;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,8 +39,8 @@ class EventsList extends StatelessWidget {
           ),
           body: TabBarView(
             children: [
-              new CurrentEvent(),
-              new PastEvents(),
+              CurrentEvent(user: this.user),
+              PastEvents(),
             ],
           ),
         ),

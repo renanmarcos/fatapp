@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Audience {
   int id;
   String name;
@@ -13,7 +11,7 @@ class Audience {
     this.acronym = json['acronym'];
   }
 
-  List<Audience> fromJsonList(body) {
-    return json.decode(body).map((data) => Audience.fromJson(data)).toList();
+  List<Audience> fromJsonList(List json) {
+    return json.map((data) => Audience.fromJson(data)).toList();
   }
 }
