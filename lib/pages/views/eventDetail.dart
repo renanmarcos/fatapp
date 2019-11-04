@@ -1,3 +1,5 @@
+import 'package:fatapp/pages/models/event.dart';
+import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/activitiesList.dart';
 import 'package:flutter/material.dart';
 import 'common/CustomShapeClipper.dart';
@@ -88,6 +90,10 @@ class _EventDetailTopPartState extends State<EventDetailTopPart> {
 }
 
 class EventDetail extends StatelessWidget {
+  const EventDetail(this.user, this.event);
+  final User user;
+  final Event event;
+  
   @override
   Widget build(BuildContext context) {
     Widget titleSection = Container(
@@ -132,7 +138,7 @@ class EventDetail extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ActivitiesList()),
+                MaterialPageRoute(builder: (context) => ActivitiesList(this.user, this.event)),
               );
             },
             child: Container(
