@@ -33,6 +33,7 @@ dependencies:
   validators: ^2.0.0+1
   # flutter_screenutil: ^0.4.2
   path_provider: ^0.4.1
+  shared_preferences: ^0.4.3
 
 
 dev_dependencies:
