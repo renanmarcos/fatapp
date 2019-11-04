@@ -1,6 +1,6 @@
-
 import 'dart:async';
 
+import 'dart:io';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,15 +37,15 @@ class _ScanState extends State<ScanScreen> {
                     textColor: Colors.white,
                     splashColor: Colors.blueGrey,
                     onPressed: scan,
-                    child: const Text('START CAMERA SCAN')
-                ),
-              )
-              ,
+                    child: const Text('START CAMERA SCAN')),
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Text(barcode, textAlign: TextAlign.center,),
-              )
-              ,
+                child: Text(
+                  barcode,
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ],
           ),
         ));
@@ -64,30 +64,10 @@ class _ScanState extends State<ScanScreen> {
       } else {
         setState(() => this.barcode = 'Unknown error: $e');
       }
-    } on FormatException{
-      setState(() => this.barcode = 'null (User returned using the "back"-button before scanning anything. Result)');
+    } on FormatException {
+      setState(() => this.barcode =
+          'null (User returned using the "back"-button before scanning anything. Result)');
     } catch (e) {
       setState(() => this.barcode = 'Unknown error: $e');
     }
   }
-
-  read() async {
-      final prefs = await SharedPreferences.getInstance();
-      final key = 'qrCodeKeys';
-      final value = prefs.getStringList(key) ?? [];
-      print('read: $value');
-      }
-
-  
-
-  saveUrl(urlToSave) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = 'qrCodeKeys';
-    final value = prefs.getStringList(key) ?? [];
-    value.add(urlToSave['id']);
-    prefs.setStringList(key, value);
-    print('saved $value');
-      }
-
-
-}

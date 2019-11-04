@@ -4,7 +4,7 @@
 // import './common/CustomShapeClipper.dart';
 
 // class EventsList extends StatefulWidget {
-//   @override 
+//   @override
 //   _EventsListState createState() => new _EventsListState();
 // }
 
@@ -12,7 +12,7 @@
 //   // Widget _appBarTitle = new Text('Search...');
 //   // Icon _searchIcon = new Icon(Icons.search);
 
-//   @override 
+//   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       body: ListView(
@@ -23,21 +23,21 @@
 //             padding: const EdgeInsets.all(20.0),
 //             child: Container(
 //               // child: new FittedBox(
-               
+
 //                 child: Material(
 //                     color: Colors.white,
 //                     elevation: 8.0,
 //                     borderRadius: BorderRadius.circular(6.0),
 //                     shadowColor: Color(0x802196F3),
 //                     child: Row(
-                      
+
 //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                       children: <Widget>[
 //                         Container(
 //                           child: Padding(
 //                             padding: const EdgeInsets.fromLTRB(19.0, 6.0, 19.0, 6.0),
 //                             child: myDetailsContainer1(),
-                            
+
 //                           ),
 //                         ),
 //                         Container(
@@ -59,22 +59,22 @@
 //                           )
 //                         )
 //                         // FlatButton(
-                        
+
 //                         //   color: Colors.redAccent,
 //                         //   textColor: Colors.white,
 //                         //   disabledColor: Colors.grey,
 //                         //   disabledTextColor: Colors.black,
 //                         //   padding: EdgeInsets.all(10.0),
-                          
+
 //                         //   splashColor: Colors.redAccent,
 //                         //   onPressed: () {
 //                         //   /*...*/
 //                         //   },
 //                         //   child: Text(
-                          
+
 //                         //   "Inscrever-se",
-//                         //   style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w800,    
-                          
+//                         //   style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w800,
+
 //                         //   fontFamily: 'Raleway',) ,
 //                         //   ),
 //                         // ),
@@ -84,7 +84,7 @@
 //               // ),
 //             ),
 //           ),
-          
+
 //           Padding(
 //             padding: const EdgeInsets.all(16.0),
 //             child: Container(
@@ -129,7 +129,7 @@
 //           child: new ConstrainedBox(
 //             constraints: BoxConstraints(
 //                 maxWidth: 200.0,
-              
+
 //             ),
 //           child: Text("Essa paletra é super foda sim isso tem que ser maior o texto tem que ser super frande pra testar Essa paletra é super foda Essa paletra é super foda Essa paletra é super foda Essa paletra é super foda Essa paletra é super foda",
 //           style: TextStyle(height: 1.5, color: Colors.black54, fontSize: 12.0,fontWeight: FontWeight.bold),)
@@ -176,14 +176,14 @@
 
 // class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
 //   String welcomeMessage = "Fatec app";
-  
+
 //   @override
 //   Widget build(BuildContext context) {
 //     return Stack(
 //       children: <Widget>[
 //         ClipPath(
 //           clipper: CustomShapeClipper(),
-//           child: Container(height: 150.0, color: Colors.red, 
+//           child: Container(height: 150.0, color: Colors.red,
 //           child: Column(
 //             children: <Widget>[
 //               SizedBox(height: 40.0,),
@@ -192,7 +192,7 @@
 //                 child: Row(
 //                   children: <Widget>[
 //                     Text(welcomeMessage,
-//                       style: TextStyle(fontWeight: FontWeight.w800,    
+//                       style: TextStyle(fontWeight: FontWeight.w800,
 //                         fontSize: 24.0,
 //                         color: Colors.white,
 //                         fontFamily: 'Raleway',
