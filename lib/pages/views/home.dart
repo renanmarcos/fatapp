@@ -1,8 +1,11 @@
 import 'dart:io' show File, InternetAddress, SocketException, exit;
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/models/user.dart';
+import 'package:fatapp/pages/views/common/CustomShapeClipper.dart';
+import 'package:fatapp/pages/views/eventsList2.dart';
 import 'package:fatapp/pages/views/login.dart';
 import 'package:fatapp/pages/views/qrCodeScan.dart';
+import 'package:fatapp/pages/views/subscriptionPage.dart';
 import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -10,9 +13,6 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import './common/CustomShapeClipper.dart';
-import './eventsList2.dart';
-import './test.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({this.user});
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.of(context).pop();
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              new Test('Página de Teste')));
+                              new SubscriptionPage(widget.user)));
                     }),
 
                 new Divider(),
