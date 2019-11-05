@@ -3,6 +3,7 @@ import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/controllers/eventController.dart';
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
+import 'package:fatapp/pages/views/eventDetail.dart';
 import 'package:fatapp/pages/views/login.dart';
 import 'package:fatapp/pages/views/qrCodeScan.dart';
 import 'package:fatapp/pages/views/updateUser.dart';
@@ -77,8 +78,8 @@ class _HomePageState extends State<HomePage> {
             child: new ListView(
               children: <Widget>[
                 new UserAccountsDrawerHeader(
-                  accountName: this.getName(),
-                  accountEmail: this.getEmail(),
+                  accountName: new Text(widget.user.name),
+                  accountEmail: new Text(widget.user.email),
                   currentAccountPicture: new GestureDetector(
                       // child: new CircleAvatar(
                       //   // backgroundImage: new AssetImage('assets/images/profileIcon.png'),
@@ -104,7 +105,6 @@ class _HomePageState extends State<HomePage> {
                     title: new Text('Inscrições'),
                     trailing: new Icon(Icons.keyboard_arrow_right),
                     onTap: () {
-                      Navigator.of(context).pop();
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (BuildContext context) =>
                               new Test('Página de Teste')));
@@ -134,13 +134,18 @@ class _HomePageState extends State<HomePage> {
           ),
           body: Column(
             children: <Widget>[
+            HomeScreenTopPart(),
             FutureBuilder<List<Event>>(
-              future: EventController().index(widget.user.token),
+              future: EventController().getEvents(widget.user.token),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 } else {
                   eventList = snapshot.data;
+                  for (Event event in eventList) {
+                    String image = DotEnv().env['FATAPP_API'] + 'files/' + event.banner;
+                    event.imageUrl = image;
+                  }
                   return CarouselSlider(
                     height: 300.0,
                     initialPage: 0,
@@ -154,28 +159,29 @@ class _HomePageState extends State<HomePage> {
                     autoPlayAnimationDuration: Duration(milliseconds: 2000),
                     pauseAutoPlayOnTouch: Duration(seconds: 10),
                     scrollDirection: Axis.horizontal,
-                    onPageChanged: (index) {
-                      setState(() {
-                        photoIndex = index;
-                      });
-                    },
-                    items: imgList.map((imgUrl) {
+                    items: eventList.map((event) {
                       return Builder(
                         builder: (BuildContext context) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin:
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin:
                               EdgeInsets.symmetric(vertical: 18.0, horizontal: 4.0),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
+                          child: GestureDetector(
+                              child: Image.network(
+                                event.imageUrl,
+                                headers: {
+                                  "Token" : widget.user.token
+                                },
+                                width: 500,
+                                height: 300,
                             ),
-                            child: Image.asset(
-                              imgUrl,
-                              fit: BoxFit.fill,
-                            ),
-                        );
-                      },
+                            onTap: () {
+                              Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => EventDetail(user: widget.user, event: event)));
+                            }
+                          )
+                          );
+                        }
                     );
                   }).toList(),
                 );
@@ -194,29 +200,11 @@ class _HomePageState extends State<HomePage> {
         )
       );
   }
-
   Future<void> deletePreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
   }
-
-  getEmail() {
-    if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
-      return new Text(widget.user.email);
-    } else {
-      return new Text('teste@gmail.com');
-    }
-  }
-
-  getName() {
-    if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
-      return new Text(widget.user.name);
-    } else {
-      return new Text('Teste');
-    }
-  }
 }
-
 class HomeScreenTopPart extends StatefulWidget {
   @override
   _HomeScreenTopPartState createState() => _HomeScreenTopPartState();
@@ -276,11 +264,3 @@ class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
   }
 }
 
-int photoIndex = 0;
-
-List imgList = [
-  'assets/images/banner1.jpg',
-  'assets/images/banner2.jpg',
-  'assets/images/banner3.jpg',
-  'assets/images/banner4.jpg',
-];

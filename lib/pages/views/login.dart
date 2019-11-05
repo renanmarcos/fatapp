@@ -123,8 +123,9 @@ class _LoginPageState extends State<LoginPage> {
       final formState = _formKey.currentState;
       if (formState.validate()) {
         formState.save();
-        ResponseHandling().validateEmail(_email);
-        ResponseHandling().validatePassword(_password);
+        if(!ResponseHandling().validateEmail(_email) || !ResponseHandling().validatePassword(_password)) {
+          return;
+        }
 
         var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
         try {

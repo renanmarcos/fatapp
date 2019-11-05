@@ -7,7 +7,6 @@ import 'package:fatapp/pages/models/student.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/home.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:masked_text/masked_text.dart';
 
@@ -195,16 +194,15 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future<void> register() async {
-    if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
       User user;
       var _name = _textNameController.text,
           _cpf = _textCPFController.text,
           _password = _textPasswordController.text,
           _email = _textEmailController.text,
           _ra = _textRAController.text;
-
-      ResponseHandling().validateEmail(_email);
-      ResponseHandling().validatePassword(_password);
+      if(!ResponseHandling().validateEmail(_email) || !ResponseHandling().validatePassword(_password)) {
+        return;
+      }
       try {
         if (visibilityRA) {
           int courseId;
@@ -228,17 +226,13 @@ class _SignupPageState extends State<SignupPage> {
             MaterialPageRoute(builder: (context) => HomePage(user: user)));
       } catch (e) {
         Fluttertoast.showToast(
-            msg: e.toString(),
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIos: 2,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      }
-    } else {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
+          msg: e.toString(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 }
