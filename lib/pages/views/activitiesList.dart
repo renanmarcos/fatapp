@@ -102,10 +102,13 @@ class _ActivitiesContainerState extends State<ActivitiesContainer> {
   _fetchData() async {
     // precisa ser dinamico, quando existir a tela de eventos
     activities = await ActivityController()
-        .indexFromEvent(Event(id: 2, name: "fatecnologia"), widget.user.token);
-    setState(() {
-      isLoading = false;
-    });
+        .indexFromEvent(Event(id: 1, name: "fatecnologia"), widget.user.token);
+
+    if (this.isLoading) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -116,13 +119,14 @@ class _ActivitiesContainerState extends State<ActivitiesContainer> {
       return Center(child: CircularProgressIndicator());
     }
 
-    return ActivityFilter(this.activities);
+    return ActivityFilter(this.activities, widget.user);
   }
 }
 
 class ActivityFilter extends StatefulWidget {
-  ActivityFilter(this.activities);
+  ActivityFilter(this.activities, this.user);
   final List<Activity> activities;
+  final User user;
 
   @override
   _ActivityFilterState createState() => new _ActivityFilterState();
@@ -184,7 +188,7 @@ class _ActivityFilterState extends State<ActivityFilter> {
           ],
         )),
       ),
-      ActivitiesListContent(_filteredActivities)
+      ActivitiesListContent(_filteredActivities, widget.user)
     ]);
   }
 
@@ -201,8 +205,9 @@ class _ActivityFilterState extends State<ActivityFilter> {
 }
 
 class ActivitiesListContent extends StatefulWidget {
-  ActivitiesListContent(this.activities);
+  ActivitiesListContent(this.activities, this.user);
   final List<Activity> activities;
+  final User user;
 
   @override
   _ActivitiesListContentState createState() => _ActivitiesListContentState();
@@ -225,16 +230,20 @@ class _ActivitiesListContentState extends State<ActivitiesListContent> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        ActivityDetail(widget.activities[index])),
+                        ActivityDetail(widget.activities[index], widget.user)),
               );
             },
             child: ListTile(
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
               title: Text(widget.activities[index].title,
                   style: TextStyle(
                       color: Colors.black,
                       fontFamily: 'Raleway',
                       fontSize: 18.0)),
-              subtitle: Text(widget.activities[index].speaker.name),
+              subtitle: Padding(
+                  padding: EdgeInsets.only(top: 12.0),
+                  child: Text(widget.activities[index].speaker.name)),
               trailing: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,

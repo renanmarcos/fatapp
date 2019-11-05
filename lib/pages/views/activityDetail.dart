@@ -1,4 +1,10 @@
+import 'dart:convert';
+
+import 'package:fatapp/pages/controllers/activityController.dart';
+import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/acitivity.dart';
+import 'package:fatapp/pages/models/subscription.dart';
+import 'package:fatapp/pages/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'common/CustomShapeClipper.dart';
@@ -34,15 +40,13 @@ class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
                     runSpacing: 4.0,
                     direction: Axis.horizontal,
                     children: <Widget>[
-                      Text(
-                        widget.title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 24.0,
-                          color: Colors.white,
-                          fontFamily: 'Raleway',
-                        ),
-                      ),
+                      Text(widget.title,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 24.0,
+                            color: Colors.white,
+                            fontFamily: 'Raleway',
+                          )),
                       Align(
                         alignment: Alignment.topRight,
                         child: Hero(
@@ -66,8 +70,9 @@ class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
 }
 
 class ActivityDetail extends StatelessWidget {
-  const ActivityDetail(this.activity);
+  const ActivityDetail(this.activity, this.user);
   final Activity activity;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +113,12 @@ class ActivityDetail extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.grey[500],
                   ),
+                ),
+                Text(
+                  this.activity.room.type + " " + this.activity.room.name,
+                  style: TextStyle(
+                    color: Colors.grey[500],
+                  ),
                 )
               ],
             ),
@@ -116,23 +127,11 @@ class ActivityDetail extends StatelessWidget {
       ),
     );
 
-    Color color = Theme.of(context).primaryColor;
-
-    Widget buttonSection = Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildButtonColumn(color, Icons.event, 'Inscreva-se', subscribe),
-          _buildButtonColumn(color, Icons.share, 'Compartilhe', share),
-        ],
-      ),
-    );
-
     Widget textSection = Container(
       padding: const EdgeInsets.all(32),
       child: Card(
           child: Padding(
-        padding: EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 35.0),
         child: new Text(
           this.activity.description,
           softWrap: true,
@@ -148,57 +147,158 @@ class ActivityDetail extends StatelessWidget {
         children: <Widget>[
           ActivityDetailTopPart(this.activity.title),
           titleSection,
-          buttonSection,
-          textSection,
+          ActivityActions(this.activity, this.user),
+          textSection
+        ],
+      ),
+    );
+  }
+}
+
+class ActivityActions extends StatefulWidget {
+  ActivityActions(this.activity, this.user);
+  final Activity activity;
+  final User user;
+
+  @override
+  _ActivityActionsState createState() => _ActivityActionsState();
+}
+
+class _ActivityActionsState extends State<ActivityActions> {
+  var subscribed = false;
+  var isLoading = true;
+  Subscription _filteredSubscription;
+  List<Subscription> _subscriptions;
+
+  _fetchData() async {
+    _subscriptions = await UserController().subscriptions(widget.user);
+    if (_subscriptions.length > 0) {
+      _filteredSubscription = _subscriptions.firstWhere(
+          (subscription) => subscription.activity.id == widget.activity.id);
+    } else {
+      _filteredSubscription = null;
+    }
+
+    if (null != _filteredSubscription && this.isLoading) {
+      setState(() {
+        subscribed = true;
+        isLoading = false;
+      });
+    }
+
+    if (this.isLoading) {
+      setState(() {
+        subscribed = false;
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _fetchData();
+
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    Color color = Theme.of(context).primaryColor;
+
+    GestureDetector subscribeButton =
+        _buildButtonColumn(color, Icons.event, 'Inscreva-se', subscribe);
+
+    if (subscribed) {
+      if (DateTime.now()
+          .toLocal()
+          .isBefore(widget.activity.initialDate.toLocal())) {
+        subscribeButton = _buildButtonColumn(
+            color, Icons.close, 'Cancelar inscrição', cancelSubscription);
+      } else {
+        subscribeButton = _buildButtonColumn(
+            color, Icons.warning, 'Atividade encerrada', null);
+      }
+    }
+
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          subscribeButton,
+          _buildButtonColumn(color, Icons.share, 'Compartilhe', share),
         ],
       ),
     );
   }
 
-  dynamic share() {
-    Fluttertoast.showToast(
-            msg: "Ola",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0
-          );
-  }
-
-  dynamic subscribe() {
-Fluttertoast.showToast(
-            msg: "abc",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0
-          );
-  }
-
-  GestureDetector _buildButtonColumn(Color color, IconData icon, String label, dynamic funcao) {
+  GestureDetector _buildButtonColumn(
+      Color color, IconData icon, String label, dynamic doAction) {
     return GestureDetector(
-      onTap: () { funcao(); },      
-      child: Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: Colors.red),
-        Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: Colors.black54,
-            ),
-          )
-        ),
-      ],
-    ));
+        onTap: () {
+          if (null != doAction) {
+            doAction();
+          }
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: Colors.red),
+            Container(
+                margin: const EdgeInsets.only(top: 8),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black54,
+                  ),
+                )),
+          ],
+        ));
+  }
+
+  dynamic share() async {
+    Fluttertoast.showToast(
+        msg: "Ola",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  dynamic subscribe() async {
+    var data = jsonEncode({"userId": widget.user.id});
+    await ActivityController()
+        .subscribe(widget.activity, data, widget.user.token);
+    Fluttertoast.showToast(
+        msg: "Inscrição realizada com sucesso",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    setState(() {
+      subscribed = true;
+    });
+  }
+
+  dynamic cancelSubscription() async {
+    var data = jsonEncode({"userId": widget.user.id});
+    await ActivityController()
+        .cancelSubscription(widget.activity, data, widget.user.token);
+    Fluttertoast.showToast(
+        msg: "Inscrição cancelada com sucesso",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    setState(() {
+      subscribed = false;
+    });
   }
 }
