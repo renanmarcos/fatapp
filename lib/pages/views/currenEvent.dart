@@ -1,8 +1,10 @@
+import 'package:fatapp/pages/models/user.dart';
 import 'package:flutter/material.dart';
 import './eventDetail.dart';
 
 class CurrentEvent extends StatelessWidget {
-  const CurrentEvent({Key key}) : super(key: key);
+  const CurrentEvent({this.user});
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class CurrentEvent extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EventDetail()),
+                  MaterialPageRoute(builder: (context) => EventDetail(this.user, null)),
                 );
               },
               child: ListTile(

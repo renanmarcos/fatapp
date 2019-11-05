@@ -1,16 +1,23 @@
+import 'dart:convert';
+import 'package:fatapp/pages/controllers/activityController.dart';
+import 'package:fatapp/pages/controllers/userController.dart';
+import 'package:fatapp/pages/models/acitivity.dart';
+import 'package:fatapp/pages/models/subscription.dart';
+import 'package:fatapp/pages/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'common/CustomShapeClipper.dart';
+import 'package:intl/intl.dart';
 
 class ActivityDetailTopPart extends StatefulWidget {
-  ActivityDetailTopPart({Key key}) : super(key: key);
+  ActivityDetailTopPart(this.title);
+  final String title;
 
   @override
   _ActivityDetailTopPartState createState() => _ActivityDetailTopPartState();
 }
 
 class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
-  String title = "Palestra X";
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -20,34 +27,33 @@ class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
           child: Container(
             height: 150.0,
             color: Colors.red,
-            child: Column(
+            child: Wrap(
               children: <Widget>[
                 SizedBox(
                   height: 5.0,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(60.0, 5.0, 60.0, 10.0),
-                  child: Row(
+                  child: Wrap(
+                    spacing: 8.0,
+                    runSpacing: 4.0,
+                    direction: Axis.horizontal,
                     children: <Widget>[
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 24.0,
-                          color: Colors.white,
-                          fontFamily: 'Raleway',
-                        ),
-                      ),
+                      Text(widget.title,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 24.0,
+                            color: Colors.white,
+                            fontFamily: 'Raleway',
+                          )),
                       Align(
                         alignment: Alignment.topRight,
                         child: Hero(
                           tag: "hero",
                           child: Container(
-                            padding: EdgeInsets.only(top: 50.0),
-                            height: 80.0,
-                            width: 80.0,
-                            // child: logo,
-                          ),
+                              padding: EdgeInsets.only(top: 50.0),
+                              height: 80.0,
+                              width: 80.0),
                         ),
                       ),
                     ],
@@ -63,6 +69,10 @@ class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
 }
 
 class ActivityDetail extends StatelessWidget {
+  const ActivityDetail(this.activity, this.user);
+  final Activity activity;
+  final User user;
+
   @override
   Widget build(BuildContext context) {
     Widget titleSection = Container(
@@ -70,30 +80,41 @@ class ActivityDetail extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            /*1*/
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /*2*/
                 Container(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    'Nome da Palestra',
+                    this.activity.speaker.name,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Raleway',
                     ),
                   ),
                 ),
-                Text(
-                  'Nome do Palestrante',
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                    fontFamily: 'Raleway',
+                Container(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    this.activity.speaker.curriculum,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w100,
+                      fontFamily: 'Raleway',
+                    ),
                   ),
                 ),
                 Text(
-                  '14:00',
+                  DateFormat("dd/MM 'às' Hms")
+                          .format(this.activity.initialDate.toLocal()) +
+                      " até " +
+                      DateFormat("dd/MM 'às' Hms")
+                          .format(this.activity.finalDate.toLocal()),
+                  style: TextStyle(
+                    color: Colors.grey[500],
+                  ),
+                ),
+                Text(
+                  this.activity.room.type + " " + this.activity.room.name,
                   style: TextStyle(
                     color: Colors.grey[500],
                   ),
@@ -101,24 +122,6 @@ class ActivityDetail extends StatelessWidget {
               ],
             ),
           ),
-          /*3*/
-          Icon(
-            Icons.star,
-            color: Colors.yellow[500],
-          ),
-          Text('5'),
-        ],
-      ),
-    );
-
-    Color color = Theme.of(context).primaryColor;
-
-    Widget buttonSection = Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildButtonColumn(color, Icons.event, 'Inscreva-se'),
-          _buildButtonColumn(color, Icons.share, 'Compartilhe'),
         ],
       ),
     );
@@ -127,61 +130,179 @@ class ActivityDetail extends StatelessWidget {
       padding: const EdgeInsets.all(32),
       child: Card(
           child: Padding(
-        padding: EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 50.0),
+        padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 35.0),
         child: new Text(
-          'Palestra super legal',
+          this.activity.description,
           softWrap: true,
         ),
-      )
-
-          // 'Palestra super foda',
-          //
-          ),
+      )),
     );
 
     return new Scaffold(
-      // title: 'Palestra X',
-      // home: Scaffold(
       appBar: AppBar(
+<<<<<<< HEAD
         // title: Text('Palestra X'),
         elevation: 0,
+=======
+>>>>>>> cbc84fabbff3344a873123a79ec4fdb1aaa3ba59
         backgroundColor: Colors.red,
       ),
       body: ListView(
         children: <Widget>[
-          ActivityDetailTopPart(),
-          // Image.asset(
-          //   'images/lake.jpg',
-          //   width: 600,
-          //   height: 240,
-          //   fit: BoxFit.cover,
-          // ),
+          ActivityDetailTopPart(this.activity.title),
           titleSection,
-          buttonSection,
-          textSection,
+          ActivityActions(this.activity, this.user),
+          textSection
+        ],
+      ),
+    );
+  }
+}
+
+class ActivityActions extends StatefulWidget {
+  ActivityActions(this.activity, this.user);
+  final Activity activity;
+  final User user;
+
+  @override
+  _ActivityActionsState createState() => _ActivityActionsState();
+}
+
+class _ActivityActionsState extends State<ActivityActions> {
+  bool subscribed = false;
+  bool isLoading = true;
+  Subscription _filteredSubscription;
+  List<Subscription> _subscriptions;
+
+  _fetchData() async {
+    _subscriptions = await UserController().subscriptions(widget.user);
+    if (_subscriptions.length > 0) {
+      _filteredSubscription = _subscriptions.firstWhere(
+          (subscription) => subscription.activity.id == widget.activity.id);
+    } else {
+      _filteredSubscription = null;
+    }
+
+    if (null != _filteredSubscription && this.isLoading) {
+      setState(() {
+        subscribed = true;
+        isLoading = false;
+      });
+    }
+
+    if (this.isLoading) {
+      setState(() {
+        subscribed = false;
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _fetchData();
+
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    Color color = Theme.of(context).primaryColor;
+    GestureDetector subscribeButton = _buildSubscribeButton(subscribed, color);
+
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          subscribeButton,
+          _buildButtonColumn(color, Icons.share, 'Compartilhe', share),
         ],
       ),
     );
   }
 
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: Colors.red),
-        Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: Colors.black54,
-            ),
-          ),
-        ),
-      ],
-    );
+  GestureDetector _buildSubscribeButton(bool subscribed, Color color) {
+    if (DateTime.now().isAfter(widget.activity.initialDate)) {
+      return _buildButtonColumn(
+          color, Icons.warning, 'Atividade encerrada', null);
+    }
+
+    if (subscribed) {
+      return _buildButtonColumn(
+          color, Icons.close, 'Cancelar inscrição', cancelSubscription);
+    }
+
+    return _buildButtonColumn(color, Icons.event, 'Inscreva-se', subscribe);
+  }
+
+  GestureDetector _buildButtonColumn(
+      Color color, IconData icon, String label, dynamic doAction) {
+    return GestureDetector(
+        onTap: () {
+          if (null != doAction) {
+            doAction();
+          }
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: Colors.red),
+            Container(
+                margin: const EdgeInsets.only(top: 8),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black54,
+                  ),
+                )),
+          ],
+        ));
+  }
+
+  dynamic share() async {
+    Fluttertoast.showToast(
+        msg: "Ola",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  dynamic subscribe() async {
+    var data = jsonEncode({"userId": widget.user.id});
+    await ActivityController()
+        .subscribe(widget.activity, data, widget.user.token);
+    Fluttertoast.showToast(
+        msg: "Inscrição realizada com sucesso",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    setState(() {
+      subscribed = true;
+    });
+  }
+
+  dynamic cancelSubscription() async {
+    var data = jsonEncode({"userId": widget.user.id});
+    await ActivityController()
+        .cancelSubscription(widget.activity, data, widget.user.token);
+    Fluttertoast.showToast(
+        msg: "Inscrição cancelada com sucesso",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    setState(() {
+      subscribed = false;
+    });
   }
 }
