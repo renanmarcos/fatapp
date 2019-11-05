@@ -144,6 +144,7 @@ class ActivityDetail extends StatelessWidget {
       // home: Scaffold(
       appBar: AppBar(
         // title: Text('Palestra X'),
+        elevation: 0,
         backgroundColor: Colors.red,
       ),
       body: ListView(

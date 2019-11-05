@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gradient_widgets/gradient_widgets.dart';
 import './home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -52,19 +53,33 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final loginButton = Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: RaisedButton(
+      padding: EdgeInsets.all(40.0),
+      child: GradientButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        onPressed: () {
+        // onTap: () {
+        //   signIn();
+        // },
+        callback: () {
           signIn();
         },
-        padding: EdgeInsets.all(20),
-        color: Colors.redAccent,
+        increaseHeightBy: 20.0,
+        increaseWidthBy: 60.0,
+        // padding: EdgeInsets.all(20),
+        gradient: Gradients.blush,
+        shadowColor: Gradients.hotLinear.colors.last.withOpacity(0.25),
         child: Text('Login', style: TextStyle(color: Colors.white)),
+        elevation: 8,
       ),
     );
+
+//     GradientButton(
+//   child: Text('Gradient'),
+//   callback: () {},
+//   gradient: Gradients.backToFuture,
+//   shadowColor: Gradients.backToFuture.colors.last.withOpacity(0.25),
+// ),
 
     final forgotLabel = FlatButton(
       child: Text(

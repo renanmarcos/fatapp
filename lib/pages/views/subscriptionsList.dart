@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gradient_widgets/gradient_widgets.dart';
 import './common/CustomShapeClipper.dart';
 import './activityDetail.dart';
 
-class ActivitiesList extends StatelessWidget {
-  const ActivitiesList({Key key}) : super(key: key);
+class SubscriptionsList extends StatelessWidget {
+  const SubscriptionsList({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,26 +12,26 @@ class ActivitiesList extends StatelessWidget {
       appBar: new AppBar(
         elevation: 0,
         // title: new Text('Palestras e Atividades'),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.red,
       ),
       body: Column(
         children: <Widget>[
-          ActivitiesListTopPart(),
+          SubscriptionsListTopPart(),
           ActivityFilter(),
-          ActivitiesListContent(),
+          SubscriptionsListContent(),
         ],
       ),
     );
   }
 }
 
-class ActivitiesListTopPart extends StatefulWidget {
+class SubscriptionsListTopPart extends StatefulWidget {
   @override
-  _ActivitiesListTopPartState createState() => _ActivitiesListTopPartState();
+  _SubscriptionsListTopPartState createState() => _SubscriptionsListTopPartState();
 }
 
-class _ActivitiesListTopPartState extends State<ActivitiesListTopPart> {
-  String title = "Palestras e Atividades";
+class _SubscriptionsListTopPartState extends State<SubscriptionsListTopPart> {
+  String title = "Inscrições";
 
   @override
   Widget build(BuildContext context) {
@@ -83,8 +84,8 @@ class _ActivitiesListTopPartState extends State<ActivitiesListTopPart> {
   }
 }
 
-class ActivitiesListContent extends StatelessWidget {
-  const ActivitiesListContent({Key key}) : super(key: key);
+class SubscriptionsListContent extends StatelessWidget {
+  const SubscriptionsListContent({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +96,6 @@ class ActivitiesListContent extends StatelessWidget {
       'Gabriel Ulisses',
       'Soraya de Campos'
     ];
-    // final rooms = ['01', '02', '04', '07'];
 
     return ListView.builder(
       shrinkWrap: true,
@@ -104,7 +104,8 @@ class ActivitiesListContent extends StatelessWidget {
         return Card(
           elevation: 2.0,
           margin: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
-          child: InkWell(
+          child: Row(children: <Widget>[
+            InkWell(
             splashColor: Colors.red.withAlpha(30),
             onTap: () {
               Navigator.push(
@@ -113,7 +114,7 @@ class ActivitiesListContent extends StatelessWidget {
               );
             },
             child: ListTile(
-              leading: Icon(Icons.remove_red_eye),
+              // leading: Icon(Icons.remove_red_eye),
               title: Text(events[index],
                   style: TextStyle(
                       color: Colors.black,
@@ -121,13 +122,17 @@ class ActivitiesListContent extends StatelessWidget {
                       fontSize: 18.0)),
               subtitle: Text(professors[index]),
             ),
+            ),
+            GradientButton(
+              
+            )
+            ],
           ),
-        );
-      },
+        );  
+      }
     );
   }
 }
-
 class ActivityFilter extends StatefulWidget {
   ActivityFilter({Key key}) : super(key: key);
 
@@ -165,25 +170,25 @@ class _ActivityFilterState extends State<ActivityFilter> {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          new Text('Escolha uma data',
-              style: TextStyle(
-                  color: Colors.black, fontFamily: 'Raleway', fontSize: 18.0)),
-          new Container(
-            padding: new EdgeInsets.all(5.0),
-          ),
-          new DropdownButton(
-            value: _currentDate,
-            items: _dropDownMenuItems,
-            onChanged: changedDropDownItem,
-          )
+          // new Text('Escolha uma data',
+          //     style: TextStyle(
+          //         color: Colors.black, fontFamily: 'Raleway', fontSize: 18.0)),
+          // new Container(
+          //   padding: new EdgeInsets.all(5.0),
+          // ),
+          // new DropdownButton(
+          //   value: _currentDate,
+          //   items: _dropDownMenuItems,
+          //   onChanged: changedDropDownItem,
+          // )
         ],
       )),
     );
   }
 
-  void changedDropDownItem(String selectedCity) {
-    setState(() {
-      _currentDate = selectedCity;
-    });
-  }
+  // void changedDropDownItem(String selectedCity) {
+  //   setState(() {
+  //     _currentDate = selectedCity;
+  //   });
+  // }
 }

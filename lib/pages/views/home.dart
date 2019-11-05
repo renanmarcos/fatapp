@@ -11,8 +11,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './common/CustomShapeClipper.dart';
-import './eventsList2.dart';
-import './test.dart';
+import './eventsList.dart';
+import './subscriptionsList.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({this.user});
@@ -122,8 +122,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.of(context).pop();
                       Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              new Test('Página de Teste')));
+                          builder: (BuildContext context) => new SubscriptionsList()));
                     }),
 
                 new Divider(),

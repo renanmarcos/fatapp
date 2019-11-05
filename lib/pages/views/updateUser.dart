@@ -8,6 +8,67 @@ import 'package:fatapp/pages/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:masked_text/masked_text.dart';
+import 'package:gradient_widgets/gradient_widgets.dart';
+import 'common/CustomShapeClipper.dart';
+
+class UserScreenTopPart extends StatefulWidget {
+  @override
+  _UserScreenTopPartState createState() => _UserScreenTopPartState();
+}
+
+class _UserScreenTopPartState extends State<UserScreenTopPart> {
+  String title = "Perfil";
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: CustomShapeClipper(),
+          child: Container(
+            height: 150.0,
+            color: Colors.red,
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 5.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(60.0, 5.0, 60.0, 10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 24.0,
+                          color: Colors.white,
+                          fontFamily: 'Raleway',
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Hero(
+                          tag: "hero",
+                          child: Container(
+                            padding: EdgeInsets.only(top: 50.0),
+                            height: 80.0,
+                            width: 80.0,
+                            // child: logo,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
 
 class UpdateUserPage extends StatefulWidget {
   const UpdateUserPage({this.user});
@@ -34,38 +95,60 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-            title: new Text('Perfil',
-                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold))),
+            elevation: 0,
+            // title: new Text('Perfil',
+            //     style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold))
+        ),  
         resizeToAvoidBottomPadding: false,
         body: SingleChildScrollView(
             child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end, children: <
                     Widget>[
+          UserScreenTopPart(),
           Container(
+              // color: Colors.white,
               padding: EdgeInsets.only(top: 15.0, left: 20.0, right: 20.0),
               child: Column(children: <Widget>[
                 TextField(
                   controller: _textNameController,
+                  style: TextStyle(color: Colors.black87),
+                  
                   decoration: InputDecoration(
                       labelText: 'Nome Completo',
+                      border: InputBorder.none,
+                      // border: InputBorder(borderSide: BorderSide(color: Colors.grey, width: 1.0)),
+                      // fillColor: const Color.fromARGB(255, 244, 244, 244),
+                      fillColor: Colors.white,
+                      filled: true,
+                      focusColor: Colors.white,
+                      // border: UnderlineInputBorder(
+                      //     borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                      //     borderRadius: BorderRadius.circular(10.0),
+                      //     ),
                       labelStyle: TextStyle(
-                          fontFamily: 'Montserrat',
+                          fontFamily: 'Noto',
                           fontWeight: FontWeight.bold,
-                          color: Colors.grey),
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green))),
+                          color: Colors.black45),
+                      
+                      // focusedBorder: UnderlineInputBorder(
+                      //     borderSide: BorderSide(color: Colors.white))
+                      ),
                 ),
-                SizedBox(height: 8.0),
+                SizedBox(height: 10.0),
                 TextField(
                   controller: _textEmailController,
                   decoration: InputDecoration(
                       labelText: 'Email',
+                      border: InputBorder.none,
+                      fillColor: Colors.white,
+                      filled: true,
                       labelStyle: TextStyle(
-                          fontFamily: 'Montserrat',
+                          fontFamily: 'Noto',
                           fontWeight: FontWeight.bold,
                           color: Colors.grey),
                       focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green))),
+                          borderSide: BorderSide(color: Colors.white))),
                 ),
                 SizedBox(height: 8.0),
                 MaskedTextField(
@@ -74,14 +157,17 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                   maxLength: 14,
                   keyboardType: TextInputType.number,
                   inputDecoration: new InputDecoration(
+                      fillColor: const Color.fromARGB(255, 244, 244, 244),
+                      filled: true,
                       enabled: false,
                       labelText: 'CPF',
                       labelStyle: TextStyle(
-                          fontFamily: 'Montserrat',
+                          fontFamily: 'Noto',
                           fontWeight: FontWeight.bold,
                           color: Colors.grey),
                       focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green))),
+                          borderSide: BorderSide(color: Colors.white,
+                          ))),
                 ),
                 SizedBox(height: 10.0),
                 CheckboxListTile(
@@ -121,72 +207,84 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                     maxLength: 13,
                     keyboardType: TextInputType.number,
                     inputDecoration: new InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.white,
                       labelText: 'RA',
                       labelStyle: TextStyle(
-                          fontFamily: 'Montserrat',
+                          fontFamily: 'Noto',
                           fontWeight: FontWeight.bold,
                           color: Colors.grey),
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green)),
+                      // focusedBorder: UnderlineInputBorder(
+                      //     borderSide: BorderSide(color: Colors.white)),
                     )),
                 SizedBox(height: 10.0),
-                Container(
-                    height: 40.0,
-                    child: Material(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: Colors.redAccent,
-                      elevation: 7.0,
-                      child: RaisedButton(
+                // Container(
+                //   color: Colors.redAccent,
+                Row (children: <Widget>[
+                    Material(
+                      // borderRadius: BorderRadius.circular(20.0),
+                      // color: Colors.white,
+                      // elevation: 7.0,
+                      child: GradientButton(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(50),
                         ),
-                        onPressed: () {
+                        callback: () {
                           this.update();
                         },
-                        color: Colors.redAccent,
+                        increaseWidthBy: 80.0,
+                        increaseHeightBy: 30.0,
+                        gradient: Gradients.blush,
                         child: Center(
                           child: Text(
                             'Atualizar',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'Montserrat'),
+                                fontSize: 16.0,
+                                fontFamily: 'Noto'),
                           ),
                         ),
                       ),
-                    )),
-                SizedBox(height: 20.0),
-                Container(
-                    height: 40.0,
-                    child: Material(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: Colors.redAccent,
-                      elevation: 7.0,
-                      child: RaisedButton(
+                    ),
+                    // SizedBox(height: 20.0),
+                
+                    // height: 40.0,
+                    Material(
+                      // borderRadius: BorderRadius.circular(20.0),
+                      // color: Colors.white,
+                      // elevation: 7.0,
+                      child: GradientButton(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(50),
                         ),
-                        onPressed: () {
+                        callback: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
                                       ChangePasswordPage(user: widget.user)));
                         },
-                        color: Colors.redAccent,
+                        gradient: Gradients.blush,
+                        increaseWidthBy: 80.0,
+                        increaseHeightBy: 30.0,
                         child: Center(
                           child: Text(
                             'Mudar Senha',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'Montserrat'),
+                                fontSize: 16.0,
+                                fontFamily: 'Noto'),
                           ),
                         ),
                       ),
-                    )),
-              ]))
-        ])));
+                    )
+                ],)
+                    
+    ])
+    )])));
   }
 
   getValues() {

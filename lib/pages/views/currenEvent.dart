@@ -24,8 +24,8 @@ class CurrentEvent extends StatelessWidget {
               child: ListTile(
                 title: Text('Fatecnologia',
                     style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Raleway',
+                        color: Colors.black45,
+                        fontFamily: 'Noto',
                         fontSize: 18.0)),
               ),
             ),

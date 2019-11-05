@@ -188,6 +188,7 @@ class EventDetail extends StatelessWidget {
       // title: 'Palestra X',
       // home: Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Text('Evento X'),
         backgroundColor: Colors.red,
       ),
