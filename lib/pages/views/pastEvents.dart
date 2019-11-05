@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import './pastEventsYears.dart';
+// import './activitiesList.dart';
+import './ratingPage.dart';
 
 class PastEvents extends StatelessWidget {
   const PastEvents({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final events = ['Fatecnologia', 'ADS Day', 'Comex Day', 'Games Day'];
+    final events = ['Fatecnologia 2018', 'ADS Day 2018', 'Comex Day 2018', 'Games Day 2018'];
 
     return ListView.builder(
       itemCount: events.length,
@@ -19,14 +20,14 @@ class PastEvents extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PastEventsYears()),
+                MaterialPageRoute(builder: (context) => RatingStar()),
               );
             },
             child: ListTile(
               title: Text(events[index],
                   style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Raleway',
+                      color: Colors.black45,
+                      fontFamily: 'Noto',
                       fontSize: 18.0)),
             ),
           ),
