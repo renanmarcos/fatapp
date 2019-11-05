@@ -1,11 +1,11 @@
 import 'package:fatapp/pages/models/acitivity.dart';
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
+import 'package:fatapp/pages/views/activityDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import './common/CustomShapeClipper.dart';
-import './activityDetail.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
+import 'common/CustomShapeClipper.dart';
 
 class ActivitiesList extends StatelessWidget {
   const ActivitiesList(this.user, this.event);
@@ -69,8 +69,7 @@ class _ActivitiesListTopPartState extends State<ActivitiesListTopPart> {
                           child: Container(
                             padding: EdgeInsets.only(top: 50.0),
                             height: 80.0,
-                            width: 80.0,
-                            // child: logo,
+                            width: 80.0
                           ),
                         ),
                       ),
@@ -96,16 +95,16 @@ class ActivitiesContainer extends StatefulWidget {
 }
 
 class _ActivitiesContainerState extends State<ActivitiesContainer> {
-  List<Activity> activities = List();
-  var isLoading = true;
+  List<Activity> _activities = List();
+  var _isLoading = true;
 
   _fetchData() async {
-    activities = await ActivityController()
+    _activities = await ActivityController()
         .indexFromEvent(widget.event, widget.user.token);
 
-    if (this.isLoading) {
+    if (_isLoading) {
       setState(() {
-        isLoading = false;
+        _isLoading = false;
       });
     }
   }
@@ -114,11 +113,11 @@ class _ActivitiesContainerState extends State<ActivitiesContainer> {
   Widget build(BuildContext context) {
     _fetchData();
 
-    if (isLoading) {
+    if (_isLoading) {
       return Center(child: CircularProgressIndicator());
     }
 
-    return ActivityFilter(this.activities, widget.user);
+    return ActivityFilter(_activities, widget.user);
   }
 }
 
