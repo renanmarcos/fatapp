@@ -1,6 +1,7 @@
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/subscription.dart';
 import 'package:fatapp/pages/models/user.dart';
+import 'package:fatapp/pages/views/activityDetail.dart';
 import 'package:flutter/material.dart';
 
 class SubscriptionPage extends StatelessWidget {
@@ -30,6 +31,12 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
 
   _fetchData() async {
     _subscriptions = await UserController().subscriptions(widget.user);
+    _subscriptions = _subscriptions
+        .where((subscription) => DateTime.now().isBefore(subscription
+            .activity.initialDate
+            .toLocal()
+            .add(Duration(hours: 1))))
+        .toList();
 
     if (_isLoading) {
       setState(() {
@@ -60,6 +67,14 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
           child: InkWell(
             splashColor: Colors.red.withAlpha(30),
             child: ListTile(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ActivityDetail(
+                          _subscriptions[index].activity, widget.user)),
+                );
+              },
               contentPadding:
                   EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
               title: Text(_subscriptions[index].activity.title,
