@@ -100,9 +100,8 @@ class _ActivitiesContainerState extends State<ActivitiesContainer> {
   var isLoading = true;
 
   _fetchData() async {
-    // precisa ser dinamico, quando existir a tela de eventos
     activities = await ActivityController()
-        .indexFromEvent(Event(id: 1, name: "fatecnologia"), widget.user.token);
+        .indexFromEvent(widget.event, widget.user.token);
 
     if (this.isLoading) {
       setState(() {

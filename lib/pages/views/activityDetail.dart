@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/acitivity.dart';
@@ -105,10 +104,10 @@ class ActivityDetail extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  DateFormat("dd/MM 'às' HH:mm")
+                  DateFormat("dd/MM 'às' Hms")
                           .format(this.activity.initialDate.toLocal()) +
                       " até " +
-                      DateFormat("dd/MM 'às' HH:mm")
+                      DateFormat("dd/MM 'às' Hms")
                           .format(this.activity.finalDate.toLocal()),
                   style: TextStyle(
                     color: Colors.grey[500],
@@ -165,8 +164,8 @@ class ActivityActions extends StatefulWidget {
 }
 
 class _ActivityActionsState extends State<ActivityActions> {
-  var subscribed = false;
-  var isLoading = true;
+  bool subscribed = false;
+  bool isLoading = true;
   Subscription _filteredSubscription;
   List<Subscription> _subscriptions;
 
@@ -203,21 +202,7 @@ class _ActivityActionsState extends State<ActivityActions> {
     }
 
     Color color = Theme.of(context).primaryColor;
-
-    GestureDetector subscribeButton =
-        _buildButtonColumn(color, Icons.event, 'Inscreva-se', subscribe);
-
-    if (subscribed) {
-      if (DateTime.now()
-          .toLocal()
-          .isBefore(widget.activity.initialDate.toLocal())) {
-        subscribeButton = _buildButtonColumn(
-            color, Icons.close, 'Cancelar inscrição', cancelSubscription);
-      } else {
-        subscribeButton = _buildButtonColumn(
-            color, Icons.warning, 'Atividade encerrada', null);
-      }
-    }
+    GestureDetector subscribeButton = _buildSubscribeButton(subscribed, color);
 
     return Container(
       child: Row(
@@ -228,6 +213,20 @@ class _ActivityActionsState extends State<ActivityActions> {
         ],
       ),
     );
+  }
+
+  GestureDetector _buildSubscribeButton(bool subscribed, Color color) {
+    if (DateTime.now().isAfter(widget.activity.initialDate)) {
+      return _buildButtonColumn(
+          color, Icons.warning, 'Atividade encerrada', null);
+    }
+
+    if (subscribed) {
+      return _buildButtonColumn(
+          color, Icons.close, 'Cancelar inscrição', cancelSubscription);
+    }
+
+    return _buildButtonColumn(color, Icons.event, 'Inscreva-se', subscribe);
   }
 
   GestureDetector _buildButtonColumn(

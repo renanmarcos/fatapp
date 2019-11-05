@@ -1,4 +1,3 @@
-import 'package:fatapp/pages/models/acitivity.dart';
 import 'package:fatapp/pages/models/subscription.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'services.dart';
