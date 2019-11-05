@@ -1,6 +1,7 @@
+import 'package:fatapp/pages/controllers/eventController.dart';
+import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:flutter/material.dart';
-import './eventDetail.dart';
 
 class CurrentEvent extends StatelessWidget {
   const CurrentEvent({this.user});
@@ -8,32 +9,32 @@ class CurrentEvent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: ListTile.divideTiles(
-        context: context,
-        tiles: [
-          Card(
-            elevation: 2.0,
-            margin: EdgeInsets.all(15.0),
-            child: InkWell(
-              splashColor: Colors.blue.withAlpha(30),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => EventDetail(this.user, null)),
-                );
-              },
-              child: ListTile(
-                title: Text('Fatecnologia',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Raleway',
-                        fontSize: 18.0)),
-              ),
-            ),
-          ),
-        ],
-      ).toList(),
-    );
-  }
+    return FutureBuilder(
+      future:EventController().getEvents(this.user.token),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        List<Event> eventList;
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          eventList = snapshot.data;
+          eventList.where((event) =>
+            event.initialDate.toLocal().isBefore(DateTime.now().toLocal()))
+            .toList();
+          }
+          return ListView.builder(
+            itemCount: eventList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return new Column(
+                children: <Widget>[
+                  new ListTile(
+                    title: new Text(eventList[index].title),
+                  ),
+                  new Divider(height: 2.0),
+                ]
+              );
+            }
+          );
+        }
+      );        
+    }
 }

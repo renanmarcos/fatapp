@@ -225,7 +225,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
       Fluttertoast.showToast(
           msg: "Cadastro atualizado com sucesso",
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 2,
           backgroundColor: Colors.green,
           textColor: Colors.white,
@@ -237,7 +237,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
       Fluttertoast.showToast(
         msg: e.toString(),
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 2,
         backgroundColor: Colors.red,
         textColor: Colors.white,

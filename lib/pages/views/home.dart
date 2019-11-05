@@ -142,14 +142,12 @@ class _HomePageState extends State<HomePage> {
                   return Center(child: CircularProgressIndicator());
                 } else {
                   eventList = snapshot.data;
-                  for (Event event in eventList) {
-                    String image = DotEnv().env['FATAPP_API'] + 'files/' + event.banner;
-                    event.imageUrl = image;
-                  }
+                  eventList.where((event) =>
+                    event.initialDate.toLocal().isBefore(DateTime.now().toLocal()))
+                  .toList();
                   return CarouselSlider(
                     height: 300.0,
                     initialPage: 0,
-                    aspectRatio: 16 / 9,
                     enlargeCenterPage: true,
                     autoPlayCurve: Curves.fastOutSlowIn,
                     autoPlay: false,
@@ -177,7 +175,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             onTap: () {
                               Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => EventDetail(user: widget.user, event: event)));
+                                MaterialPageRoute(builder: (context) => EventDetail(widget.user, event)));
                             }
                           )
                           );

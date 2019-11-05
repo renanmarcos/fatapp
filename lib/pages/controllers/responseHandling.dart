@@ -16,7 +16,7 @@ class ResponseHandling extends AppException {
     }
 
     if (response.statusCode == 422) {
-      validateCPF(response.body);
+      handleUnprocessableEntityException(response.body);
     }
 
     if (response.statusCode == 401 || response.statusCode == 404) {
@@ -31,7 +31,7 @@ class ResponseHandling extends AppException {
       Fluttertoast.showToast(
         msg: "Email precisa ser preenchido",
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 2,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -42,7 +42,7 @@ class ResponseHandling extends AppException {
       Fluttertoast.showToast(
         msg: "Email Inválido",
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 2,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -57,7 +57,7 @@ class ResponseHandling extends AppException {
       Fluttertoast.showToast(
         msg: "Senha precisa ser preenchida",
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 2,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -68,7 +68,7 @@ class ResponseHandling extends AppException {
       Fluttertoast.showToast(
         msg: "Senha Inválida",
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 2,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -83,7 +83,7 @@ class ResponseHandling extends AppException {
       Fluttertoast.showToast(
         msg: "RA precisa ser preenchido",
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 2,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -94,7 +94,7 @@ class ResponseHandling extends AppException {
       Fluttertoast.showToast(
         msg: "RA Inválido",
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 2,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -104,14 +104,8 @@ class ResponseHandling extends AppException {
     return true;
   }
 
-  void validateCPF(body) {
-    var message = messageException(json.decode(body));
-    if (message.compareTo("CPF ou Email já existente") == 0) {
-      throw ValidationException("CPF ou Email já existente");
-    }
-    throw InternalException();
-  }
-  messageException(Map<String, dynamic> json) {
-    return json['message'];
+  void handleUnprocessableEntityException(body) {
+    var exception = json.decode(body);
+    throw ValidationException(exception['message']);
   }
 }
