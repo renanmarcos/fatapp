@@ -65,7 +65,7 @@ class _EventDetailTopPartState extends State<EventDetailTopPart> {
 }
 
 class EventDetail extends StatelessWidget {
-  const EventDetail({this.user, this.event});
+  const EventDetail(this.user, this.event);
   final User user;
   final Event event;
   @override
@@ -112,7 +112,7 @@ class EventDetail extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ActivitiesList()),
+                MaterialPageRoute(builder: (context) => ActivitiesList(this.user, this.event)),
               );
             },
             child: Container(

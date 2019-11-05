@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.of(context).pop();
                       Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) => new EventsList()));
+                          builder: (BuildContext context) => new EventsList(user: widget.user)));
                     }),
 
                 new ListTile(
