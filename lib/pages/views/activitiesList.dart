@@ -67,10 +67,9 @@ class _ActivitiesListTopPartState extends State<ActivitiesListTopPart> {
                         child: Hero(
                           tag: "hero",
                           child: Container(
-                            padding: EdgeInsets.only(top: 50.0),
-                            height: 80.0,
-                            width: 80.0
-                          ),
+                              padding: EdgeInsets.only(top: 50.0),
+                              height: 80.0,
+                              width: 80.0),
                         ),
                       ),
                     ],
@@ -139,15 +138,13 @@ class _ActivityFilterState extends State<ActivityFilter> {
   @override
   void initState() {
     _dates = widget.activities
-        .map((activity) =>
-            DateFormat("dd/MM").format(activity.initialDate.toLocal()))
+        .map((activity) => DateFormat("dd/MM").format(activity.initialDate))
         .toList();
     _dropDownMenuItems = getDropDownMenuItems();
     _currentDate = _dropDownMenuItems[0].value;
     _filteredActivities = widget.activities
         .where((activity) =>
-            DateFormat("dd/MM").format(activity.initialDate.toLocal()) ==
-            _currentDate)
+            DateFormat("dd/MM").format(activity.initialDate) == _currentDate)
         .toList();
     super.initState();
   }
