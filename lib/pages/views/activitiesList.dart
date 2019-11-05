@@ -1,11 +1,11 @@
 import 'package:fatapp/pages/models/acitivity.dart';
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
+import 'package:fatapp/pages/views/activityDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import './common/CustomShapeClipper.dart';
-import './activityDetail.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
+import 'common/CustomShapeClipper.dart';
 
 class ActivitiesList extends StatelessWidget {
   const ActivitiesList(this.user, this.event);
@@ -69,8 +69,7 @@ class _ActivitiesListTopPartState extends State<ActivitiesListTopPart> {
                           child: Container(
                             padding: EdgeInsets.only(top: 50.0),
                             height: 80.0,
-                            width: 80.0,
-                            // child: logo,
+                            width: 80.0
                           ),
                         ),
                       ),
@@ -96,33 +95,36 @@ class ActivitiesContainer extends StatefulWidget {
 }
 
 class _ActivitiesContainerState extends State<ActivitiesContainer> {
-  List<Activity> activities = List();
-  var isLoading = true;
+  List<Activity> _activities = List();
+  var _isLoading = true;
 
   _fetchData() async {
-    // precisa ser dinamico, quando existir a tela de eventos
-    activities = await ActivityController()
-        .indexFromEvent(Event(id: 2, name: "fatecnologia"), widget.user.token);
-    setState(() {
-      isLoading = false;
-    });
+    _activities = await ActivityController()
+        .indexFromEvent(widget.event, widget.user.token);
+
+    if (_isLoading) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     _fetchData();
 
-    if (isLoading) {
+    if (_isLoading) {
       return Center(child: CircularProgressIndicator());
     }
 
-    return ActivityFilter(this.activities);
+    return ActivityFilter(_activities, widget.user);
   }
 }
 
 class ActivityFilter extends StatefulWidget {
-  ActivityFilter(this.activities);
+  ActivityFilter(this.activities, this.user);
   final List<Activity> activities;
+  final User user;
 
   @override
   _ActivityFilterState createState() => new _ActivityFilterState();
@@ -184,7 +186,7 @@ class _ActivityFilterState extends State<ActivityFilter> {
           ],
         )),
       ),
-      ActivitiesListContent(_filteredActivities)
+      ActivitiesListContent(_filteredActivities, widget.user)
     ]);
   }
 
@@ -201,8 +203,9 @@ class _ActivityFilterState extends State<ActivityFilter> {
 }
 
 class ActivitiesListContent extends StatefulWidget {
-  ActivitiesListContent(this.activities);
+  ActivitiesListContent(this.activities, this.user);
   final List<Activity> activities;
+  final User user;
 
   @override
   _ActivitiesListContentState createState() => _ActivitiesListContentState();
@@ -225,16 +228,20 @@ class _ActivitiesListContentState extends State<ActivitiesListContent> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        ActivityDetail(widget.activities[index])),
+                        ActivityDetail(widget.activities[index], widget.user)),
               );
             },
             child: ListTile(
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
               title: Text(widget.activities[index].title,
                   style: TextStyle(
                       color: Colors.black,
                       fontFamily: 'Raleway',
                       fontSize: 18.0)),
-              subtitle: Text(widget.activities[index].speaker.name),
+              subtitle: Padding(
+                  padding: EdgeInsets.only(top: 12.0),
+                  child: Text(widget.activities[index].speaker.name)),
               trailing: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,
