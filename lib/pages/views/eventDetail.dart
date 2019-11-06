@@ -4,40 +4,16 @@ import 'package:fatapp/pages/views/activitiesList.dart';
 import 'package:flutter/material.dart';
 import 'common/CustomShapeClipper.dart';
 
-// class EventDetail extends StatefulWidget {
-//   EventDetail({Key key}) : super(key: key);
-
-//   @override
-//   _EventDetailState createState() => _EventDetailState();
-// }
-
-// class _EventDetailState extends State<EventDetail> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return new Scaffold(
-//       appBar: new AppBar(
-//         // title: new Text('Palestras e Atividades'),
-//         backgroundColor: Colors.red,
-//       ),
-//       body: Column(
-//         children: <Widget>[
-//           EventDetailTopPart(),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 class EventDetailTopPart extends StatefulWidget {
-  EventDetailTopPart({Key key}) : super(key: key);
 
   @override
   _EventDetailTopPartState createState() => _EventDetailTopPartState();
 }
 
 class _EventDetailTopPartState extends State<EventDetailTopPart> {
-  String title = "Fatecnologia";
-
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -57,7 +33,7 @@ class _EventDetailTopPartState extends State<EventDetailTopPart> {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        title,
+                        "Evento",
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 24.0,
@@ -109,7 +85,7 @@ class EventDetail extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    'Nome do Evento',
+                    this.event.title,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Raleway',
@@ -124,7 +100,7 @@ class EventDetail extends StatelessWidget {
                 //   ),
                 // ),
                 Text(
-                  'Ano',
+                  this.event.edition,
                   style: TextStyle(
                     color: Colors.grey[500],
                   ),
@@ -180,7 +156,7 @@ class EventDetail extends StatelessWidget {
           child: Padding(
         padding: EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 50.0),
         child: new Text(
-          'Evento super legal',
+          this.event.description,
           softWrap: true,
         ),
       )
@@ -194,14 +170,17 @@ class EventDetail extends StatelessWidget {
       // title: 'Palestra X',
       // home: Scaffold(
       appBar: AppBar(
-        title: Text('Evento X'),
+        title: new Text(this.event.title),
         backgroundColor: Colors.red,
       ),
       body: ListView(
         children: <Widget>[
           // EventDetailTopPart(),
-          Image.asset(
-            'assets/images/header.jpg',
+          Image.network(
+            this.event.imageUrl,
+            headers: {
+              "Token" : this.user.token
+            },
             width: 600,
             height: 240,
             fit: BoxFit.cover,

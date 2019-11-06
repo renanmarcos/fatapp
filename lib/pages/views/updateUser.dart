@@ -196,38 +196,52 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
     if (widget.user.student != null) {
       _textRAController.text = widget.user.student.ra;
       _isChecked = true;
-      //_course = widget.user.student.course.acronym;
+      _course = widget.user.student.course.acronym;
     }
   }
 
   Future<void> update() async {
-    var _name = _textNameController.text, _email = _textEmailController.text;
+    var _name = _textNameController.text, 
+        _email = _textEmailController.text,
+        _ra = _textRAController.text;
     ResponseHandling().validateEmail(_email);
     try {
-      var jsonData = '{ "name" : "$_name", "email" : "$_email" }';
-      final update = await UserController()
-          .update(widget.user.id, jsonData, widget.user.token);
+      var jsonData = '{ "name" : "$_name", "email" : "$_email"';
+      if (widget.user.student == null && _isChecked || widget.user.student != null) {
+        int courseId;
+        for (var course in courseList) {
+          if (course.acronym == _course) {
+            courseId = course.id;
+          }
+        }
+        if (ResponseHandling().validateRA(_ra) && courseId != 0) {
+          jsonData += ', "ra" : "$_ra", "courseId" : "$courseId"';
+        }
+      }
+      jsonData += ' }';
+      final update = await UserController().update(widget.user.id, jsonData, widget.user.token);
       User user = User.fromJson(update, widget.user.token);
+
       Fluttertoast.showToast(
           msg: "Cadastro atualizado com sucesso",
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 2,
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => HomePage(user: user)));
-      //Falta ajustar estudante
+
     } catch (e) {
       Fluttertoast.showToast(
-          msg: e.toString(),
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIos: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+        msg: e.toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
     }
   }
 }
