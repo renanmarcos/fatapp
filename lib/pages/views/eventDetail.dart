@@ -11,7 +11,9 @@ class EventDetailTopPart extends StatefulWidget {
 }
 
 class _EventDetailTopPartState extends State<EventDetailTopPart> {
-
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -67,6 +69,7 @@ class EventDetail extends StatelessWidget {
   const EventDetail(this.user, this.event);
   final User user;
   final Event event;
+  
   @override
   Widget build(BuildContext context) {
     Widget titleSection = Container(
