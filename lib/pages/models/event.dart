@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class Event {
   int id;
   String title;
@@ -18,6 +20,7 @@ class Event {
     this.finalDate = DateTime.parse(json['finalDate']);
     this.banner = json['banner'];
     this.description = json['description'];
+    this.imageUrl = DotEnv().env['FATAPP_API'] + 'files/' + this.banner;
   }
   List<Event> fromJsonList(List json) {
     return json.map((data) => Event.fromJson(data)).toList();
