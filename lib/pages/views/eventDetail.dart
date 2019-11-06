@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'common/CustomShapeClipper.dart';
 
 class EventDetailTopPart extends StatefulWidget {
-  EventDetailTopPart({Key key}) : super(key: key);
 
   @override
   _EventDetailTopPartState createState() => _EventDetailTopPartState();

@@ -18,8 +18,8 @@ class PastEvents extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else {
           eventList = snapshot.data;
-          eventList.where((event) =>
-            event.initialDate.toLocal().isAfter(DateTime.now().toLocal()))
+          eventList = eventList.where((event) =>
+            event.finalDate.toLocal().add(Duration(hours: 1)).isBefore(DateTime.now().toLocal()))
             .toList();
           }
           return ListView.builder(

@@ -4,7 +4,6 @@ import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/register.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './home.dart';
@@ -119,39 +118,35 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> signIn() async {
-    if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
-      final formState = _formKey.currentState;
-      if (formState.validate()) {
-        formState.save();
-        if(!ResponseHandling().validateEmail(_email) || !ResponseHandling().validatePassword(_password)) {
-          return;
-        }
-
-        var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
-        try {
-          final tokenResponse = await UserController().login(jsonData);
-
-          SharedPreferences sharedUser = await SharedPreferences.getInstance();
-          String userString = json.encode(tokenResponse);
-          sharedUser.setString('user', userString);
-
-          User user = User.create(tokenResponse);
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => HomePage(user: user)));
-        } catch (e) {
-          Fluttertoast.showToast(
-              msg: e.toString(),
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 2,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
-        }
+    final formState = _formKey.currentState;
+    if (formState.validate()) {
+      formState.save();
+      if (!ResponseHandling().validateEmail(_email) ||
+          !ResponseHandling().validatePassword(_password)) {
+        return;
       }
-    } else {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
+
+      var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
+      try {
+        final tokenResponse = await UserController().login(jsonData);
+
+        SharedPreferences sharedUser = await SharedPreferences.getInstance();
+        String userString = json.encode(tokenResponse);
+        sharedUser.setString('user', userString);
+
+        User user = User.create(tokenResponse);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => HomePage(user: user)));
+      } catch (e) {
+        Fluttertoast.showToast(
+            msg: e.toString(),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 2,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:fatapp/pages/models/user.dart';
+import 'package:fatapp/pages/views/home.dart';
 import 'package:flutter/material.dart';
 import './currenEvent.dart';
 import './pastEvents.dart';
@@ -9,7 +10,13 @@ class EventsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return WillPopScope(
+        onWillPop: () async {
+          Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => HomePage(user: user)));
+          return true;
+        },
+        child: MaterialApp(
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -36,6 +43,9 @@ class EventsList extends StatelessWidget {
               style: TextStyle(fontFamily: 'Noto'),
             ),
             backgroundColor: Colors.red,
+            leading: IconButton(icon:Icon(Icons.arrow_back),
+              onPressed:() => Navigator.pop(context, false),
+            )
           ),
           body: TabBarView(
             children: [
@@ -45,6 +55,7 @@ class EventsList extends StatelessWidget {
           ),
         ),
       ),
+    )
     );
   }
 }

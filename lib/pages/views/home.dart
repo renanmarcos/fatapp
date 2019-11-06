@@ -96,7 +96,6 @@ class _HomePageState extends State<HomePage> {
                     title: new Text('Eventos'),
                     trailing: new Icon(Icons.keyboard_arrow_right),
                     onTap: () {
-                      Navigator.of(context).pop();
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (BuildContext context) => new EventsList(user: widget.user)));
                     }),
