@@ -1,10 +1,11 @@
 import 'package:fatapp/pages/controllers/eventController.dart';
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
+import 'package:fatapp/pages/views/eventDetail.dart';
 import 'package:flutter/material.dart';
 
 class CurrentEvent extends StatelessWidget {
-  const CurrentEvent({this.user});
+  const CurrentEvent(this.user);
   final User user;
 
   @override
@@ -24,14 +25,29 @@ class CurrentEvent extends StatelessWidget {
           return ListView.builder(
             itemCount: eventList.length,
             itemBuilder: (BuildContext context, int index) {
-              return new Column(
-                children: <Widget>[
-                  new ListTile(
-                    title: new Text(eventList[index].title),
-                  ),
-                  new Divider(height: 2.0),
-                ]
-              );
+              return Card(
+                elevation: 2.0,
+                margin: EdgeInsets.all(15.0),
+                child: InkWell(
+                  splashColor: Colors.red.withAlpha(30),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EventDetail(this.user, eventList[index])),
+                    );
+                  },
+                  child: ListTile(
+                    title: new Text(eventList[index].title,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Raleway',
+                      fontSize: 18.0)),
+                    subtitle: Padding(
+                    padding: EdgeInsets.only(top: 12.0),
+                    child: Text(eventList[index].edition)),
+                  )
+                )
+              );     
             }
           );
         }

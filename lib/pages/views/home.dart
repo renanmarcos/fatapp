@@ -142,6 +142,17 @@ class _HomePageState extends State<HomePage> {
                   return Center(child: CircularProgressIndicator());
                 } else {
                   eventList = snapshot.data;
+                  if(eventList.isEmpty) {
+                    return Text(
+                      "Não há eventos ativos no momento",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 24.0,
+                        color: Colors.white,
+                        fontFamily: 'Raleway',
+                      ),
+                    );
+                  }
                   eventList.where((event) =>
                     event.initialDate.toLocal().isBefore(DateTime.now().toLocal()))
                   .toList();
