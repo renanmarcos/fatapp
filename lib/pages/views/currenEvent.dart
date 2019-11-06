@@ -44,7 +44,7 @@ class CurrentEvent extends StatelessWidget {
                       fontSize: 18.0)),
                     subtitle: Padding(
                     padding: EdgeInsets.only(top: 12.0),
-                    child: Text(eventList[index].edition)),
+                    child: Text(eventList[index].description)),
                   )
                 )
               );     

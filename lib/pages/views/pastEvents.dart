@@ -45,7 +45,7 @@ class PastEvents extends StatelessWidget {
                     subtitle: Padding(
                     padding: EdgeInsets.only(top: 12.0),
 
-                    child: Text(eventList[index].edition)),
+                    child: Text(eventList[index].description)),
                   )
                 )
               );     
