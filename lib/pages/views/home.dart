@@ -9,7 +9,6 @@ import 'package:fatapp/pages/views/eventDetail.dart';
 import 'package:fatapp/pages/views/common/CustomShapeClipper.dart';
 import 'package:fatapp/pages/views/eventsList2.dart';
 import 'package:fatapp/pages/views/login.dart';
-import 'package:fatapp/pages/views/qrCodeScan.dart';
 import 'package:fatapp/pages/views/subscriptionPage.dart';
 import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
@@ -70,15 +69,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Event> eventList;
   @override
-  Future initState() async {
-    try {
+  void initState() {
+    /*try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         read(widget.user.id,widget.user.token);
       }
     } on SocketException catch (_) {
       print('Sem conexão com a internet');
-    }
+    }*/
     super.initState();
   }
 
