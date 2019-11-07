@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:barcode_scan/barcode_scan.dart';
@@ -61,6 +62,7 @@ class HomePage extends StatefulWidget {
     final prefs = await SharedPreferences.getInstance();
     final key = 'qrCodeKeys';
     final value = prefs.getStringList(key) ?? [];
+    urlToSave = jsonEncode(urlToSave);
     value.add(urlToSave['id']);
     prefs.setStringList(key, value);
     print('saved $value');
