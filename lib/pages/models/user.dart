@@ -41,6 +41,6 @@ class User {
     this.email = json['user']['email'];
     this.cpf = json['user']['cpf'];
     this.password = json['user']['password'];
-    this.student = Student(id: json['id'], course: Course.fromJson(json['course']), ra: json['ra']);
+    this.student = Student.fromUser(json);
   }
 }
