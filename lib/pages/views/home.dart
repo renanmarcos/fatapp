@@ -1,6 +1,9 @@
 import 'dart:io' show File, InternetAddress, SocketException, exit;
 import 'package:fatapp/pages/controllers/activityController.dart';
+import 'package:fatapp/pages/controllers/eventController.dart';
+import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
+import 'package:fatapp/pages/views/eventDetail.dart';
 import 'package:fatapp/pages/views/common/CustomShapeClipper.dart';
 import 'package:fatapp/pages/views/eventsList2.dart';
 import 'package:fatapp/pages/views/login.dart';
@@ -14,8 +17,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './common/CustomShapeClipper.dart';
-import './eventsList.dart';
-import './subscriptionsList.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({this.user});
@@ -49,6 +50,7 @@ readUrlFile(userId, userToken) async {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Event> eventList;
   @override
   void initState() {
     readUrlFile(widget.user.id, widget.user.token);
@@ -64,21 +66,16 @@ class _HomePageState extends State<HomePage> {
         },
         child: new Scaffold(
           appBar: new AppBar(
-            // title: new Text('FATapp'),
             backgroundColor: Colors.red,
             elevation: 0,
-            brightness: Brightness.light,
-            // centerTitle: true,
-            // actions: <Widget>[
-            //   Icon(Icons.notifications),
-            // ],
+            brightness: Brightness.light
           ),
           drawer: new Drawer(
             child: new ListView(
               children: <Widget>[
                 new UserAccountsDrawerHeader(
-                  accountName: this.getName(),
-                  accountEmail: this.getEmail(),
+                  accountName: new Text(widget.user.name),
+                  accountEmail: new Text(widget.user.email),
                   currentAccountPicture: new GestureDetector(
                       // child: new CircleAvatar(
                       //   // backgroundImage: new AssetImage('assets/images/profileIcon.png'),
@@ -95,35 +92,14 @@ class _HomePageState extends State<HomePage> {
                     title: new Text('Eventos'),
                     trailing: new Icon(Icons.keyboard_arrow_right),
                     onTap: () {
-                      Navigator.of(context).pop();
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (BuildContext context) => new EventsList(user: widget.user)));
                     }),
 
-                // new ExpansionTile(
-                //   title: Text('Eventos'),
-                //   children: <Widget>[
-                //     new ListTile(
-                //       title: new Text('Evento Atual'),
-                //       trailing: new Icon(Icons.keyboard_arrow_right),
-                //     ),
-                //     new ListTile(
-                //       title: new Text('Eventos Passados'),
-                //       trailing: new Icon(Icons.keyboard_arrow_right),
-                //       onTap: () {
-                //        Navigator.push(
-                //         context,
-                //         MaterialPageRoute(builder: (context) => EventsList()),
-                //       );
-                //       }
-                //     ),
-                //   ],
-                // ),
                 new ListTile(
                     title: new Text('Inscrições'),
                     trailing: new Icon(Icons.keyboard_arrow_right),
                     onTap: () {
-                      Navigator.of(context).pop();
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (BuildContext context) =>
                               new SubscriptionPage(widget.user)));
@@ -153,44 +129,86 @@ class _HomePageState extends State<HomePage> {
           ),
           body: Column(
             children: <Widget>[
-              HomeScreenTopPart(),
-              HomeScreenBottomPart(),
-            ],
+            HomeScreenTopPart(),
+            FutureBuilder<List<Event>>(
+              future: EventController().getEvents(widget.user.token),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  eventList = snapshot.data;
+                  if(eventList.isEmpty) {
+                    return Text(
+                      "Não há eventos ativos no momento",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 24.0,
+                        color: Colors.white,
+                        fontFamily: 'Raleway',
+                      ),
+                    );
+                  }
+                  eventList.where((event) =>
+                    event.initialDate.toLocal().isBefore(DateTime.now().toLocal()))
+                  .toList();
+                  return CarouselSlider(
+                    height: 300.0,
+                    initialPage: 0,
+                    enlargeCenterPage: true,
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    autoPlay: false,
+                    reverse: false,
+                    enableInfiniteScroll: true,
+                    autoPlayInterval: Duration(seconds: 2),
+                    autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                    pauseAutoPlayOnTouch: Duration(seconds: 10),
+                    scrollDirection: Axis.horizontal,
+                    items: eventList.map((event) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin:
+                              EdgeInsets.symmetric(vertical: 18.0, horizontal: 4.0),
+                          child: GestureDetector(
+                              child: Image.network(
+                                event.imageUrl,
+                                headers: {
+                                  "Token" : widget.user.token
+                                },
+                                width: 500,
+                                height: 300,
+                            ),
+                            onTap: () {
+                              Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => EventDetail(widget.user, event)));
+                            }
+                          )
+                          );
+                        }
+                    );
+                  }).toList(),
+                );
+              }}
+            )]
           ),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ScanScreen()));
+              MaterialPageRoute(builder: (context) => ScanScreen()));
             },
             label: Text('PRESENÇA'),
             icon: Icon(Icons.photo_camera),
             backgroundColor: Colors.black87,
           ),
-        ));
+        )
+      );
   }
-
   Future<void> deletePreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
   }
-
-  getEmail() {
-    if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
-      return new Text(widget.user.email);
-    } else {
-      return new Text('teste@gmail.com');
-    }
-  }
-
-  getName() {
-    if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
-      return new Text(widget.user.name);
-    } else {
-      return new Text('Teste');
-    }
-  }
 }
-
 class HomeScreenTopPart extends StatefulWidget {
   @override
   _HomeScreenTopPartState createState() => _HomeScreenTopPartState();
@@ -246,72 +264,6 @@ class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
           ),
         )
       ],
-    );
-  }
-}
-
-int photoIndex = 0;
-
-List imgList = [
-  'assets/images/banner1.jpg',
-  'assets/images/banner2.jpg',
-  'assets/images/banner3.jpg',
-  'assets/images/banner4.jpg',
-];
-
-class HomeScreenBottomPart extends StatefulWidget {
-  @override
-  _HomeScreenBottomPartState createState() => _HomeScreenBottomPartState();
-}
-
-class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          CarouselSlider(
-            height: 300.0,
-            initialPage: 0,
-            aspectRatio: 16 / 9,
-            enlargeCenterPage: true,
-            autoPlayCurve: Curves.fastOutSlowIn,
-            autoPlay: false,
-            reverse: false,
-            enableInfiniteScroll: true,
-            autoPlayInterval: Duration(seconds: 2),
-            autoPlayAnimationDuration: Duration(milliseconds: 2000),
-            pauseAutoPlayOnTouch: Duration(seconds: 10),
-            scrollDirection: Axis.horizontal,
-            onPageChanged: (index) {
-              setState(() {
-                photoIndex = index;
-              });
-            },
-            items: imgList.map((imgUrl) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin:
-                        EdgeInsets.symmetric(vertical: 18.0, horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Image.asset(
-                      imgUrl,
-                      fit: BoxFit.fill,
-                    ),
-                  );
-                },
-              );
-            }).toList(),
-          ),
-        ],
-      ),
     );
   }
 }
