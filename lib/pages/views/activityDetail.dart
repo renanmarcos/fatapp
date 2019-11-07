@@ -104,11 +104,17 @@ class ActivityDetail extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  DateFormat("dd/MM 'às' Hms")
-                          .format(this.activity.initialDate.toLocal()) +
+                  DateFormat("dd/MM 'às' HH:mm").format(this
+                          .activity
+                          .initialDate
+                          .toLocal()
+                          .add(Duration(hours: 1))) +
                       " até " +
-                      DateFormat("dd/MM 'às' Hms")
-                          .format(this.activity.finalDate.toLocal()),
+                      DateFormat("dd/MM 'às' HH:mm").format(this
+                          .activity
+                          .finalDate
+                          .toLocal()
+                          .add(Duration(hours: 1))),
                   style: TextStyle(
                     color: Colors.grey[500],
                   ),
@@ -140,11 +146,7 @@ class ActivityDetail extends StatelessWidget {
 
     return new Scaffold(
       appBar: AppBar(
-<<<<<<< HEAD
-        // title: Text('Palestra X'),
         elevation: 0,
-=======
->>>>>>> cbc84fabbff3344a873123a79ec4fdb1aaa3ba59
         backgroundColor: Colors.red,
       ),
       body: ListView(
@@ -221,7 +223,8 @@ class _ActivityActionsState extends State<ActivityActions> {
   }
 
   GestureDetector _buildSubscribeButton(bool subscribed, Color color) {
-    if (DateTime.now().isAfter(widget.activity.initialDate)) {
+    if (DateTime.now().isAfter(
+        widget.activity.initialDate.toLocal().add(Duration(hours: 1)))) {
       return _buildButtonColumn(
           color, Icons.warning, 'Atividade encerrada', null);
     }
