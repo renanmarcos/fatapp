@@ -17,6 +17,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   TextEditingController _textPasswordController = new TextEditingController();
   TextEditingController _textNewPasswordController = new TextEditingController();
   @override
+  void initState() {
+    super.initState();
+  }
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
