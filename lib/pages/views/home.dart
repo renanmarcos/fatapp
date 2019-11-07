@@ -68,6 +68,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Event> eventList;
+  
   @override
   void initState() {
     this.verifyOfflineAttendees();
@@ -83,7 +84,6 @@ class _HomePageState extends State<HomePage> {
     } on SocketException catch (_) {
       print('Sem conexão com a internet');
     }
-      super.initState();
   }
 
   Future scan() async {

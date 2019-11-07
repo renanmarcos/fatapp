@@ -17,7 +17,7 @@ class ActivitiesList extends StatelessWidget {
     return new Scaffold(
       appBar: new AppBar(
         elevation: 0,
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.red,
       ),
       body: Column(children: <Widget>[
         ActivitiesListTopPart(),
