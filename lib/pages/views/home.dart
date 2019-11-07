@@ -70,15 +70,20 @@ class _HomePageState extends State<HomePage> {
   List<Event> eventList;
   @override
   void initState() {
-    /*try {
+    this.verifyOfflineAttendees();
+    super.initState();
+  }
+
+  void verifyOfflineAttendees() async {
+    try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         read(widget.user.id,widget.user.token);
       }
     } on SocketException catch (_) {
       print('Sem conexão com a internet');
-    }*/
-    super.initState();
+    }
+      super.initState();
   }
 
   Future scan() async {
