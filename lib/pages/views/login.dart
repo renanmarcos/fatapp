@@ -4,9 +4,9 @@ import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/register.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gradient_widgets/gradient_widgets.dart';
 import './home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -52,17 +52,20 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final loginButton = Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: RaisedButton(
+      padding: EdgeInsets.all(40.0),
+      child: GradientButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        onPressed: () {
+        callback: () {
           signIn();
         },
-        padding: EdgeInsets.all(20),
-        color: Colors.redAccent,
+        increaseHeightBy: 20.0,
+        increaseWidthBy: 60.0,
+        gradient: Gradients.blush,
+        shadowColor: Gradients.hotLinear.colors.last.withOpacity(0.25),
         child: Text('Login', style: TextStyle(color: Colors.white)),
+        elevation: 8,
       ),
     );
 
@@ -119,38 +122,35 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> signIn() async {
-    if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
-      final formState = _formKey.currentState;
-      if (formState.validate()) {
-        formState.save();
-        ResponseHandling().validateEmail(_email);
-        ResponseHandling().validatePassword(_password);
-
-        var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
-        try {
-          final tokenResponse = await UserController().login(jsonData);
-
-          SharedPreferences sharedUser = await SharedPreferences.getInstance();
-          String userString = json.encode(tokenResponse);
-          sharedUser.setString('user', userString);
-
-          User user = User.create(tokenResponse);
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => HomePage(user: user)));
-        } catch (e) {
-          Fluttertoast.showToast(
-              msg: e.toString(),
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIos: 2,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
-        }
+    final formState = _formKey.currentState;
+    if (formState.validate()) {
+      formState.save();
+      if (!ResponseHandling().validateEmail(_email) ||
+          !ResponseHandling().validatePassword(_password)) {
+        return;
       }
-    } else {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
+
+      var jsonData = '{ "email" : "$_email", "password" : "$_password" }';
+      try {
+        final tokenResponse = await UserController().login(jsonData);
+
+        SharedPreferences sharedUser = await SharedPreferences.getInstance();
+        String userString = json.encode(tokenResponse);
+        sharedUser.setString('user', userString);
+
+        User user = User.create(tokenResponse);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => HomePage(user: user)));
+      } catch (e) {
+        Fluttertoast.showToast(
+            msg: e.toString(),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 2,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
     }
   }
 }

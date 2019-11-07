@@ -15,8 +15,8 @@ class ResponseHandling extends AppException {
       return json.decode(response.body);
     }
 
-    if (response.statusCode == 400) {
-      validateCPF(response.body);
+    if (response.statusCode == 422) {
+      handleUnprocessableEntityException(response.body);
     }
 
     if (response.statusCode == 401 || response.statusCode == 404) {
@@ -26,37 +26,86 @@ class ResponseHandling extends AppException {
     throw InternalException();
   }
 
-  void validateEmail(String string) {
+  bool validateEmail(String string) {
+    if(string.isEmpty) {
+      Fluttertoast.showToast(
+        msg: "Email precisa ser preenchido",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+        return false;
+    }
     if (!isEmail(string)) {
       Fluttertoast.showToast(
-          msg: "Email Inválido",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIos: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+        msg: "Email Inválido",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+        return false;
     }
+    return true;
   }
 
-  void validatePassword(String string) {
+  bool validatePassword(String string) {
+    if(string.isEmpty) {
+      Fluttertoast.showToast(
+        msg: "Senha precisa ser preenchida",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+        return false;
+    }
     if (string.length < 6) {
       Fluttertoast.showToast(
-          msg: "Senha Inválida",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIos: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+        msg: "Senha Inválida",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+        return false;
     }
+    return true;
   }
 
-  void validateCPF(body) {
-    if (body.toString().compareTo("CPF Já Existe") == 0) {
-      throw ValidationException("CPF Já Existe");
+  bool validateRA(String string) {
+    if(string.isEmpty) {
+      Fluttertoast.showToast(
+        msg: "RA precisa ser preenchido",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+        return false;
     }
+    if (string.length < 13) {
+      Fluttertoast.showToast(
+        msg: "RA Inválido",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+        return false;
+    }
+    return true;
+  }
 
-    throw InternalException();
+  void handleUnprocessableEntityException(body) {
+    var exception = json.decode(body);
+    throw ValidationException(exception['message']);
   }
 }
