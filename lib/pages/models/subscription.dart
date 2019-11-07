@@ -1,24 +1,19 @@
-import 'dart:convert';
+import 'package:fatapp/pages/models/acitivity.dart';
 
 class Subscription {
   int id;
-  int attended;
-  int activityId;
-  int studentId;
+  bool attended;
+  Activity activity;
 
-  Subscription({this.id, this.attended, this.activityId, this.studentId});
+  Subscription({this.id, this.attended, this.activity});
 
   Subscription.fromJson(Map<String, dynamic> json) {
     this.id = json['id'];
     this.attended = json['attended'];
-    this.activityId = json['activity_id'];
-    this.studentId = json['student_id'];
+    this.activity = Activity.fromJson(json['activity']);
   }
 
-  List<Subscription> subscriptionList(String body) {
-    return json
-        .decode(body)
-        .map((data) => Subscription.fromJson(data))
-        .toList();
+  List<Subscription> fromJsonList(List json) {
+    return json.map((data) => Subscription.fromJson(data)).toList();
   }
 }

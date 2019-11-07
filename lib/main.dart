@@ -8,7 +8,7 @@ final routes = <String, WidgetBuilder>{LoginPage.tag: (context) => LoginPage()};
 
 void main() {
   Intl.defaultLocale = 'pt_BR';
-  initializeDateFormatting();
+  initializeDateFormatting("pt_BR", null);
   DotEnv().load('.env');
   runApp(new MaterialApp(
     home: new LoginPage(),

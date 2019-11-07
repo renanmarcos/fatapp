@@ -31,9 +31,9 @@ class Activity {
     this.description = json['description'];
     this.initialDate = DateTime.parse(json['initialDate']);
     this.finalDate = DateTime.parse(json['finalDate']);
-    this.room = Room.fromJson(json['room']);
-    this.speaker = Speaker.fromJson(json['speaker']);
-    this.targetAudience = Audience().fromJsonList(json['targetAudience']);
+    this.room = json['room'] != null ? Room.fromJson(json['room']) : null;
+    this.speaker = json['speaker'] != null ? Speaker.fromJson(json['speaker']) : null;
+    this.targetAudience = json['targetAudience'] != null ? Audience().fromJsonList(json['targetAudience']) : null;
   }
 
   List<Activity> fromJsonList(List json) {
