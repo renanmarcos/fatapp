@@ -54,7 +54,7 @@ class HomePage extends StatefulWidget {
           }
       prefs.setStringList(key, []);
       print('read: $value');
-      }
+    }
 
   
 
@@ -62,8 +62,8 @@ class HomePage extends StatefulWidget {
     final prefs = await SharedPreferences.getInstance();
     final key = 'qrCodeKeys';
     final value = prefs.getStringList(key) ?? [];
-    urlToSave = jsonEncode(urlToSave);
-    value.add(urlToSave['id']);
+    urlToSave = jsonDecode(urlToSave);
+    value.add(urlToSave['id'].toString());
     prefs.setStringList(key, value);
     print('saved $value');
   }
