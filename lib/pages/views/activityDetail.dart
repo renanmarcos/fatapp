@@ -140,12 +140,8 @@ class ActivityDetail extends StatelessWidget {
 
     return new Scaffold(
       appBar: AppBar(
-<<<<<<< HEAD
-        // title: Text('Palestra X'),
-        elevation: 0,
-=======
->>>>>>> cbc84fabbff3344a873123a79ec4fdb1aaa3ba59
         backgroundColor: Colors.red,
+        elevation: 0,
       ),
       body: ListView(
         children: <Widget>[
