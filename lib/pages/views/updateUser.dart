@@ -223,6 +223,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                 //   color: Colors.redAccent,
                 Row(
                   children: <Widget>[
+                    SizedBox(width: 20.0),
                     Material(
                       // borderRadius: BorderRadius.circular(20.0),
                       // color: Colors.white,
@@ -249,7 +250,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                         ),
                       ),
                     ),
-                    // SizedBox(height: 20.0),
+                    SizedBox(width: 40.0),
 
                     // height: 40.0,
                     Material(
