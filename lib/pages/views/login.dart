@@ -18,8 +18,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   Widget build(BuildContext context) {
-    this.checkLogin();
     final logo = Hero(
       tag: 'hero',
       child: CircleAvatar(
@@ -109,16 +109,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  Future<void> checkLogin() async {
-    SharedPreferences sharedUser = await SharedPreferences.getInstance();
-    if (sharedUser.getString('user') != null) {
-      Map userMap = json.decode(sharedUser.getString('user'));
-      User user = User.create(userMap);
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => HomePage(user: user)));
-    }
   }
 
   Future<void> signIn() async {

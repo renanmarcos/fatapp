@@ -1,4 +1,3 @@
-import 'package:fatapp/pages/models/course.dart';
 import 'package:fatapp/pages/models/student.dart';
 
 class User {

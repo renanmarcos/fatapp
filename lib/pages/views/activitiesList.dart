@@ -118,6 +118,10 @@ class _ActivitiesContainerState extends State<ActivitiesContainer> {
       return Center(child: CircularProgressIndicator());
     }
 
+    if (_activities.isEmpty) {
+      return Center(child: Text("Não existe atividades para esse evento."));
+    }
+
     return ActivityFilter(_activities, widget.user);
   }
 }
