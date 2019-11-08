@@ -49,8 +49,8 @@ class EventsList extends StatelessWidget {
           ),
           body: TabBarView(
             children: [
-              CurrentEvent(this.user),
-              PastEvents(this.user),
+              new CurrentEvent(this.user),
+              new PastEvents(this.user),
             ],
           ),
         ),
