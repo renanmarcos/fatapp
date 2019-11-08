@@ -1,14 +1,16 @@
+import 'dart:convert';
+
 import 'package:fatapp/pages/controllers/courseController.dart';
 import 'package:fatapp/pages/controllers/responseHandling.dart';
 import 'package:fatapp/pages/controllers/studentController.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/course.dart';
-import 'package:fatapp/pages/models/student.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:masked_text/masked_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -201,6 +203,7 @@ class _SignupPageState extends State<SignupPage> {
         return;
       }
       try {
+        var created;
         if (visibilityRA) {
           int courseId;
           for (var course in courseList) {
@@ -210,14 +213,18 @@ class _SignupPageState extends State<SignupPage> {
           }
           var jsonStudent =
               '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password", "ra" : "$_ra", "courseId" : "$courseId" }';
-          final created = await StudentController().create(jsonStudent);
+          created = await StudentController().create(jsonStudent);
           user = User.createWithStudent(created);
         } else {
           var jsonUser =
               '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password" }';
-          final created = await UserController().create(jsonUser);
+          created = await UserController().create(jsonUser);
           user = User.create(created);
         }
+        SharedPreferences sharedUser = await SharedPreferences.getInstance();
+          String userString = json.encode(created);
+          sharedUser.setString('user', userString);
+
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => HomePage(user: user)));
       } catch (e) {

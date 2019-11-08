@@ -1,6 +1,7 @@
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/activitiesList.dart';
+import 'package:fatapp/pages/views/eventsList2.dart';
 import 'package:flutter/material.dart';
 import 'common/CustomShapeClipper.dart';
 
@@ -14,7 +15,6 @@ class _EventDetailTopPartState extends State<EventDetailTopPart> {
   void initState() {
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -132,28 +132,35 @@ class EventDetail extends StatelessWidget {
         ),
       )));
 
-    return new Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: new Text(this.event.title),
-        backgroundColor: Colors.red,
-      ),
-      body: ListView(
-        children: <Widget>[
-          Image.network(
-            this.event.imageUrl,
-            headers: {
-              "Token" : this.user.token
-            },
-            width: 600,
-            height: 240,
-            fit: BoxFit.cover,
+    return WillPopScope(
+        onWillPop: () async {
+          Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => EventsList(user: user)));
+          return true;
+        }, 
+        child: Scaffold(    
+          appBar: AppBar(
+            elevation: 0,
+            title: new Text(this.event.title),
+            backgroundColor: Colors.red,
           ),
-          titleSection,
-          textSection,
-        ],
-      ),
-    );
+          body: ListView(
+            children: <Widget>[
+              Image.network(
+                this.event.imageUrl,
+                headers: {
+                  "Token" : this.user.token
+                },
+                width: 600,
+                height: 240,
+                fit: BoxFit.cover,
+              ),
+              titleSection,
+              textSection,
+            ],
+          ),
+        )
+      );
   }
 
   Column _buildButtonColumn(Color color, IconData icon, String label) {
