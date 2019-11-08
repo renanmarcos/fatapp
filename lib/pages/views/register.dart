@@ -211,8 +211,7 @@ class _SignupPageState extends State<SignupPage> {
           var jsonStudent =
               '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password", "ra" : "$_ra", "courseId" : "$courseId" }';
           final created = await StudentController().create(jsonStudent);
-          Student student = Student.fromJson(created);
-          user = student.user;
+          user = User.createWithStudent(created);
         } else {
           var jsonUser =
               '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password" }';
