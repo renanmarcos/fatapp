@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/controllers/eventController.dart';
-import 'package:fatapp/pages/controllers/services.dart';
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/eventDetail.dart';
@@ -39,48 +39,56 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  void verifyOfflineAttendees() async {
-    try {
-      final result = await InternetAddress.lookup(Services.baseUri);
-      
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        this.read(widget.user.id, widget.user.token);
-      }
-    } on SocketException catch (_) {
-      Fluttertoast.showToast(
-          msg: "Você ainda está sem conexão, mas enviaremos as " +
-              "atividades participadas para o servidor assim que possível",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 5,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+  Future<bool> check() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
     }
+    return false;
+}
+
+  void verifyOfflineAttendees() async {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      List<String> value = preferences.getStringList("qrCodeKeys");
+      if(value == null || value.isEmpty) {
+        return;
+      }
+      if (await this.check() == true) {
+        this.read(widget.user.id, widget.user.token, value);
+        preferences.setStringList('qrCodeKeys', []);
+      }
   }
 
   Future<void> scan() async {
     try {
       String barcode = await BarcodeScanner.scan();
-      try {
-        final result = await InternetAddress.lookup(Services.baseUri);
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        if(await this.check() == true) {
           String jsonData = jsonEncode({"userId": widget.user.id});
           int activityId = jsonDecode(barcode)['id'];
           ActivityController()
               .attendee(activityId, jsonData, widget.user.token);
-        }
-      } on SocketException catch (_) {
-        this.saveUrl(barcode);
-        Fluttertoast.showToast(
+          Fluttertoast.showToast(
             msg:
-                "Você está sem conexão, mas confirmaremos sua presença assim que possível.",
+                "O certificado das atividade participada foi mandada para seu email",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIos: 5,
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.green,
             textColor: Colors.white,
-            fontSize: 16.0);
+            fontSize: 16.0);    
+        } else {
+          this.saveUrl(barcode);
+          Fluttertoast.showToast(
+              msg:
+                  "Você está sem conexão, mas confirmaremos sua presença assim que possível.",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 5,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
       }
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
@@ -99,23 +107,20 @@ class _HomePageState extends State<HomePage> {
     prefs.setStringList("qrCodeKeys", value);
   }
 
-  Future<void> read(userId, userToken) async {
-    final prefs = await SharedPreferences.getInstance();
-    final activities = prefs.getStringList("qrCodeKeys") ?? [];
+  Future<void> read(userId, userToken, List<String> activities) async {
     for (var activityId in activities) {
       String jsonData = jsonEncode({"userId": userId});
       ActivityController().attendee(activityId, jsonData, userToken);
       Fluttertoast.showToast(
           msg:
-              "O certificado das atividades participadas chegaram em seu Email em breve.",
+              "O certificado das atividades participadas chegarão em seu Email em breve.",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 5,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
     }
-    prefs.setStringList("qrCodeKeys", []);
   }
 
   @override
@@ -152,8 +157,8 @@ class _HomePageState extends State<HomePage> {
                     trailing: new Icon(Icons.keyboard_arrow_right),
                     onTap: () {
                       Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              new EventsList(user: widget.user)));
+                          builder: (BuildContext context) => 
+                            new EventsList(user: widget.user)));
                     }),
                 new ListTile(
                     title: new Text('Inscrições'),
