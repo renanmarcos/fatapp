@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/controllers/eventController.dart';
+import 'package:fatapp/pages/controllers/services.dart';
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/eventDetail.dart';
@@ -14,6 +16,7 @@ import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './common/CustomShapeClipper.dart';
 import './eventsList2.dart';
@@ -22,53 +25,14 @@ class HomePage extends StatefulWidget {
   const HomePage({this.user});
   final User user;
   static String tag = 'home-page';
+
   @override
   _HomePageState createState() => new _HomePageState();
 }
 
-  Future scan() async {
-    try {
-      String barcode = await BarcodeScanner.scan();
-      saveUrl(barcode);
-    } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) {
-          print('The user did not grant the camera permission!');
-      } else {
-        print('Unknown error: $e');
-      }
-    } on FormatException{
-      print('null (User returned using the "back"-button before scanning anything. Result)');
-    } catch (e) {
-      print('Unknown error: $e');
-    }
-  }
-
-  read(userId,userToken) async {
-      final prefs = await SharedPreferences.getInstance();
-      final key = 'qrCodeKeys';
-      final value = prefs.getStringList(key) ?? [];
-      for (var item in value) {
-            var jsonData = '{ "userId" : "$userId"}';
-            ActivityController().attendee(item, jsonData, userToken);
-          }
-      prefs.setStringList(key, []);
-      print('read: $value');
-      }
-
-  
-
-  saveUrl(urlToSave) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = 'qrCodeKeys';
-    final value = prefs.getStringList(key) ?? [];
-    value.add(urlToSave['id']);
-    prefs.setStringList(key, value);
-    print('saved $value');
-  }
-
 class _HomePageState extends State<HomePage> {
   List<Event> eventList;
-  
+
   @override
   void initState() {
     this.verifyOfflineAttendees();
@@ -77,36 +41,81 @@ class _HomePageState extends State<HomePage> {
 
   void verifyOfflineAttendees() async {
     try {
-      final result = await InternetAddress.lookup('google.com');
+      final result = await InternetAddress.lookup(Services.baseUri);
+      
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        read(widget.user.id,widget.user.token);
+        this.read(widget.user.id, widget.user.token);
       }
     } on SocketException catch (_) {
-      print('Sem conexão com a internet');
+      Fluttertoast.showToast(
+          msg: "Você ainda está sem conexão, mas enviaremos as " +
+              "atividades participadas para o servidor assim que possível",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 5,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 
-  Future scan() async {
-    String barcode;
-
+  Future<void> scan() async {
     try {
-      barcode = await BarcodeScanner.scan();
-      setState(() => barcode = barcode);
-      saveUrl(barcode);
+      String barcode = await BarcodeScanner.scan();
+      try {
+        final result = await InternetAddress.lookup(Services.baseUri);
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          String jsonData = jsonEncode({"userId": widget.user.id});
+          int activityId = jsonDecode(barcode)['id'];
+          ActivityController()
+              .attendee(activityId, jsonData, widget.user.token);
+        }
+      } on SocketException catch (_) {
+        this.saveUrl(barcode);
+        Fluttertoast.showToast(
+            msg:
+                "Você está sem conexão, mas confirmaremos sua presença assim que possível.",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 5,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
-        setState(() {
-          barcode = 'The user did not grant the camera permission!';
-        });
-      } else {
-        setState(() => barcode = 'Unknown error: $e');
+        print('The user did not grant the camera permission!');
       }
-    } on FormatException {
-      setState(() => barcode =
-          'null (User returned using the "back"-button before scanning anything. Result)');
     } catch (e) {
-      setState(() => barcode = 'Unknown error: $e');
+      print('Unknown error: $e');
     }
+  }
+
+  Future<void> saveUrl(urlToSave) async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getStringList("qrCodeKeys") ?? [];
+    urlToSave = jsonDecode(urlToSave);
+    value.add(urlToSave['id'].toString());
+    prefs.setStringList("qrCodeKeys", value);
+  }
+
+  Future<void> read(userId, userToken) async {
+    final prefs = await SharedPreferences.getInstance();
+    final activities = prefs.getStringList("qrCodeKeys") ?? [];
+    for (var activityId in activities) {
+      String jsonData = jsonEncode({"userId": userId});
+      ActivityController().attendee(activityId, jsonData, userToken);
+      Fluttertoast.showToast(
+          msg:
+              "O certificado das atividades participadas chegaram em seu Email em breve.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 5,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+    prefs.setStringList("qrCodeKeys", []);
   }
 
   @override
@@ -118,10 +127,9 @@ class _HomePageState extends State<HomePage> {
         },
         child: new Scaffold(
           appBar: new AppBar(
-            backgroundColor: Colors.red,
-            elevation: 0,
-            brightness: Brightness.light
-          ),
+              backgroundColor: Colors.red,
+              elevation: 0,
+              brightness: Brightness.light),
           drawer: new Drawer(
             child: new ListView(
               children: <Widget>[
@@ -139,15 +147,14 @@ class _HomePageState extends State<HomePage> {
                               'assets/images/fatec-saocaetano.jpg'),
                           fit: BoxFit.fitWidth)),
                 ),
-
                 new ListTile(
                     title: new Text('Eventos'),
                     trailing: new Icon(Icons.keyboard_arrow_right),
                     onTap: () {
                       Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) => new EventsList(user: widget.user)));
+                          builder: (BuildContext context) =>
+                              new EventsList(user: widget.user)));
                     }),
-
                 new ListTile(
                     title: new Text('Inscrições'),
                     trailing: new Icon(Icons.keyboard_arrow_right),
@@ -156,7 +163,6 @@ class _HomePageState extends State<HomePage> {
                           builder: (BuildContext context) =>
                               new SubscriptionPage(widget.user)));
                     }),
-
                 new Divider(),
                 new ListTile(
                   title: new Text('Perfil'),
@@ -179,71 +185,69 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          body: Column(
-            children: <Widget>[
+          body: Column(children: <Widget>[
             HomeScreenTopPart(),
             FutureBuilder<List<Event>>(
-              future: EventController().getEvents(widget.user.token),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                } else {
-                  eventList = snapshot.data;
-                  if(eventList.isEmpty) {
-                    return Text(
-                      "Não há eventos ativos no momento",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 24.0,
-                        color: Colors.white,
-                        fontFamily: 'Raleway',
-                      ),
+                future: EventController().getEvents(widget.user.token),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    eventList = snapshot.data;
+                    if (eventList.isEmpty) {
+                      return Text(
+                        "Não há eventos ativos no momento",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 24.0,
+                          color: Colors.white,
+                          fontFamily: 'Raleway',
+                        ),
+                      );
+                    }
+                    eventList = eventList
+                        .where((event) => event.initialDate
+                            .toLocal()
+                            .isBefore(DateTime.now().toLocal()))
+                        .toList();
+                    return CarouselSlider(
+                      height: 300.0,
+                      initialPage: 0,
+                      enlargeCenterPage: true,
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      autoPlay: false,
+                      reverse: false,
+                      enableInfiniteScroll: true,
+                      autoPlayInterval: Duration(seconds: 2),
+                      autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                      pauseAutoPlayOnTouch: Duration(seconds: 10),
+                      scrollDirection: Axis.horizontal,
+                      items: eventList.map((event) {
+                        return Builder(builder: (BuildContext context) {
+                          return Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 18.0, horizontal: 4.0),
+                              child: GestureDetector(
+                                  child: Image.network(
+                                    event.imageUrl,
+                                    headers: {"Token": widget.user.token},
+                                    width: 500,
+                                    height: 300,
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => EventDetail(
+                                                widget.user, event)));
+                                  }));
+                        });
+                      }).toList(),
                     );
                   }
-                  eventList.where((event) =>
-                    event.initialDate.toLocal().isBefore(DateTime.now().toLocal()))
-                  .toList();
-                  return CarouselSlider(
-                    height: 300.0,
-                    initialPage: 0,
-                    enlargeCenterPage: true,
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    autoPlay: false,
-                    reverse: false,
-                    enableInfiniteScroll: true,
-                    autoPlayInterval: Duration(seconds: 2),
-                    autoPlayAnimationDuration: Duration(milliseconds: 2000),
-                    pauseAutoPlayOnTouch: Duration(seconds: 10),
-                    scrollDirection: Axis.horizontal,
-                    items: eventList.map((event) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin:
-                              EdgeInsets.symmetric(vertical: 18.0, horizontal: 4.0),
-                          child: GestureDetector(
-                              child: Image.network(
-                                event.imageUrl,
-                                headers: {
-                                  "Token" : widget.user.token
-                                },
-                                width: 500,
-                                height: 300,
-                            ),
-                            onTap: () {
-                              Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => EventDetail(widget.user, event)));
-                            }
-                          )
-                          );
-                        }
-                    );
-                  }).toList(),
-                );
-              }}
-            )]
-          ),
+                })
+          ]),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () async {
               this.scan();
@@ -252,14 +256,15 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.photo_camera),
             backgroundColor: Colors.black87,
           ),
-        )
-      );
+        ));
   }
+
   Future<void> deletePreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
   }
 }
+
 class HomeScreenTopPart extends StatefulWidget {
   @override
   _HomeScreenTopPartState createState() => _HomeScreenTopPartState();
