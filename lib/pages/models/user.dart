@@ -43,4 +43,13 @@ class User {
     this.password = json['user']['password'];
     this.student = Student.fromUser(json);
   }
+  User.createWithStudent(Map<String, dynamic> json) {
+    this.token = json['token'];
+    this.id = json['student']['user']['id'];
+    this.name = json['student']['user']['name'];
+    this.email = json['student']['user']['email'];
+    this.cpf = json['student']['user']['cpf'];
+    this.password = json['student']['user']['password'];
+    this.student = Student.fromUser(json['student']);
+  }
 }
