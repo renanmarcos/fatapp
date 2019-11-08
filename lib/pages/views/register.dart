@@ -36,7 +36,7 @@ class _SignupPageState extends State<SignupPage> {
             style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)
           )
         ),
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
             Widget>[

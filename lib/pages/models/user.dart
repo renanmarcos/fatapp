@@ -1,3 +1,4 @@
+import 'package:fatapp/pages/models/course.dart';
 import 'package:fatapp/pages/models/student.dart';
 
 class User {
@@ -20,7 +21,7 @@ class User {
     this.password = json['user']['password'];
     
     if(json['user']['student'] != null) {
-      student = Student.fromUser(json['user']['student']);
+      this.student = Student.fromUser(json['user']['student']);
     }
   }
 
@@ -31,5 +32,15 @@ class User {
     this.email = json['email'];
     this.cpf = json['cpf'];
     this.password = json['password'];
+  }
+  
+  User.fromStudent(Map<String, dynamic> json, String token) {
+    this.token = token;
+    this.id = json['user']['id'];
+    this.name = json['user']['name'];
+    this.email = json['user']['email'];
+    this.cpf = json['user']['cpf'];
+    this.password = json['user']['password'];
+    this.student = Student.fromUser(json);
   }
 }

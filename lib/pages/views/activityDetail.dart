@@ -18,6 +18,10 @@ class ActivityDetailTopPart extends StatefulWidget {
 }
 
 class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(

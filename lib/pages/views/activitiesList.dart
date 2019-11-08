@@ -34,7 +34,6 @@ class ActivitiesListTopPart extends StatefulWidget {
 
 class _ActivitiesListTopPartState extends State<ActivitiesListTopPart> {
   final String title = "Atividades";
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -109,6 +108,9 @@ class _ActivitiesContainerState extends State<ActivitiesContainer> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
   Widget build(BuildContext context) {
     _fetchData();
 

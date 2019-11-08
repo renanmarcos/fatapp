@@ -1,5 +1,6 @@
 import 'package:fatapp/pages/controllers/courseController.dart';
 import 'package:fatapp/pages/controllers/responseHandling.dart';
+import 'package:fatapp/pages/controllers/studentController.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/course.dart';
 import 'package:fatapp/pages/models/user.dart';
@@ -99,7 +100,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
           // title: new Text('Perfil',
           //     style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold))
         ),
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.end, children: <
@@ -233,8 +234,8 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                         callback: () {
                           this.update();
                         },
-                        increaseWidthBy: 80.0,
-                        increaseHeightBy: 30.0,
+                        increaseWidthBy: 50.0,
+                        increaseHeightBy: 10.0,
                         gradient: Gradients.blush,
                         child: Center(
                           child: Text(
@@ -267,8 +268,8 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                                       ChangePasswordPage(user: widget.user)));
                         },
                         gradient: Gradients.blush,
-                        increaseWidthBy: 80.0,
-                        increaseHeightBy: 30.0,
+                        increaseWidthBy: 50.0,
+                        increaseHeightBy: 10.0,
                         child: Center(
                           child: Text(
                             'Mudar Senha',
@@ -304,23 +305,41 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
         _ra = _textRAController.text;
     ResponseHandling().validateEmail(_email);
     try {
-      var jsonData = '{ "name" : "$_name", "email" : "$_email"';
-      if (widget.user.student == null && _isChecked ||
-          widget.user.student != null) {
-        int courseId;
+      int courseId;
+      bool updateStudent;
         for (var course in courseList) {
           if (course.acronym == _course) {
-            courseId = course.id;
-          }
+          courseId = course.id;
         }
+      }
+      var jsonData = '{ "name" : "$_name", "email" : "$_email"';
+      if (widget.user.student == null && _isChecked || widget.user.student != null) 
+      {
         if (ResponseHandling().validateRA(_ra) && courseId != 0) {
           jsonData += ', "ra" : "$_ra", "courseId" : "$courseId"';
+          updateStudent = true;
+        } else {
+          Fluttertoast.showToast(
+            msg: "Você precisa preencher seu curso e RA",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 2,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
         }
       }
       jsonData += ' }';
-      final update = await UserController()
+      User user;
+      if (updateStudent) {
+        final update = await StudentController()
+          .update(widget.user.student.id, jsonData, widget.user.token);
+        user = User.fromStudent(update, widget.user.token);
+      } else {
+        final update = await UserController()
           .update(widget.user.id, jsonData, widget.user.token);
-      User user = User.fromJson(update, widget.user.token);
+        user = User.fromJson(update, widget.user.token);
+      }
 
       Fluttertoast.showToast(
           msg: "Cadastro atualizado com sucesso",
