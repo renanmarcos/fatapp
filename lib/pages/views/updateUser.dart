@@ -1,5 +1,6 @@
 import 'package:fatapp/pages/controllers/courseController.dart';
 import 'package:fatapp/pages/controllers/responseHandling.dart';
+import 'package:fatapp/pages/controllers/studentController.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/course.dart';
 import 'package:fatapp/pages/models/user.dart';
@@ -95,15 +96,14 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-            elevation: 0,
-            // title: new Text('Perfil',
-            //     style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold))
-        ),  
-        resizeToAvoidBottomPadding: false,
+          elevation: 0,
+          // title: new Text('Perfil',
+          //     style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold))
+        ),
+        resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
             child:
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end, children: <
+                Column(crossAxisAlignment: CrossAxisAlignment.end, children: <
                     Widget>[
           UserScreenTopPart(),
           Container(
@@ -113,27 +113,26 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                 TextField(
                   controller: _textNameController,
                   style: TextStyle(color: Colors.black87),
-                  
                   decoration: InputDecoration(
-                      labelText: 'Nome Completo',
-                      border: InputBorder.none,
-                      // border: InputBorder(borderSide: BorderSide(color: Colors.grey, width: 1.0)),
-                      // fillColor: const Color.fromARGB(255, 244, 244, 244),
-                      fillColor: Colors.white,
-                      filled: true,
-                      focusColor: Colors.white,
-                      // border: UnderlineInputBorder(
-                      //     borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                      //     borderRadius: BorderRadius.circular(10.0),
-                      //     ),
-                      labelStyle: TextStyle(
-                          fontFamily: 'Noto',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black45),
-                      
-                      // focusedBorder: UnderlineInputBorder(
-                      //     borderSide: BorderSide(color: Colors.white))
-                      ),
+                    labelText: 'Nome Completo',
+                    border: InputBorder.none,
+                    // border: InputBorder(borderSide: BorderSide(color: Colors.grey, width: 1.0)),
+                    // fillColor: const Color.fromARGB(255, 244, 244, 244),
+                    fillColor: Colors.white,
+                    filled: true,
+                    focusColor: Colors.white,
+                    // border: UnderlineInputBorder(
+                    //     borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                    //     borderRadius: BorderRadius.circular(10.0),
+                    //     ),
+                    labelStyle: TextStyle(
+                        fontFamily: 'Noto',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black45),
+
+                    // focusedBorder: UnderlineInputBorder(
+                    //     borderSide: BorderSide(color: Colors.white))
+                  ),
                 ),
                 SizedBox(height: 10.0),
                 TextField(
@@ -166,8 +165,9 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                           fontWeight: FontWeight.bold,
                           color: Colors.grey),
                       focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white,
-                          ))),
+                          borderSide: BorderSide(
+                        color: Colors.white,
+                      ))),
                 ),
                 SizedBox(height: 10.0),
                 CheckboxListTile(
@@ -221,7 +221,9 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                 SizedBox(height: 10.0),
                 // Container(
                 //   color: Colors.redAccent,
-                Row (children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    SizedBox(width: 20.0),
                     Material(
                       // borderRadius: BorderRadius.circular(20.0),
                       // color: Colors.white,
@@ -233,8 +235,8 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                         callback: () {
                           this.update();
                         },
-                        increaseWidthBy: 80.0,
-                        increaseHeightBy: 30.0,
+                        increaseWidthBy: 50.0,
+                        increaseHeightBy: 10.0,
                         gradient: Gradients.blush,
                         child: Center(
                           child: Text(
@@ -248,8 +250,8 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                         ),
                       ),
                     ),
-                    // SizedBox(height: 20.0),
-                
+                    SizedBox(width: 40.0),
+
                     // height: 40.0,
                     Material(
                       // borderRadius: BorderRadius.circular(20.0),
@@ -267,8 +269,8 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                                       ChangePasswordPage(user: widget.user)));
                         },
                         gradient: Gradients.blush,
-                        increaseWidthBy: 80.0,
-                        increaseHeightBy: 30.0,
+                        increaseWidthBy: 50.0,
+                        increaseHeightBy: 10.0,
                         child: Center(
                           child: Text(
                             'Mudar Senha',
@@ -281,10 +283,10 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                         ),
                       ),
                     )
-                ],)
-                    
-    ])
-    )])));
+                  ],
+                )
+              ]))
+        ])));
   }
 
   getValues() {
@@ -294,34 +296,67 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
     if (widget.user.student != null) {
       _textRAController.text = widget.user.student.ra;
       _isChecked = true;
-      //_course = widget.user.student.course.acronym;
+      _course = widget.user.student.course.acronym;
     }
   }
 
   Future<void> update() async {
-    var _name = _textNameController.text, _email = _textEmailController.text;
+    var _name = _textNameController.text,
+        _email = _textEmailController.text,
+        _ra = _textRAController.text;
     ResponseHandling().validateEmail(_email);
     try {
-      var jsonData = '{ "name" : "$_name", "email" : "$_email" }';
-      final update = await UserController()
+      int courseId;
+      bool updateStudent;
+        for (var course in courseList) {
+          if (course.acronym == _course) {
+          courseId = course.id;
+        }
+      }
+      var jsonData = '{ "name" : "$_name", "email" : "$_email"';
+      if (widget.user.student == null && _isChecked || widget.user.student != null) 
+      {
+        if (ResponseHandling().validateRA(_ra) && courseId != 0) {
+          jsonData += ', "ra" : "$_ra", "courseId" : "$courseId"';
+          updateStudent = true;
+        } else {
+          Fluttertoast.showToast(
+            msg: "Você precisa preencher seu curso e RA",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 2,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        }
+      }
+      jsonData += ' }';
+      User user;
+      if (updateStudent) {
+        final update = await StudentController()
+          .update(widget.user.student.id, jsonData, widget.user.token);
+        user = User.fromStudent(update, widget.user.token);
+      } else {
+        final update = await UserController()
           .update(widget.user.id, jsonData, widget.user.token);
-      User user = User.fromJson(update, widget.user.token);
+        user = User.fromJson(update, widget.user.token);
+      }
+
       Fluttertoast.showToast(
           msg: "Cadastro atualizado com sucesso",
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 2,
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => HomePage(user: user)));
-      //Falta ajustar estudante
     } catch (e) {
       Fluttertoast.showToast(
           msg: e.toString(),
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 2,
           backgroundColor: Colors.red,
           textColor: Colors.white,

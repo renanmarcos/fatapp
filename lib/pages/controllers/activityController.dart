@@ -4,6 +4,7 @@ import 'services.dart';
 import 'dart:async';
 
 class ActivityController {
+
   final String _resource = "activities";
 
   Future<List<Activity>> indexFromEvent(Event event, String token) async {
@@ -24,6 +25,6 @@ class ActivityController {
   }
 
   Future<Map<String, dynamic>> attendee(id, data, token) async {
-    return Services().putData(_resource, id, data, token, '/attendee');
+    return await Services().putData(_resource, id, data, token, '/attendee');
   }
 }

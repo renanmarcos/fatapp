@@ -1,58 +1,126 @@
-import 'dart:io' show File, InternetAddress, SocketException, exit;
+import 'dart:convert';
+import 'dart:io';
+import 'dart:async';
+import 'package:barcode_scan/barcode_scan.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
+import 'package:fatapp/pages/controllers/eventController.dart';
+import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
+import 'package:fatapp/pages/views/eventDetail.dart';
 import 'package:fatapp/pages/views/common/CustomShapeClipper.dart';
 import 'package:fatapp/pages/views/eventsList2.dart';
 import 'package:fatapp/pages/views/login.dart';
-import 'package:fatapp/pages/views/qrCodeScan.dart';
 import 'package:fatapp/pages/views/subscriptionPage.dart';
 import 'package:fatapp/pages/views/updateUser.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './common/CustomShapeClipper.dart';
-import './eventsList.dart';
-import './subscriptionsList.dart';
+import './eventsList2.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({this.user});
   final User user;
   static String tag = 'home-page';
+
   @override
   _HomePageState createState() => new _HomePageState();
 }
 
-readUrlFile(userId, userToken) async {
-  try {
-    final result = await InternetAddress.lookup(DotEnv().env['FATAPP_API']);
-
-    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-      try {
-        final directory = await getApplicationDocumentsDirectory();
-        final file = File('${directory.path}/url.txt');
-        List<String> text = await file.readAsLines();
-        for (var item in text) {
-          var jsonData = '{ "userId" : "$userId"}';
-
-          ActivityController().attendee(item, jsonData, userToken);
-        }
-      } catch (e) {
-        print("Não foi possível ler o arquivo");
-      }
-    }
-  } on SocketException catch (_) {
-    print('Sem conexão com a internet');
-  }
-}
-
 class _HomePageState extends State<HomePage> {
+  List<Event> eventList;
+
   @override
   void initState() {
-    readUrlFile(widget.user.id, widget.user.token);
+    this.verifyOfflineAttendees();
     super.initState();
+  }
+
+  Future<bool> check() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    }
+    return false;
+}
+
+  void verifyOfflineAttendees() async {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      List<String> value = preferences.getStringList("qrCodeKeys");
+      if(value == null || value.isEmpty) {
+        return;
+      }
+      if (await this.check() == true) {
+        this.read(widget.user.id, widget.user.token, value);
+        preferences.setStringList('qrCodeKeys', []);
+      }
+  }
+
+  Future<void> scan() async {
+    try {
+      String barcode = await BarcodeScanner.scan();
+        if(await this.check() == true) {
+          String jsonData = jsonEncode({"userId": widget.user.id});
+          int activityId = jsonDecode(barcode)['id'];
+          ActivityController()
+              .attendee(activityId, jsonData, widget.user.token);
+          Fluttertoast.showToast(
+            msg:
+                "O certificado das atividade participada foi mandada para seu email",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 5,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);    
+        } else {
+          this.saveUrl(barcode);
+          Fluttertoast.showToast(
+              msg:
+                  "Você está sem conexão, mas confirmaremos sua presença assim que possível.",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 5,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+      }
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.CameraAccessDenied) {
+        print('The user did not grant the camera permission!');
+      }
+    } catch (e) {
+      print('Unknown error: $e');
+    }
+  }
+
+  Future<void> saveUrl(urlToSave) async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getStringList("qrCodeKeys") ?? [];
+    urlToSave = jsonDecode(urlToSave);
+    value.add(urlToSave['id'].toString());
+    prefs.setStringList("qrCodeKeys", value);
+  }
+
+  Future<void> read(userId, userToken, List<String> activities) async {
+    for (var activityId in activities) {
+      String jsonData = jsonEncode({"userId": userId});
+      ActivityController().attendee(activityId, jsonData, userToken);
+      Fluttertoast.showToast(
+          msg:
+              "O certificado das atividades participadas chegarão em seu Email em breve.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 5,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 
   @override
@@ -64,21 +132,15 @@ class _HomePageState extends State<HomePage> {
         },
         child: new Scaffold(
           appBar: new AppBar(
-            // title: new Text('FATapp'),
-            backgroundColor: Colors.red,
-            elevation: 0,
-            brightness: Brightness.light,
-            // centerTitle: true,
-            // actions: <Widget>[
-            //   Icon(Icons.notifications),
-            // ],
-          ),
+              backgroundColor: Colors.red,
+              elevation: 0,
+              brightness: Brightness.light),
           drawer: new Drawer(
             child: new ListView(
               children: <Widget>[
                 new UserAccountsDrawerHeader(
-                  accountName: this.getName(),
-                  accountEmail: this.getEmail(),
+                  accountName: new Text(widget.user.name),
+                  accountEmail: new Text(widget.user.email),
                   currentAccountPicture: new GestureDetector(
                       // child: new CircleAvatar(
                       //   // backgroundImage: new AssetImage('assets/images/profileIcon.png'),
@@ -90,45 +152,22 @@ class _HomePageState extends State<HomePage> {
                               'assets/images/fatec-saocaetano.jpg'),
                           fit: BoxFit.fitWidth)),
                 ),
-
                 new ListTile(
                     title: new Text('Eventos'),
                     trailing: new Icon(Icons.keyboard_arrow_right),
                     onTap: () {
-                      Navigator.of(context).pop();
                       Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) => new EventsList(user: widget.user)));
+                          builder: (BuildContext context) => 
+                            new EventsList(user: widget.user)));
                     }),
-
-                // new ExpansionTile(
-                //   title: Text('Eventos'),
-                //   children: <Widget>[
-                //     new ListTile(
-                //       title: new Text('Evento Atual'),
-                //       trailing: new Icon(Icons.keyboard_arrow_right),
-                //     ),
-                //     new ListTile(
-                //       title: new Text('Eventos Passados'),
-                //       trailing: new Icon(Icons.keyboard_arrow_right),
-                //       onTap: () {
-                //        Navigator.push(
-                //         context,
-                //         MaterialPageRoute(builder: (context) => EventsList()),
-                //       );
-                //       }
-                //     ),
-                //   ],
-                // ),
                 new ListTile(
                     title: new Text('Inscrições'),
                     trailing: new Icon(Icons.keyboard_arrow_right),
                     onTap: () {
-                      Navigator.of(context).pop();
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (BuildContext context) =>
                               new SubscriptionPage(widget.user)));
                     }),
-
                 new Divider(),
                 new ListTile(
                   title: new Text('Perfil'),
@@ -151,16 +190,72 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          body: Column(
-            children: <Widget>[
-              HomeScreenTopPart(),
-              HomeScreenBottomPart(),
-            ],
-          ),
+          body: Column(children: <Widget>[
+            HomeScreenTopPart(),
+            FutureBuilder<List<Event>>(
+                future: EventController().getEvents(widget.user.token),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    eventList = snapshot.data;
+                    if (eventList.isEmpty) {
+                      return Text(
+                        "Não há eventos ativos no momento",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 24.0,
+                          color: Colors.white,
+                          fontFamily: 'Raleway',
+                        ),
+                      );
+                    }
+                    eventList = eventList
+                        .where((event) => event.initialDate
+                            .toLocal()
+                            .isBefore(DateTime.now().toLocal()))
+                        .toList();
+                    return CarouselSlider(
+                      height: 300.0,
+                      initialPage: 0,
+                      enlargeCenterPage: true,
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      autoPlay: false,
+                      reverse: false,
+                      enableInfiniteScroll: true,
+                      autoPlayInterval: Duration(seconds: 2),
+                      autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                      pauseAutoPlayOnTouch: Duration(seconds: 10),
+                      scrollDirection: Axis.horizontal,
+                      items: eventList.map((event) {
+                        return Builder(builder: (BuildContext context) {
+                          return Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 18.0, horizontal: 4.0),
+                              child: GestureDetector(
+                                  child: Image.network(
+                                    event.imageUrl,
+                                    headers: {"Token": widget.user.token},
+                                    width: 500,
+                                    height: 300,
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => EventDetail(
+                                                widget.user, event)));
+                                  }));
+                        });
+                      }).toList(),
+                    );
+                  }
+                })
+          ]),
           floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ScanScreen()));
+            onPressed: () async {
+              this.scan();
             },
             label: Text('PRESENÇA'),
             icon: Icon(Icons.photo_camera),
@@ -172,22 +267,6 @@ class _HomePageState extends State<HomePage> {
   Future<void> deletePreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
-  }
-
-  getEmail() {
-    if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
-      return new Text(widget.user.email);
-    } else {
-      return new Text('teste@gmail.com');
-    }
-  }
-
-  getName() {
-    if (DotEnv().env['FATAPP_REQUEST'].compareTo('TRUE') == 0) {
-      return new Text(widget.user.name);
-    } else {
-      return new Text('Teste');
-    }
   }
 }
 
@@ -246,72 +325,6 @@ class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
           ),
         )
       ],
-    );
-  }
-}
-
-int photoIndex = 0;
-
-List imgList = [
-  'assets/images/banner1.jpg',
-  'assets/images/banner2.jpg',
-  'assets/images/banner3.jpg',
-  'assets/images/banner4.jpg',
-];
-
-class HomeScreenBottomPart extends StatefulWidget {
-  @override
-  _HomeScreenBottomPartState createState() => _HomeScreenBottomPartState();
-}
-
-class _HomeScreenBottomPartState extends State<HomeScreenBottomPart> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          CarouselSlider(
-            height: 300.0,
-            initialPage: 0,
-            aspectRatio: 16 / 9,
-            enlargeCenterPage: true,
-            autoPlayCurve: Curves.fastOutSlowIn,
-            autoPlay: false,
-            reverse: false,
-            enableInfiniteScroll: true,
-            autoPlayInterval: Duration(seconds: 2),
-            autoPlayAnimationDuration: Duration(milliseconds: 2000),
-            pauseAutoPlayOnTouch: Duration(seconds: 10),
-            scrollDirection: Axis.horizontal,
-            onPageChanged: (index) {
-              setState(() {
-                photoIndex = index;
-              });
-            },
-            items: imgList.map((imgUrl) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin:
-                        EdgeInsets.symmetric(vertical: 18.0, horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Image.asset(
-                      imgUrl,
-                      fit: BoxFit.fill,
-                    ),
-                  );
-                },
-              );
-            }).toList(),
-          ),
-        ],
-      ),
     );
   }
 }
