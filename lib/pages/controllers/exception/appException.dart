@@ -13,7 +13,7 @@ class InternalException extends AppException {
 }
 
 class LoginException extends AppException {
-  LoginException() : super("Cadastro inválido");
+  LoginException() : super("Usuário ou senha não encontrados");
 }
 
 class ValidationException extends AppException {
