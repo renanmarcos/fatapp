@@ -34,7 +34,12 @@ Future<StatefulWidget> checkLogin() async {
 
   if (sharedUser.getString('user') != null) {
     Map userMap = json.decode(sharedUser.getString('user'));
-    User user = User.create(userMap);
+    User user;
+    if(userMap['student'] != null) {
+      user = User.createWithStudent(userMap);
+    } else {
+      user = User.create(userMap);
+    }
 
     return HomePage(user: user);
   }
