@@ -42,7 +42,7 @@ class EventsList extends StatelessWidget {
               'Eventos',
               style: TextStyle(fontFamily: 'Noto'),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: const Color(0xFFCE0000),
             leading: IconButton(icon:Icon(Icons.arrow_back),
               onPressed:() => Navigator.pop(context, false),
             )

@@ -37,15 +37,19 @@ class PastEvents extends StatelessWidget {
                     );
                   },
                   child: ListTile(
-                    title: new Text(eventList[index].title,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Raleway',
-                      fontSize: 18.0)),
+                   title: Padding(
+                      padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
+                      child: Text(eventList[index].title,
+                        style: TextStyle(
+                          color: Colors.black45,
+                          fontFamily: 'Noto',
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w900
+                          )),
+                    ),
                     subtitle: Padding(
-                    padding: EdgeInsets.only(top: 12.0),
-
-                    child: Text(eventList[index].description)),
+                      padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 20.0),
+                      child: Text(eventList[index].description)),
                   )
                 )
               );     
