@@ -27,4 +27,12 @@ class ActivityController {
   Future<Map<String, dynamic>> attendee(id, data, token) async {
     return await Services().putData(_resource, id, data, token, '/attendee');
   }
+
+  Future<Map<String, dynamic>> getActivity(id,token) async {
+    return await Services().getData(_resource, id, token);
+  }
+
+  Future<Map<String, dynamic>> rateActivity(idActivity,dataToPost,token) async {
+    return await Services().postData(_resource, dataToPost, token,"$idActivity/rate");
+  }
 }
