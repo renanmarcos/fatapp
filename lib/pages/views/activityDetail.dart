@@ -151,7 +151,7 @@ class ActivityDetail extends StatelessWidget {
     return new Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.red,
+        backgroundColor: const Color(0xFFCE0000),
       ),
       body: ListView(
         children: <Widget>[

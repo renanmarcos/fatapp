@@ -23,7 +23,7 @@ class _EventDetailTopPartState extends State<EventDetailTopPart> {
           clipper: CustomShapeClipper(),
           child: Container(
             height: 150.0,
-            color: Colors.red,
+            color: const Color(0xFFCE0000),
             child: Column(
               children: <Widget>[
                 SizedBox(
@@ -142,7 +142,7 @@ class EventDetail extends StatelessWidget {
           appBar: AppBar(
             elevation: 0,
             title: new Text(this.event.title),
-            backgroundColor: Colors.red,
+            backgroundColor: const Color(0xFFCE0000),
           ),
           body: ListView(
             children: <Widget>[

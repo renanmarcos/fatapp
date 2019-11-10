@@ -132,9 +132,9 @@ class _HomePageState extends State<HomePage> {
         },
         child: new Scaffold(
           appBar: new AppBar(
-              backgroundColor: Colors.red,
+              backgroundColor: const Color(0xFFCE0000),
               elevation: 0,
-              brightness: Brightness.light),
+              brightness: Brightness.dark),
           drawer: new Drawer(
             child: new ListView(
               children: <Widget>[
@@ -184,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                     trailing: new Icon(Icons.cancel),
                     onTap: () async {
                       this.deletePreferences();
-                      Navigator.push(context,
+                      Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) => LoginPage()));
                     })
               ],
@@ -286,25 +286,30 @@ class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
           clipper: CustomShapeClipper(),
           child: Container(
             height: 150.0,
-            color: Colors.red,
+            color: const Color(0xFFCE0000),
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 5.0,
+                  height: 1.0,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(60.0, 5.0, 60.0, 10.0),
+                  padding: const EdgeInsets.fromLTRB(60.0, 0.0, 60.0, 00.0),
                   child: Row(
                     children: <Widget>[
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 24.0,
-                          color: Colors.white,
-                          fontFamily: 'Raleway',
-                        ),
+                       CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: 50.0,
+                        child: Image.asset('assets/images/logoText.png'),
                       ),
+                      // Text(
+                      //   title,
+                      //   style: TextStyle(
+                      //     fontWeight: FontWeight.w800,
+                      //     fontSize: 24.0,
+                      //     color: Colors.white,
+                      //     fontFamily: 'Raleway',
+                      //   ),
+                      // ),
                       Align(
                         alignment: Alignment.topRight,
                         child: Hero(

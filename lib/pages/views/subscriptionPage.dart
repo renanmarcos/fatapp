@@ -3,6 +3,7 @@ import 'package:fatapp/pages/models/subscription.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:flutter/material.dart';
 import 'activityDetail.dart';
+import 'common/CustomShapeClipper.dart';
 
 class SubscriptionPage extends StatelessWidget {
   SubscriptionPage(this.user);
@@ -11,8 +12,15 @@ class SubscriptionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(title: new Text('Inscrições')),
-      body: SubscriptionsContainer(user),
+      appBar: new AppBar(
+        // title: new Text('Inscrições')
+        backgroundColor: const Color(0xFFCE0000),
+        elevation: 0,
+      ),
+      body: Column(children: <Widget>[
+        SubscriptionsListTopPart(),
+        SubscriptionsContainer(user),
+      ]),
     );
   }
 }
@@ -54,7 +62,9 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
     }
 
     if (_subscriptions.length == 0) {
-      return Center(child: Text("Sem inscrições"));
+      return Center(
+        child: Text("Sem inscrições"),
+      );
     }
 
     return ListView.builder(
@@ -65,7 +75,7 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
           elevation: 2.0,
           margin: EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
           child: InkWell(
-            splashColor: Colors.red.withAlpha(30),
+            splashColor: const Color(0xFFCE0000),
             child: ListTile(
               onTap: () {
                 Navigator.push(
@@ -91,6 +101,65 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
           ),
         );
       },
+    );
+  }
+}
+
+class SubscriptionsListTopPart extends StatefulWidget {
+  @override
+  _SubscriptionsListTopPartState createState() => _SubscriptionsListTopPartState();
+}
+
+class _SubscriptionsListTopPartState extends State<SubscriptionsListTopPart> {
+  String title = "Inscrições";
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: CustomShapeClipper(),
+          child: Container(
+            height: 150.0,
+            color: const Color(0xFFCE0000),
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 5.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(50.0, 10.0, 0.0, 10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 24.0,
+                          color: Colors.white,
+                          fontFamily: 'Raleway',
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Hero(
+                          tag: "hero",
+                          child: Container(
+                            padding: EdgeInsets.only(top: 50.0),
+                            height: 80.0,
+                            width: 80.0,
+                            // child: logo,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 }
