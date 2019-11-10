@@ -174,6 +174,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                 CheckboxListTile(
                     title: Text("Você é um estudante da FATEC?"),
                     value: _isChecked,
+                    activeColor: const Color(0xFFCE0000),
                     onChanged: (val) {
                       setState(() {
                         _isChecked = val;

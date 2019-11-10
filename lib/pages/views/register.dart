@@ -253,7 +253,7 @@ class RegisterTopPart extends StatefulWidget {
 }
 
 class _RegisterTopPartState extends State<RegisterTopPart> {
-  String title = "Perfil";
+  String title = "Cadastro";
 
   @override
   Widget build(BuildContext context) {
