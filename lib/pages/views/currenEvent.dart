@@ -29,7 +29,7 @@ class CurrentEvent extends StatelessWidget {
                 elevation: 2.0,
                 margin: EdgeInsets.all(15.0),
                 child: InkWell(
-                  splashColor: Colors.red.withAlpha(30),
+                  splashColor: const Color(0xFFCE0000),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -37,13 +37,18 @@ class CurrentEvent extends StatelessWidget {
                     );
                   },
                   child: ListTile(
-                    title: new Text(eventList[index].title,
-                    style: TextStyle(
-                      color: Colors.black45,
-                      fontFamily: 'Noto',
-                      fontSize: 18.0)),
+                    title: Padding(
+                      padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
+                      child: Text(eventList[index].title,
+                        style: TextStyle(
+                          color: Colors.black45,
+                          fontFamily: 'Noto',
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w900
+                          )),
+                    ),
                     subtitle: Padding(
-                    padding: EdgeInsets.only(top: 12.0),
+                    padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 20.0),
                     child: Text(eventList[index].description)),
                   )
                 )

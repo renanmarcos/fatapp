@@ -17,7 +17,7 @@ class ActivitiesList extends StatelessWidget {
     return new Scaffold(
       appBar: new AppBar(
         elevation: 0,
-        backgroundColor: Colors.red,
+        backgroundColor: const Color(0xFFCE0000),
       ),
       body: Column(children: <Widget>[
         ActivitiesListTopPart(),
@@ -42,7 +42,7 @@ class _ActivitiesListTopPartState extends State<ActivitiesListTopPart> {
           clipper: CustomShapeClipper(),
           child: Container(
             height: 150.0,
-            color: Colors.red,
+            color: const Color(0xFFCE0000),
             child: Column(
               children: <Widget>[
                 SizedBox(
@@ -119,7 +119,7 @@ class _ActivitiesContainerState extends State<ActivitiesContainer> {
     }
 
     if (_activities.isEmpty) {
-      return Center(child: Text("Não existe atividades para esse evento."));
+      return Center(child: Text("Não existem atividades para esse evento."));
     }
 
     return ActivityFilter(_activities, widget.user);
@@ -172,21 +172,21 @@ class _ActivityFilterState extends State<ActivityFilter> {
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Escolha uma data',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Raleway',
-                    fontSize: 18.0)),
-            Container(
-              padding: EdgeInsets.all(5.0),
-            ),
-            DropdownButton(
-              value: _currentDate,
-              items: _dropDownMenuItems,
-              onChanged: changedDropDownItem,
-            )
-          ],
+          // children: <Widget>[
+          //   Text('Escolha uma data',
+          //       style: TextStyle(
+          //           color: Colors.black,
+          //           fontFamily: 'Raleway',
+          //           fontSize: 18.0)),
+          //   Container(
+          //     padding: EdgeInsets.all(5.0),
+          //   ),
+          //   DropdownButton(
+          //     value: _currentDate,
+          //     items: _dropDownMenuItems,
+          //     onChanged: changedDropDownItem,
+          //   )
+          // ],
         )),
       ),
       ActivitiesListContent(_filteredActivities, widget.user)
@@ -239,9 +239,10 @@ class _ActivitiesListContentState extends State<ActivitiesListContent> {
                   EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
               title: Text(widget.activities[index].title,
                   style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.black54,
                       fontFamily: 'Raleway',
-                      fontSize: 18.0)),
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w900)),
               subtitle: Padding(
                   padding: EdgeInsets.only(top: 12.0),
                   child: Text(widget.activities[index].speaker.name)),

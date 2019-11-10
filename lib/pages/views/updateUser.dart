@@ -28,7 +28,7 @@ class _UserScreenTopPartState extends State<UserScreenTopPart> {
           clipper: CustomShapeClipper(),
           child: Container(
             height: 150.0,
-            color: Colors.red,
+            color: const Color(0xFFCE0000),
             child: Column(
               children: <Widget>[
                 SizedBox(
@@ -96,6 +96,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
+          backgroundColor: const Color(0xFFCE0000),
           elevation: 0,
           // title: new Text('Perfil',
           //     style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold))
@@ -224,7 +225,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                 Row(
                   children: <Widget>[
                     SizedBox(width: 20.0),
-                    Material(
+                      Material(
                       // borderRadius: BorderRadius.circular(20.0),
                       // color: Colors.white,
                       // elevation: 7.0,
@@ -268,8 +269,9 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                                   builder: (context) =>
                                       ChangePasswordPage(user: widget.user)));
                         },
+                        
                         gradient: Gradients.blush,
-                        increaseWidthBy: 50.0,
+                        increaseWidthBy: 60.0,
                         increaseHeightBy: 10.0,
                         child: Center(
                           child: Text(

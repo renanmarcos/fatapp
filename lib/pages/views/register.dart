@@ -9,8 +9,10 @@ import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:masked_text/masked_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'common/CustomShapeClipper.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -33,15 +35,14 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-          title: new 
-            Text('Cadastro', 
-            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)
-          )
-        ),
+        backgroundColor: const Color(0xFFCE0000),
+        elevation: 0,
+      ),
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
             Widget>[
+          RegisterTopPart(),
           Container(
               padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
               child: Column(children: <Widget>[
@@ -53,8 +54,11 @@ class _SignupPageState extends State<SignupPage> {
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,
                           color: Colors.grey),
+                      border: InputBorder.none,
+                      fillColor: Colors.white,
+                      filled: true,
                       focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green))),
+                          borderSide: BorderSide(color: Colors.white))),
                 ),
                 SizedBox(height: 10.0),
                 TextField(
@@ -65,8 +69,11 @@ class _SignupPageState extends State<SignupPage> {
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,
                           color: Colors.grey),
+                      border: InputBorder.none,
+                      fillColor: Colors.white,
+                      filled: true,
                       focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green))),
+                          borderSide: BorderSide(color: Colors.white))),
                 ),
                 SizedBox(height: 10.0),
                 TextField(
@@ -77,8 +84,11 @@ class _SignupPageState extends State<SignupPage> {
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,
                           color: Colors.grey),
+                      border: InputBorder.none,
+                      fillColor: Colors.white,
+                      filled: true,
                       focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green))),
+                          borderSide: BorderSide(color: Colors.white))),
                   obscureText: true,
                 ),
                 SizedBox(height: 10.0),
@@ -93,12 +103,16 @@ class _SignupPageState extends State<SignupPage> {
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,
                           color: Colors.grey),
+                      border: InputBorder.none,
+                      fillColor: Colors.white,
+                      filled: true,
                       focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green))),
+                          borderSide: BorderSide(color: Colors.white))),
                 ),
                 CheckboxListTile(
                     title: Text("Você é um estudante da FATEC?"),
                     value: _isChecked,
+                    activeColor: const Color(0xFFCE0000),
                     onChanged: (val) {
                       setState(() {
                         _isChecked = val;
@@ -149,33 +163,27 @@ class _SignupPageState extends State<SignupPage> {
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.bold,
                               color: Colors.grey),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.green)),
+                          border: InputBorder.none,
+                      fillColor: Colors.white,
+                      filled: true,
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white)),
                         ))),
                 SizedBox(height: 20.0),
                 Container(
-                    height: 40.0,
+                    height: 50.0,
                     child: Material(
                       borderRadius: BorderRadius.circular(20.0),
-                      color: Colors.redAccent,
-                      elevation: 7.0,
-                      child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        onPressed: () {
-                          register();
-                        },
-                        color: Colors.redAccent,
-                        elevation: 7.0,
-                        child: RaisedButton(
+                      child: GradientButton(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          onPressed: () {
+                          increaseWidthBy: 50.0,
+                          increaseHeightBy: 10.0,
+                          gradient: Gradients.blush,
+                          callback: () {
                             register();
                           },
-                          color: Colors.redAccent,
                           child: Center(
                             child: Text(
                               'Cadastrar',
@@ -186,7 +194,6 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                           ),
                         ),
-                      ),
                     ))
               ]))
         ])));
@@ -237,5 +244,64 @@ class _SignupPageState extends State<SignupPage> {
           textColor: Colors.white,
           fontSize: 16.0);
     }
+  }
+}
+
+class RegisterTopPart extends StatefulWidget {
+  @override
+  _RegisterTopPartState createState() => _RegisterTopPartState();
+}
+
+class _RegisterTopPartState extends State<RegisterTopPart> {
+  String title = "Perfil";
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: CustomShapeClipper(),
+          child: Container(
+            height: 150.0,
+            color: const Color(0xFFCE0000),
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 5.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(60.0, 5.0, 60.0, 10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 24.0,
+                          color: Colors.white,
+                          fontFamily: 'Raleway',
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Hero(
+                          tag: "hero",
+                          child: Container(
+                            padding: EdgeInsets.only(top: 50.0),
+                            height: 80.0,
+                            width: 80.0,
+                            // child: logo,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
+      ],
+    );
   }
 }
