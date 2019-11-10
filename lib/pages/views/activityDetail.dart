@@ -30,7 +30,7 @@ class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
           clipper: CustomShapeClipper(),
           child: Container(
             height: 150.0,
-            color: Colors.red,
+            color: const Color(0xFFCE0000),
             child: Wrap(
               children: <Widget>[
                 SizedBox(
