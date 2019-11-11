@@ -22,7 +22,7 @@ Future main() async {
   runApp(new MaterialApp(
     home: home,
     theme: ThemeData(
-      // primarySwatch: Colors.red,
+      cursorColor: Color(0xFFCE0000),
       fontFamily: 'Raleway',
     ),
     routes: routes,

@@ -62,7 +62,10 @@ class _LoginPageState extends State<LoginPage> {
         },
         increaseHeightBy: 20.0,
         increaseWidthBy: 60.0,
-        gradient: Gradients.blush,
+        gradient: Gradients.buildGradient(
+            Alignment.topLeft,
+            Alignment.bottomRight,
+            [const Color(0xFFCE0000), const Color(0xFFB71C1C)]),
         shadowColor: Gradients.hotLinear.colors.last.withOpacity(0.25),
         child: Text('Login', style: TextStyle(color: Colors.white)),
         elevation: 8,

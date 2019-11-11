@@ -13,7 +13,6 @@ class SubscriptionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        // title: new Text('Inscrições')
         backgroundColor: const Color(0xFFCE0000),
         elevation: 0,
       ),
@@ -91,12 +90,7 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
                   style: TextStyle(
                       color: Colors.black,
                       fontFamily: 'Raleway',
-                      fontSize: 18.0)),
-              subtitle: Padding(
-                  padding: EdgeInsets.only(top: 12.0),
-                  child: Text(_subscriptions[index].attended
-                      ? "Participou"
-                      : "Não participou")),
+                      fontSize: 18.0))
             ),
           ),
         );

@@ -1,4 +1,4 @@
-package com.example.fatapp;
+package com.fatecscs.fatapp;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

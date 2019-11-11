@@ -47,52 +47,59 @@ class _HomePageState extends State<HomePage> {
       return true;
     }
     return false;
-}
+  }
 
   void verifyOfflineAttendees() async {
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      List<String> value = preferences.getStringList("qrCodeKeys");
-      if(value == null || value.isEmpty) {
-        return;
-      }
-      if (await this.check() == true) {
-        this.read(widget.user.id, widget.user.token, value);
-        preferences.setStringList('qrCodeKeys', []);
-      }
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    List<String> value = preferences.getStringList("qrCodeKeys");
+    if (value == null || value.isEmpty) {
+      return;
+    }
+    if (await this.check() == true) {
+      this.read(widget.user.id, widget.user.token, value);
+      preferences.setStringList('qrCodeKeys', []);
+    }
   }
 
   Future<void> scan() async {
     try {
       String barcode = await BarcodeScanner.scan();
-        if(await this.check() == true) {
-          String jsonData = jsonEncode({"userId": widget.user.id});
-          int activityId = jsonDecode(barcode)['id'];
-          ActivityController()
-              .attendee(activityId, jsonData, widget.user.token);
-          Fluttertoast.showToast(
+      if (await this.check() == true) {
+        String jsonData = jsonEncode({"userId": widget.user.id});
+        int activityId = jsonDecode(barcode)['id'];
+        ActivityController().attendee(activityId, jsonData, widget.user.token);
+        Fluttertoast.showToast(
             msg:
-                "O certificado das atividade participada foi mandada para seu email",
+                "O certificado da atividade participada sera enviada em seu email",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIos: 5,
             backgroundColor: Colors.green,
             textColor: Colors.white,
-            fontSize: 16.0);    
-        } else {
-          this.saveUrl(barcode);
-          Fluttertoast.showToast(
-              msg:
-                  "Você está sem conexão, mas confirmaremos sua presença assim que possível.",
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 5,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
+            fontSize: 16.0);
+      } else {
+        this.saveUrl(barcode);
+        Fluttertoast.showToast(
+            msg:
+                "Você está sem conexão, mas confirmaremos sua presença assim que possível.",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 5,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
-        print('The user did not grant the camera permission!');
+        Fluttertoast.showToast(
+            msg:
+                "É necessário permissão para acessar a câmera.",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 5,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     } catch (e) {
       print('Unknown error: $e');
@@ -113,7 +120,7 @@ class _HomePageState extends State<HomePage> {
       ActivityController().attendee(activityId, jsonData, userToken);
       Fluttertoast.showToast(
           msg:
-              "O certificado das atividades participadas chegarão em seu Email em breve.",
+              "O certificado das atividades participadas chegarão em seu email em breve.",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 5,
@@ -157,8 +164,8 @@ class _HomePageState extends State<HomePage> {
                     trailing: new Icon(Icons.keyboard_arrow_right),
                     onTap: () {
                       Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) => 
-                            new EventsList(user: widget.user)));
+                          builder: (BuildContext context) =>
+                              new EventsList(user: widget.user)));
                     }),
                 new ListTile(
                     title: new Text('Inscrições'),
@@ -210,11 +217,13 @@ class _HomePageState extends State<HomePage> {
                         ),
                       );
                     }
+                    print(eventList.length);
                     eventList = eventList
                         .where((event) => event.initialDate
                             .toLocal()
                             .isBefore(DateTime.now().toLocal()))
                         .toList();
+                        print(eventList.length);
                     return CarouselSlider(
                       height: 300.0,
                       initialPage: 0,
@@ -259,7 +268,7 @@ class _HomePageState extends State<HomePage> {
             },
             label: Text('PRESENÇA'),
             icon: Icon(Icons.photo_camera),
-            backgroundColor: Colors.black87,
+            backgroundColor: Color(0xFFB71C1C).withOpacity(0.92)
           ),
         ));
   }
@@ -276,7 +285,7 @@ class HomeScreenTopPart extends StatefulWidget {
 }
 
 class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
-  String title = "FATapp";
+  String title = "Fatapp";
 
   @override
   Widget build(BuildContext context) {
@@ -296,7 +305,7 @@ class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
                   padding: const EdgeInsets.fromLTRB(60.0, 0.0, 60.0, 00.0),
                   child: Row(
                     children: <Widget>[
-                       CircleAvatar(
+                      CircleAvatar(
                         backgroundColor: Colors.transparent,
                         radius: 50.0,
                         child: Image.asset('assets/images/logoText.png'),
