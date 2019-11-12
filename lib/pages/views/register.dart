@@ -34,208 +34,216 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        backgroundColor: const Color(0xFFCE0000),
-        elevation: 0,
-      ),
+        appBar: new AppBar(
+          backgroundColor: const Color(0xFFCE0000),
+          elevation: 0,
+        ),
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-            Widget>[
-          RegisterTopPart(),
-          Container(
-              padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-              child: Column(children: <Widget>[
-                TextField(
-                  controller: _textNameController,
-                  decoration: InputDecoration(
-                      labelText: 'Nome Completo',
-                      labelStyle: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey),
-                      border: InputBorder.none,
-                      fillColor: Colors.white,
-                      filled: true,
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white))),
-                ),
-                SizedBox(height: 10.0),
-                TextField(
-                  controller: _textEmailController,
-                  decoration: InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey),
-                      border: InputBorder.none,
-                      fillColor: Colors.white,
-                      filled: true,
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white))),
-                ),
-                SizedBox(height: 10.0),
-                TextField(
-                  controller: _textPasswordController,
-                  decoration: InputDecoration(
-                      labelText: 'Senha',
-                      labelStyle: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey),
-                      border: InputBorder.none,
-                      fillColor: Colors.white,
-                      filled: true,
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white))),
-                  obscureText: true,
-                ),
-                SizedBox(height: 10.0),
-                MaskedTextField(
-                  maskedTextFieldController: _textCPFController,
-                  mask: "xxx.xxx.xxx-xx",
-                  maxLength: 14,
-                  keyboardType: TextInputType.number,
-                  inputDecoration: new InputDecoration(
-                      labelText: 'CPF',
-                      labelStyle: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey),
-                      border: InputBorder.none,
-                      fillColor: Colors.white,
-                      filled: true,
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white))),
-                ),
-                CheckboxListTile(
-                    title: Text("Você é um estudante da FATEC?"),
-                    value: _isChecked,
-                    activeColor: const Color(0xFFCE0000),
-                    onChanged: (val) {
-                      setState(() {
-                        _isChecked = val;
-                        if (val == true) {
-                          visibilityRA = true;
-                          visibilityCourse = true;
-                        } else {
-                          visibilityRA = false;
-                          visibilityCourse = false;
-                        }
-                      });
-                    }),
-                FutureBuilder<List<Course>>(
-                    future: CourseController().getCourses(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (!snapshot.hasData) {
-                        return Center(child: CircularProgressIndicator());
-                      } else {
-                        courseList = snapshot.data;
-                        return Visibility(
-                            visible: visibilityCourse,
-                            child: DropdownButton<String>(
-                              hint: Text('Escolha seu curso'),
-                              value: _course,
-                              onChanged: (String course) {
-                                setState(() {
-                                  _course = course;
-                                });
-                              },
-                              items: courseList.map((Course course) {
-                                return DropdownMenuItem<String>(
-                                  value: course.acronym,
-                                  child: Text(course.acronym),
-                                );
-                              }).toList(),
-                            ));
-                      }
-                    }),
-                Visibility(
-                    visible: visibilityRA,
-                    child: MaskedTextField(
-                        maskedTextFieldController: _textRAController,
-                        maxLength: 13,
-                        keyboardType: TextInputType.number,
-                        inputDecoration: new InputDecoration(
-                          labelText: 'RA',
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+              RegisterTopPart(),
+              Container(
+                  padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+                  child: Column(children: <Widget>[
+                    TextField(
+                      controller: _textNameController,
+                      decoration: InputDecoration(
+                          labelText: 'Nome Completo',
                           labelStyle: TextStyle(
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.bold,
                               color: Colors.grey),
                           border: InputBorder.none,
-                      fillColor: Colors.white,
-                      filled: true,
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                        ))),
-                SizedBox(height: 20.0),
-                Container(
-                    height: 50.0,
-                    child: Material(
-                      borderRadius: BorderRadius.circular(20.0),
-                      child: GradientButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          increaseWidthBy: 50.0,
-                          increaseHeightBy: 10.0,
-                          gradient: Gradients.blush,
-                          callback: () {
-                            register();
-                          },
-                          child: Center(
-                            child: Text(
-                              'Cadastrar',
-                              style: TextStyle(
-                                  color: Colors.white,
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white))),
+                    ),
+                    SizedBox(height: 10.0),
+                    TextField(
+                      controller: _textEmailController,
+                      decoration: InputDecoration(
+                          labelText: 'Email',
+                          labelStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                          border: InputBorder.none,
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white))),
+                    ),
+                    SizedBox(height: 10.0),
+                    TextField(
+                      controller: _textPasswordController,
+                      decoration: InputDecoration(
+                          labelText: 'Senha',
+                          labelStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                          border: InputBorder.none,
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white))),
+                      obscureText: true,
+                    ),
+                    SizedBox(height: 10.0),
+                    MaskedTextField(
+                      maskedTextFieldController: _textCPFController,
+                      mask: "xxx.xxx.xxx-xx",
+                      maxLength: 14,
+                      keyboardType: TextInputType.number,
+                      inputDecoration: new InputDecoration(
+                          labelText: 'CPF',
+                          labelStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                          border: InputBorder.none,
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white))),
+                    ),
+                    CheckboxListTile(
+                        title: Text("Você é um estudante da FATEC?"),
+                        value: _isChecked,
+                        activeColor: const Color(0xFFCE0000),
+                        onChanged: (val) {
+                          setState(() {
+                            _isChecked = val;
+                            if (val == true) {
+                              visibilityRA = true;
+                              visibilityCourse = true;
+                            } else {
+                              visibilityRA = false;
+                              visibilityCourse = false;
+                            }
+                          });
+                        }),
+                    FutureBuilder<List<Course>>(
+                        future: CourseController().getCourses(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(child: CircularProgressIndicator());
+                          } else {
+                            courseList = snapshot.data;
+                            return Visibility(
+                                visible: visibilityCourse,
+                                child: DropdownButton<String>(
+                                  hint: Text('Escolha seu curso'),
+                                  value: _course,
+                                  onChanged: (String course) {
+                                    setState(() {
+                                      _course = course;
+                                    });
+                                  },
+                                  items: courseList.map((Course course) {
+                                    return DropdownMenuItem<String>(
+                                      value: course.acronym,
+                                      child: Text(course.acronym),
+                                    );
+                                  }).toList(),
+                                ));
+                          }
+                        }),
+                    Visibility(
+                        visible: visibilityRA,
+                        child: MaskedTextField(
+                            maskedTextFieldController: _textRAController,
+                            maxLength: 13,
+                            keyboardType: TextInputType.number,
+                            inputDecoration: new InputDecoration(
+                              labelText: 'RA',
+                              labelStyle: TextStyle(
+                                  fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.bold,
-                                  fontFamily: 'Montserrat'),
+                                  color: Colors.grey),
+                              border: InputBorder.none,
+                              fillColor: Colors.white,
+                              filled: true,
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white)),
+                            ))),
+                    SizedBox(height: 10.0),
+                    Container(
+                        height: 50.0,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: GradientButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            increaseWidthBy: 50.0,
+                            increaseHeightBy: 10.0,
+                            gradient: Gradients.buildGradient(
+                                Alignment.topLeft, Alignment.bottomRight, [
+                              const Color(0xFFCE0000),
+                              const Color(0xFFB71C1C)
+                            ]),
+                            callback: () {
+                              register();
+                            },
+                            child: Center(
+                              child: Text(
+                                'Cadastre-se',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Montserrat'),
+                              ),
                             ),
                           ),
-                        ),
-                    ))
-              ]))
-        ])));
+                        )),
+                    SizedBox(height: 30.0)
+                  ]))
+            ])));
   }
 
   Future<void> register() async {
-      User user;
-      var _name = _textNameController.text,
-          _cpf = _textCPFController.text,
-          _password = _textPasswordController.text,
-          _email = _textEmailController.text,
-          _ra = _textRAController.text;
-      if(!ResponseHandling().validateEmail(_email) || !ResponseHandling().validatePassword(_password)) {
-        return;
-      }
-      try {
-        var created;
-        if (visibilityRA) {
-          int courseId;
-          for (var course in courseList) {
-            if (course.acronym == _course) {
-              courseId = course.id;
-            }
+    User user;
+    var _name = _textNameController.text,
+        _cpf = _textCPFController.text,
+        _password = _textPasswordController.text,
+        _email = _textEmailController.text,
+        _ra = _textRAController.text;
+    if (!ResponseHandling().validateEmail(_email) ||
+        !ResponseHandling().validatePassword(_password)) {
+      return;
+    }
+    try {
+      var created;
+      if (visibilityRA) {
+        int courseId;
+        for (var course in courseList) {
+          if (course.acronym == _course) {
+            courseId = course.id;
           }
-          var jsonStudent =
-              '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password", "ra" : "$_ra", "courseId" : "$courseId" }';
-          created = await StudentController().create(jsonStudent);
-          user = User.createWithStudent(created);
-        } else {
-          var jsonUser =
-              '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password" }';
-          created = await UserController().create(jsonUser);
-          user = User.create(created);
         }
-        SharedPreferences sharedUser = await SharedPreferences.getInstance();
-          String userString = json.encode(created);
-          sharedUser.setString('user', userString);
+        var jsonStudent =
+            '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password", "ra" : "$_ra", "courseId" : "$courseId" }';
+        created = await StudentController().create(jsonStudent);
+        user = User.createWithStudent(created);
+      } else {
+        var jsonUser =
+            '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password" }';
+        created = await UserController().create(jsonUser);
+        user = User.create(created);
+      }
+      SharedPreferences sharedUser = await SharedPreferences.getInstance();
+      String userString = json.encode(created);
+      sharedUser.setString('user', userString);
 
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => HomePage(user: user)));
-      } catch (e) {
-        Fluttertoast.showToast(
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => HomePage(user: user)));
+    } catch (e) {
+      Fluttertoast.showToast(
           msg: e.toString(),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,

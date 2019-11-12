@@ -223,71 +223,73 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                 SizedBox(height: 10.0),
                 // Container(
                 //   color: Colors.redAccent,
-                Row(
-                  children: <Widget>[
-                    SizedBox(width: 20.0),
-                      Material(
-                      // borderRadius: BorderRadius.circular(20.0),
-                      // color: Colors.white,
-                      // elevation: 7.0,
-                      child: GradientButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        callback: () {
-                          this.update();
-                        },
-                        increaseWidthBy: 50.0,
-                        increaseHeightBy: 10.0,
-                        gradient: Gradients.blush,
-                        child: Center(
-                          child: Text(
-                            'Atualizar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                                fontFamily: 'Noto'),
-                          ),
+                Row(children: <Widget>[
+                  SizedBox(width: 20.0),
+                  Material(
+                    // borderRadius: BorderRadius.circular(20.0),
+                    // color: Colors.white,
+                    // elevation: 7.0,
+                    child: GradientButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      callback: () {
+                        this.update();
+                      },
+                      increaseWidthBy: 50.0,
+                      increaseHeightBy: 10.0,
+                      gradient: Gradients.buildGradient(
+                          Alignment.topLeft,
+                          Alignment.bottomRight,
+                          [const Color(0xFFCE0000), const Color(0xFFB71C1C)]),
+                      child: Center(
+                        child: Text(
+                          'Atualizar',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                              fontFamily: 'Noto'),
                         ),
                       ),
                     ),
-                    SizedBox(width: 40.0),
+                  ),
+                  SizedBox(width: 40.0),
 
-                    // height: 40.0,
-                    Material(
-                      // borderRadius: BorderRadius.circular(20.0),
-                      // color: Colors.white,
-                      // elevation: 7.0,
-                      child: GradientButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        callback: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ChangePasswordPage(user: widget.user)));
-                        },
-                        
-                        gradient: Gradients.blush,
-                        increaseWidthBy: 60.0,
-                        increaseHeightBy: 10.0,
-                        child: Center(
-                          child: Text(
-                            'Mudar Senha',
+                  // height: 40.0,
+                  Material(
+                    // borderRadius: BorderRadius.circular(20.0),
+                    // color: Colors.white,
+                    // elevation: 7.0,
+                    child: GradientButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      callback: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ChangePasswordPage(user: widget.user)));
+                      },
+                      gradient: Gradients.buildGradient(
+                          Alignment.topLeft,
+                          Alignment.bottomRight,
+                          [const Color(0xFFCE0000), const Color(0xFFB71C1C)]),
+                      increaseWidthBy: 60.0,
+                      increaseHeightBy: 10.0,
+                      child: Center(
+                        child: Text('Mudar Senha',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.0,
-                                fontFamily: 'Noto'),
-                          ),
-                        ),
+                                fontFamily: 'Noto')),
                       ),
-                    )
-                  ],
-                )
+                    ),
+                  )
+                ]),
+                SizedBox(height: 20.0)
               ]))
         ])));
   }
@@ -311,37 +313,37 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
     try {
       int courseId;
       bool updateStudent;
-        for (var course in courseList) {
-          if (course.acronym == _course) {
+      for (var course in courseList) {
+        if (course.acronym == _course) {
           courseId = course.id;
         }
       }
       var jsonData = '{ "name" : "$_name", "email" : "$_email"';
-      if (widget.user.student == null && _isChecked || widget.user.student != null) 
-      {
+      if (widget.user.student == null && _isChecked ||
+          widget.user.student != null) {
         if (ResponseHandling().validateRA(_ra) && courseId != 0) {
           jsonData += ', "ra" : "$_ra", "courseId" : "$courseId"';
           updateStudent = true;
         } else {
           Fluttertoast.showToast(
-            msg: "Você precisa preencher seu curso e RA",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 2,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
+              msg: "Você precisa preencher seu curso e RA",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 2,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
       jsonData += ' }';
       User user;
       if (updateStudent) {
         final update = await StudentController()
-          .update(widget.user.student.id, jsonData, widget.user.token);
+            .update(widget.user.student.id, jsonData, widget.user.token);
         user = User.fromStudent(update, widget.user.token);
       } else {
         final update = await UserController()
-          .update(widget.user.id, jsonData, widget.user.token);
+            .update(widget.user.id, jsonData, widget.user.token);
         user = User.fromJson(update, widget.user.token);
       }
 
