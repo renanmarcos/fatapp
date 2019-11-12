@@ -10,7 +10,15 @@ class Event {
   String imageUrl;
   String description;
 
-  Event({this.id, this.title, this.edition, this.initialDate, this.finalDate, this.banner, this.description, this.imageUrl});
+  Event(
+      {this.id,
+      this.title,
+      this.edition,
+      this.initialDate,
+      this.finalDate,
+      this.banner,
+      this.description,
+      this.imageUrl});
 
   Event.fromJson(Map<String, dynamic> json) {
     this.id = json['id'];

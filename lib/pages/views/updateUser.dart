@@ -289,7 +289,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                     ),
                   )
                 ]),
-                SizedBox(height: 10.0)
+                SizedBox(height: 20.0)
               ]))
         ])));
   }

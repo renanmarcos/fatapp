@@ -4,7 +4,6 @@ import 'services.dart';
 import 'dart:async';
 
 class ActivityController {
-
   final String _resource = "activities";
 
   Future<List<Activity>> indexFromEvent(Event event, String token) async {
@@ -13,7 +12,8 @@ class ActivityController {
     return Activity().fromJsonList(response);
   }
 
-  Future<Map<String, dynamic>> subscribe(Activity activity, Object data, String token) async {
+  Future<Map<String, dynamic>> subscribe(
+      Activity activity, Object data, String token) async {
     return await Services()
         .putData(_resource, activity.id, data, token, '/subscribe');
   }

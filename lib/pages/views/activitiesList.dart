@@ -111,6 +111,7 @@ class _ActivitiesContainerState extends State<ActivitiesContainer> {
   void initState() {
     super.initState();
   }
+
   Widget build(BuildContext context) {
     _fetchData();
 

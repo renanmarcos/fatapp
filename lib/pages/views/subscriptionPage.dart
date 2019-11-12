@@ -76,22 +76,21 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
           child: InkWell(
             splashColor: const Color(0xFFCE0000),
             child: ListTile(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ActivityDetail(
-                          _subscriptions[index].activity, widget.user)),
-                );
-              },
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
-              title: Text(_subscriptions[index].activity.title,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Raleway',
-                      fontSize: 18.0))
-            ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ActivityDetail(
+                            _subscriptions[index].activity, widget.user)),
+                  );
+                },
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
+                title: Text(_subscriptions[index].activity.title,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Raleway',
+                        fontSize: 18.0))),
           ),
         );
       },
@@ -101,7 +100,8 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
 
 class SubscriptionsListTopPart extends StatefulWidget {
   @override
-  _SubscriptionsListTopPartState createState() => _SubscriptionsListTopPartState();
+  _SubscriptionsListTopPartState createState() =>
+      _SubscriptionsListTopPartState();
 }
 
 class _SubscriptionsListTopPartState extends State<SubscriptionsListTopPart> {

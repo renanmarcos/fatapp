@@ -92,8 +92,7 @@ class _HomePageState extends State<HomePage> {
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         Fluttertoast.showToast(
-            msg:
-                "É necessário permissão para acessar a câmera.",
+            msg: "É necessário permissão para acessar a câmera.",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIos: 5,
@@ -217,13 +216,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                       );
                     }
-                    print(eventList.length);
+
                     eventList = eventList
                         .where((event) => event.initialDate
                             .toLocal()
                             .isBefore(DateTime.now().toLocal()))
                         .toList();
-                        print(eventList.length);
                     return CarouselSlider(
                       height: 300.0,
                       initialPage: 0,
@@ -263,13 +261,12 @@ class _HomePageState extends State<HomePage> {
                 })
           ]),
           floatingActionButton: FloatingActionButton.extended(
-            onPressed: () async {
-              this.scan();
-            },
-            label: Text('PRESENÇA'),
-            icon: Icon(Icons.photo_camera),
-            backgroundColor: Color(0xFFB71C1C).withOpacity(0.92)
-          ),
+              onPressed: () async {
+                this.scan();
+              },
+              label: Text('PRESENÇA'),
+              icon: Icon(Icons.photo_camera),
+              backgroundColor: Color(0xFFB71C1C).withOpacity(0.92)),
         ));
   }
 

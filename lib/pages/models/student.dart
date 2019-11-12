@@ -17,7 +17,7 @@ class Student extends User {
     this.course = Course.fromJson(json['student']['course']);
     this.user = User.fromJson(json['student']['user'], token);
   }
-  
+
   Student.fromUser(Map<String, dynamic> json) {
     this.id = json['id'];
     this.ra = json['ra'];

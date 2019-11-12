@@ -171,7 +171,7 @@ class _SignupPageState extends State<SignupPage> {
                               focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white)),
                             ))),
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 10.0),
                     Container(
                         height: 50.0,
                         child: Material(
@@ -192,7 +192,7 @@ class _SignupPageState extends State<SignupPage> {
                             },
                             child: Center(
                               child: Text(
-                                'Cadastrar',
+                                'Cadastre-se',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -200,7 +200,8 @@ class _SignupPageState extends State<SignupPage> {
                               ),
                             ),
                           ),
-                        ))
+                        )),
+                    SizedBox(height: 30.0)
                   ]))
             ])));
   }

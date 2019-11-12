@@ -13,49 +13,48 @@ class EventsList extends StatelessWidget {
     return WillPopScope(
         onWillPop: () async {
           Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => HomePage(user: user)));
+              MaterialPageRoute(builder: (context) => HomePage(user: user)));
           return true;
         },
         child: MaterialApp(
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: TabBar(
-              indicatorColor: Colors.white,
-              labelStyle: TextStyle(
-                  fontFamily: 'Raleway',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0),
-              tabs: [
-                Tab(
-                  // icon: Icon(Icons.check_box),
-                  text: 'Evento Atual',
-                ),
-                Tab(
-                  // icon: Icon(Icons.history),
-                  text: 'Eventos Passados',
-                ),
-              ],
+          home: DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                  bottom: TabBar(
+                    indicatorColor: Colors.white,
+                    labelStyle: TextStyle(
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0),
+                    tabs: [
+                      Tab(
+                        // icon: Icon(Icons.check_box),
+                        text: 'Evento Atual',
+                      ),
+                      Tab(
+                        // icon: Icon(Icons.history),
+                        text: 'Eventos Passados',
+                      ),
+                    ],
+                  ),
+                  title: Text(
+                    'Eventos',
+                    style: TextStyle(fontFamily: 'Noto'),
+                  ),
+                  backgroundColor: const Color(0xFFCE0000),
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.pop(context, false),
+                  )),
+              body: TabBarView(
+                children: [
+                  new CurrentEvent(this.user),
+                  new PastEvents(this.user),
+                ],
+              ),
             ),
-            title: Text(
-              'Eventos',
-              style: TextStyle(fontFamily: 'Noto'),
-            ),
-            backgroundColor: const Color(0xFFCE0000),
-            leading: IconButton(icon:Icon(Icons.arrow_back),
-              onPressed:() => Navigator.pop(context, false),
-            )
           ),
-          body: TabBarView(
-            children: [
-              new CurrentEvent(this.user),
-              new PastEvents(this.user),
-            ],
-          ),
-        ),
-      ),
-    )
-    );
+        ));
   }
 }
