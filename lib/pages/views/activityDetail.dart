@@ -182,12 +182,9 @@ class _ActivityActionsState extends State<ActivityActions> {
 
   _fetchData() async {
     _subscriptions = await UserController().subscriptions(widget.user);
-    if (_subscriptions.length > 0) {
-      _filteredSubscription = _subscriptions.firstWhere(
-          (subscription) => subscription.activity.id == widget.activity.id);
-    } else {
-      _filteredSubscription = null;
-    }
+    _filteredSubscription = _subscriptions.firstWhere(
+        (subscription) => subscription.activity.id == widget.activity.id,
+        orElse: () => null);
 
     if (null != _filteredSubscription && this.isLoading) {
       setState(() {
