@@ -226,6 +226,9 @@ class _SignupPageState extends State<SignupPage> {
             courseId = course.id;
           }
         }
+        if(!ResponseHandling().validateRA(_ra)) {
+          return;
+        }
         var jsonStudent =
             '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password", "ra" : "$_ra", "courseId" : "$courseId" }';
         created = await StudentController().create(jsonStudent);

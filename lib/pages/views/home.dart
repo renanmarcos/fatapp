@@ -5,6 +5,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/controllers/eventController.dart';
+import 'package:fatapp/pages/controllers/exception/appException.dart';
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/eventDetail.dart';
@@ -67,7 +68,7 @@ class _HomePageState extends State<HomePage> {
       if (await this.check() == true) {
         String jsonData = jsonEncode({"userId": widget.user.id});
         int activityId = jsonDecode(barcode)['id'];
-        ActivityController().attendee(activityId, jsonData, widget.user.token);
+        await ActivityController().attendee(activityId, jsonData, widget.user.token);
         Fluttertoast.showToast(
             msg:
                 "O certificado da atividade participada sera enviada em seu email",
@@ -101,7 +102,14 @@ class _HomePageState extends State<HomePage> {
             fontSize: 16.0);
       }
     } catch (e) {
-      print('Unknown error: $e');
+        Fluttertoast.showToast(
+        msg: e.toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
     }
   }
 
@@ -114,18 +122,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> read(userId, userToken, List<String> activities) async {
-    for (var activityId in activities) {
-      String jsonData = jsonEncode({"userId": userId});
-      ActivityController().attendee(activityId, jsonData, userToken);
-      Fluttertoast.showToast(
-          msg:
-              "O certificado das atividades participadas chegarão em seu email em breve.",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 5,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0);
+    try {
+      for (var activityId in activities) {
+        String jsonData = jsonEncode({"userId": userId});
+        await ActivityController().attendee(activityId, jsonData, userToken);
+        Fluttertoast.showToast(
+            msg:
+                "O certificado das atividades participadas chegarão em seu email em breve.",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 5,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    } catch (e) {
+        Fluttertoast.showToast(
+        msg: e.toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
     }
   }
 

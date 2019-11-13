@@ -11,16 +11,16 @@ class ResponseHandling extends AppException {
       return true;
     }
 
-    if (response.statusCode >= 200 && response.statusCode <= 300) {
+    else if (response.statusCode >= 200 && response.statusCode <= 300) {
       return json.decode(response.body);
     }
 
-    if (response.statusCode == 422) {
-      handleUnprocessableEntityException(response.body);
+    else if (response.statusCode == 401 || response.statusCode == 404) {
+      throw LoginException();
     }
 
-    if (response.statusCode == 401 || response.statusCode == 404) {
-      throw LoginException();
+    else if (response.statusCode == 422) {
+      handleUnprocessableEntityException(response.body);
     }
 
     throw InternalException();
