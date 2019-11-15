@@ -131,7 +131,9 @@ class _SignupPageState extends State<SignupPage> {
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
                           if (!snapshot.hasData) {
-                            return Center(child: CircularProgressIndicator());
+                            return Center(child: CircularProgressIndicator(
+                              valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)
+                            ));
                           } else {
                             courseList = snapshot.data;
                             return Visibility(
@@ -214,7 +216,8 @@ class _SignupPageState extends State<SignupPage> {
         _email = _textEmailController.text,
         _ra = _textRAController.text;
     if (!ResponseHandling().validateEmail(_email) ||
-        !ResponseHandling().validatePassword(_password)) {
+        !ResponseHandling().validatePassword(_password) ||
+        !ResponseHandling().validateCPF(_cpf)) {
       return;
     }
     try {
@@ -225,6 +228,9 @@ class _SignupPageState extends State<SignupPage> {
           if (course.acronym == _course) {
             courseId = course.id;
           }
+        }
+        if(!ResponseHandling().validateRA(_ra)) {
+          return;
         }
         var jsonStudent =
             '{ "name" : "$_name", "cpf" : "$_cpf", "email" : "$_email", "password" : "$_password", "ra" : "$_ra", "courseId" : "$courseId" }';
