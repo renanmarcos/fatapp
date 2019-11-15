@@ -8,7 +8,6 @@ import 'package:fatapp/pages/controllers/eventController.dart';
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/eventDetail.dart';
-import 'package:fatapp/pages/views/ratingPage.dart';
 import 'package:fatapp/pages/views/common/CustomShapeClipper.dart';
 import 'package:fatapp/pages/views/eventsList2.dart';
 import 'package:fatapp/pages/views/login.dart';
@@ -78,19 +77,6 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
-          Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => RatingStar(activityId: activityId, token: widget.user.token, userId: widget.user.id)));    
-        } else {
-          this.saveUrl(barcode);
-          Fluttertoast.showToast(
-              msg:
-                  "Você está sem conexão, mas confirmaremos sua presença assim que possível.",
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 5,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
       } else {
         this.saveUrl(barcode);
         Fluttertoast.showToast(
