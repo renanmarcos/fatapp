@@ -13,7 +13,7 @@ class InternalException extends AppException {
 }
 
 class LoginException extends AppException {
-  LoginException() : super("Usuário ou senha não encontrados");
+  LoginException() : super("Usuário não encontrado");
 }
 
 class ValidationException extends AppException {

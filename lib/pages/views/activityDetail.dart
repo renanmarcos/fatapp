@@ -285,7 +285,7 @@ class _ActivityActionsState extends State<ActivityActions> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 1,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.green,
         textColor: Colors.white,
         fontSize: 16.0);
     setState(() {

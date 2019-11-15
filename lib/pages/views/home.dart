@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
       if (await this.check() == true) {
         String jsonData = jsonEncode({"userId": widget.user.id});
         int activityId = jsonDecode(barcode)['id'];
-        ActivityController().attendee(activityId, jsonData, widget.user.token);
+        await ActivityController().attendee(activityId, jsonData, widget.user.token);
         Fluttertoast.showToast(
             msg:
                 "O certificado da atividade participada sera enviada em seu email",
@@ -99,9 +99,18 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-      }
+        }
+      } on FormatException {
+        return false;
     } catch (e) {
-      print('Unknown error: $e');
+        Fluttertoast.showToast(
+        msg: e.toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
     }
   }
 
@@ -114,18 +123,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> read(userId, userToken, List<String> activities) async {
-    for (var activityId in activities) {
-      String jsonData = jsonEncode({"userId": userId});
-      ActivityController().attendee(activityId, jsonData, userToken);
-      Fluttertoast.showToast(
-          msg:
-              "O certificado das atividades participadas chegarão em seu email em breve.",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 5,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0);
+    try {
+      for (var activityId in activities) {
+        String jsonData = jsonEncode({"userId": userId});
+        await ActivityController().attendee(activityId, jsonData, userToken);
+        Fluttertoast.showToast(
+            msg:
+                "O certificado das atividades participadas chegarão em seu email em breve.",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 5,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    } catch (e) {
+        Fluttertoast.showToast(
+        msg: e.toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
     }
   }
 
@@ -137,6 +157,7 @@ class _HomePageState extends State<HomePage> {
           return true;
         },
         child: new Scaffold(
+          resizeToAvoidBottomPadding: false,
           appBar: new AppBar(
               backgroundColor: const Color(0xFFCE0000),
               elevation: 0,
@@ -196,70 +217,75 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          body: Column(children: <Widget>[
-            HomeScreenTopPart(),
-            FutureBuilder<List<Event>>(
-                future: EventController().getEvents(widget.user.token),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                  } else {
-                    eventList = snapshot.data;
-                    if (eventList.isEmpty) {
-                      return Text(
-                        "Não há eventos ativos no momento",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 24.0,
-                          color: Colors.white,
-                          fontFamily: 'Raleway',
-                        ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+              HomeScreenTopPart(),
+              FutureBuilder<List<Event>>(
+                  future: EventController().getEvents(widget.user.token),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(child: CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)
+                      ));
+                    } else {
+                      eventList = snapshot.data;
+                      if (eventList.isEmpty) {
+                        return Text(
+                          "Não há eventos ativos no momento",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 24.0,
+                            color: Colors.white,
+                            fontFamily: 'Raleway',
+                          ),
+                        );
+                      }
+
+                      eventList = eventList
+                          .where((event) => event.initialDate
+                              .toLocal()
+                              .isBefore(DateTime.now().toLocal()))
+                          .toList();
+                      return CarouselSlider(
+                        height: 300.0,
+                        initialPage: 0,
+                        enlargeCenterPage: true,
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        autoPlay: false,
+                        reverse: false,
+                        enableInfiniteScroll: true,
+                        autoPlayInterval: Duration(seconds: 2),
+                        autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                        pauseAutoPlayOnTouch: Duration(seconds: 10),
+                        scrollDirection: Axis.horizontal,
+                        items: eventList.map((event) {
+                          return Builder(builder: (BuildContext context) {
+                            return Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 18.0, horizontal: 4.0),
+                                child: GestureDetector(
+                                    child: Image.network(
+                                      event.imageUrl,
+                                      headers: {"Token": widget.user.token},
+                                      width: 500,
+                                      height: 300,
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => EventDetail(
+                                                  widget.user, event)));
+                                    }));
+                          });
+                        }).toList(),
                       );
                     }
-
-                    eventList = eventList
-                        .where((event) => event.initialDate
-                            .toLocal()
-                            .isBefore(DateTime.now().toLocal()))
-                        .toList();
-                    return CarouselSlider(
-                      height: 300.0,
-                      initialPage: 0,
-                      enlargeCenterPage: true,
-                      autoPlayCurve: Curves.fastOutSlowIn,
-                      autoPlay: false,
-                      reverse: false,
-                      enableInfiniteScroll: true,
-                      autoPlayInterval: Duration(seconds: 2),
-                      autoPlayAnimationDuration: Duration(milliseconds: 2000),
-                      pauseAutoPlayOnTouch: Duration(seconds: 10),
-                      scrollDirection: Axis.horizontal,
-                      items: eventList.map((event) {
-                        return Builder(builder: (BuildContext context) {
-                          return Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 18.0, horizontal: 4.0),
-                              child: GestureDetector(
-                                  child: Image.network(
-                                    event.imageUrl,
-                                    headers: {"Token": widget.user.token},
-                                    width: 500,
-                                    height: 300,
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => EventDetail(
-                                                widget.user, event)));
-                                  }));
-                        });
-                      }).toList(),
-                    );
-                  }
-                })
-          ]),
+                  })
+              ])
+          ),
           floatingActionButton: FloatingActionButton.extended(
               onPressed: () async {
                 this.scan();

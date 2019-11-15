@@ -44,7 +44,6 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
             .toLocal()
             .add(Duration(hours: 1))))
         .toList();
-
     if (_isLoading) {
       setState(() {
         _isLoading = false;
@@ -57,7 +56,9 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
     _fetchData();
 
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)
+      ));
     }
 
     if (_subscriptions.length == 0) {
