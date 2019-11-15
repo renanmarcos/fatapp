@@ -66,11 +66,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 callback: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ChangePasswordPage(user: widget.user)));
+                  this.updatePassword();
                 },
                 gradient: Gradients.buildGradient(
                     Alignment.topLeft,
@@ -94,7 +90,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     var _password = _textPasswordController.text,
         _newPassword = _textNewPasswordController.text;
 
-    ResponseHandling().validatePassword(_newPassword);
+    if(!ResponseHandling().validatePassword(_newPassword)) {
+      return;
+    }
     try {
       var jsonData =
           '{ "oldPassword" : "$_password", "newPassword" : "$_newPassword"}';

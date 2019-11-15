@@ -7,19 +7,22 @@ import 'package:validators/validators.dart';
 
 class ResponseHandling extends AppException {
   handling(Response response) {
+    if (response == null) {
+      throw AppException('Sem conexão');
+    }
     if (response.statusCode == 204) {
       return true;
     }
 
-    else if (response.statusCode >= 200 && response.statusCode <= 300) {
+    if (response.statusCode >= 200 && response.statusCode <= 300) {
       return json.decode(response.body);
     }
 
-    else if (response.statusCode == 401 || response.statusCode == 404) {
+    if (response.statusCode == 401 || response.statusCode == 404) {
       throw LoginException();
     }
 
-    else if (response.statusCode == 422) {
+    if (response.statusCode == 422) {
       handleUnprocessableEntityException(response.body);
     }
 
@@ -66,7 +69,7 @@ class ResponseHandling extends AppException {
     }
     if (string.length < 6) {
       Fluttertoast.showToast(
-          msg: "Senha Inválida",
+          msg: "Senha precisa ter 6 caracteres",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 2,
@@ -92,7 +95,33 @@ class ResponseHandling extends AppException {
     }
     if (string.length < 13) {
       Fluttertoast.showToast(
-          msg: "RA Inválido",
+          msg: "RA precisa ter 13 caracteres",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return false;
+    }
+    return true;
+  }
+
+  bool validateCPF(String string) {
+    if (string.isEmpty) {
+      Fluttertoast.showToast(
+          msg: "CPF precisa ser preenchido",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return false;
+    }
+    if (string.length < 14) {
+      Fluttertoast.showToast(
+          msg: "CPF precisa ter 11 caracteres",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 2,
