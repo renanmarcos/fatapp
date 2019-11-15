@@ -7,6 +7,9 @@ import 'package:validators/validators.dart';
 
 class ResponseHandling extends AppException {
   handling(Response response) {
+    if (response == null) {
+      throw AppException('Sem conexão');
+    }
     if (response.statusCode == 204) {
       return true;
     }
@@ -15,91 +18,117 @@ class ResponseHandling extends AppException {
       return json.decode(response.body);
     }
 
-    if (response.statusCode == 422) {
-      handleUnprocessableEntityException(response.body);
-    }
-
     if (response.statusCode == 401 || response.statusCode == 404) {
       throw LoginException();
+    }
+
+    if (response.statusCode == 422) {
+      handleUnprocessableEntityException(response.body);
     }
 
     throw InternalException();
   }
 
   bool validateEmail(String string) {
-    if(string.isEmpty) {
+    if (string.isEmpty) {
       Fluttertoast.showToast(
-        msg: "Email precisa ser preenchido",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 2,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-        return false;
+          msg: "Email precisa ser preenchido",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return false;
     }
     if (!isEmail(string)) {
       Fluttertoast.showToast(
-        msg: "Email Inválido",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 2,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-        return false;
+          msg: "Email Inválido",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return false;
     }
     return true;
   }
 
   bool validatePassword(String string) {
-    if(string.isEmpty) {
+    if (string.isEmpty) {
       Fluttertoast.showToast(
-        msg: "Senha precisa ser preenchida",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 2,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-        return false;
+          msg: "Senha precisa ser preenchida",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return false;
     }
     if (string.length < 6) {
       Fluttertoast.showToast(
-        msg: "Senha Inválida",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 2,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-        return false;
+          msg: "Senha precisa ter 6 caracteres",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return false;
     }
     return true;
   }
 
   bool validateRA(String string) {
-    if(string.isEmpty) {
+    if (string.isEmpty) {
       Fluttertoast.showToast(
-        msg: "RA precisa ser preenchido",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 2,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-        return false;
+          msg: "RA precisa ser preenchido",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return false;
     }
     if (string.length < 13) {
       Fluttertoast.showToast(
-        msg: "RA Inválido",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 2,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-        return false;
+          msg: "RA precisa ter 13 caracteres",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return false;
+    }
+    return true;
+  }
+
+  bool validateCPF(String string) {
+    if (string.isEmpty) {
+      Fluttertoast.showToast(
+          msg: "CPF precisa ser preenchido",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return false;
+    }
+    if (string.length < 14) {
+      Fluttertoast.showToast(
+          msg: "CPF precisa ter 11 caracteres",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return false;
     }
     return true;
   }

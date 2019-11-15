@@ -111,6 +111,7 @@ class _ActivitiesContainerState extends State<ActivitiesContainer> {
   void initState() {
     super.initState();
   }
+
   Widget build(BuildContext context) {
     _fetchData();
 
@@ -172,21 +173,21 @@ class _ActivityFilterState extends State<ActivityFilter> {
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.center,
-          // children: <Widget>[
-          //   Text('Escolha uma data',
-          //       style: TextStyle(
-          //           color: Colors.black,
-          //           fontFamily: 'Raleway',
-          //           fontSize: 18.0)),
-          //   Container(
-          //     padding: EdgeInsets.all(5.0),
-          //   ),
-          //   DropdownButton(
-          //     value: _currentDate,
-          //     items: _dropDownMenuItems,
-          //     onChanged: changedDropDownItem,
-          //   )
-          // ],
+          children: <Widget>[
+            Text('Escolha uma data',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Raleway',
+                    fontSize: 18.0)),
+            Container(
+              padding: EdgeInsets.all(5.0),
+            ),
+            DropdownButton(
+              value: _currentDate,
+              items: _dropDownMenuItems,
+              onChanged: changedDropDownItem,
+            )
+          ],
         )),
       ),
       ActivitiesListContent(_filteredActivities, widget.user)

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'common/CustomShapeClipper.dart';
 
 class EventDetailTopPart extends StatefulWidget {
-
   @override
   _EventDetailTopPartState createState() => _EventDetailTopPartState();
 }
@@ -15,6 +14,7 @@ class _EventDetailTopPartState extends State<EventDetailTopPart> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -47,10 +47,9 @@ class _EventDetailTopPartState extends State<EventDetailTopPart> {
                         child: Hero(
                           tag: "hero",
                           child: Container(
-                            padding: EdgeInsets.only(top: 50.0),
-                            height: 80.0,
-                            width: 80.0
-                          ),
+                              padding: EdgeInsets.only(top: 50.0),
+                              height: 80.0,
+                              width: 80.0),
                         ),
                       ),
                     ],
@@ -69,7 +68,7 @@ class EventDetail extends StatelessWidget {
   const EventDetail(this.user, this.event);
   final User user;
   final Event event;
-  
+
   @override
   Widget build(BuildContext context) {
     Widget titleSection = Container(
@@ -99,20 +98,20 @@ class EventDetail extends StatelessWidget {
               ],
             ),
           ),
-
           GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ActivitiesList(this.user, this.event)),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ActivitiesList(this.user, this.event)),
               );
             },
             child: Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildButtonColumn(
-                      Colors.grey[500], Icons.event, 'Palestras')
+                  _buildButtonColumn(Colors.grey[500], Icons.event, 'Palestras')
                 ],
               ),
             ),
@@ -122,23 +121,23 @@ class EventDetail extends StatelessWidget {
     );
 
     Widget textSection = Container(
-      padding: const EdgeInsets.all(32),
-      child: Card(
-          child: Padding(
-        padding: EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 50.0),
-        child: new Text(
-          this.event.description,
-          softWrap: true,
-        ),
-      )));
+        padding: const EdgeInsets.all(32),
+        child: Card(
+            child: Padding(
+          padding: EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 50.0),
+          child: new Text(
+            this.event.description,
+            softWrap: true,
+          ),
+        )));
 
     return WillPopScope(
         onWillPop: () async {
           Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => EventsList(user: user)));
+              MaterialPageRoute(builder: (context) => EventsList(user: user)));
           return true;
-        }, 
-        child: Scaffold(    
+        },
+        child: Scaffold(
           appBar: AppBar(
             elevation: 0,
             title: new Text(this.event.title),
@@ -148,9 +147,7 @@ class EventDetail extends StatelessWidget {
             children: <Widget>[
               Image.network(
                 this.event.imageUrl,
-                headers: {
-                  "Token" : this.user.token
-                },
+                headers: {"Token": this.user.token},
                 width: 600,
                 height: 240,
                 fit: BoxFit.cover,
@@ -159,8 +156,7 @@ class EventDetail extends StatelessWidget {
               textSection,
             ],
           ),
-        )
-      );
+        ));
   }
 
   Column _buildButtonColumn(Color color, IconData icon, String label) {

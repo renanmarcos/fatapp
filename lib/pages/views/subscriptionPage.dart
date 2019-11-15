@@ -13,7 +13,6 @@ class SubscriptionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        // title: new Text('Inscrições')
         backgroundColor: const Color(0xFFCE0000),
         elevation: 0,
       ),
@@ -45,7 +44,6 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
             .toLocal()
             .add(Duration(hours: 1))))
         .toList();
-
     if (_isLoading) {
       setState(() {
         _isLoading = false;
@@ -58,7 +56,9 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
     _fetchData();
 
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)
+      ));
     }
 
     if (_subscriptions.length == 0) {
@@ -77,27 +77,21 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
           child: InkWell(
             splashColor: const Color(0xFFCE0000),
             child: ListTile(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ActivityDetail(
-                          _subscriptions[index].activity, widget.user)),
-                );
-              },
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
-              title: Text(_subscriptions[index].activity.title,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Raleway',
-                      fontSize: 18.0)),
-              subtitle: Padding(
-                  padding: EdgeInsets.only(top: 12.0),
-                  child: Text(_subscriptions[index].attended
-                      ? "Participou"
-                      : "Não participou")),
-            ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ActivityDetail(
+                            _subscriptions[index].activity, widget.user)),
+                  );
+                },
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
+                title: Text(_subscriptions[index].activity.title,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Raleway',
+                        fontSize: 18.0))),
           ),
         );
       },
@@ -107,7 +101,8 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
 
 class SubscriptionsListTopPart extends StatefulWidget {
   @override
-  _SubscriptionsListTopPartState createState() => _SubscriptionsListTopPartState();
+  _SubscriptionsListTopPartState createState() =>
+      _SubscriptionsListTopPartState();
 }
 
 class _SubscriptionsListTopPartState extends State<SubscriptionsListTopPart> {

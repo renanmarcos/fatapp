@@ -9,7 +9,14 @@ class User {
   String token;
   Student student;
 
-  User({this.token, this.id, this.name, this.email, this.cpf, this.password, this.student});
+  User(
+      {this.token,
+      this.id,
+      this.name,
+      this.email,
+      this.cpf,
+      this.password,
+      this.student});
 
   User.create(Map<String, dynamic> json) {
     this.token = json['token'];
@@ -18,8 +25,8 @@ class User {
     this.email = json['user']['email'];
     this.cpf = json['user']['cpf'];
     this.password = json['user']['password'];
-    
-    if(json['user']['student'] != null) {
+
+    if (json['user']['student'] != null) {
       this.student = Student.fromUser(json['user']['student']);
     }
   }
@@ -32,7 +39,7 @@ class User {
     this.cpf = json['cpf'];
     this.password = json['password'];
   }
-  
+
   User.fromStudent(Map<String, dynamic> json, String token) {
     this.token = token;
     this.id = json['user']['id'];
