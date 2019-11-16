@@ -19,6 +19,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './common/CustomShapeClipper.dart';
+import 'package:fatapp/pages/views/ratingPage.dart';
 import './eventsList2.dart';
 
 class HomePage extends StatefulWidget {
@@ -77,6 +78,9 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
+
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => RatingStar(activityId: activityId, token: widget.user.token, userId: widget.user.id))); 
       } else {
         this.saveUrl(barcode);
         Fluttertoast.showToast(
