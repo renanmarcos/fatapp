@@ -30,8 +30,8 @@ class _RatingStarState extends State<RatingStar> {
   @override
   void initState() {
     // Future<dynamic> activityString = ActivityController().getActivity(rate.activityId, rate.token);
-    Map<String, dynamic> activityString = this.returnActivity(rate.activityId, rate.token);
-    activity = Activity.fromJson(activityString);
+    this.returnActivity(rate.activityId, rate.token);
+    // activity = Activity.fromJson(activityString);
 
     title = activity.title;
     super.initState();
@@ -93,7 +93,10 @@ class _RatingStarState extends State<RatingStar> {
 
   }
 
-  Future<Map<String, dynamic>> returnActivity(id,token) async{
-    return await ActivityController().getActivity(id,token);
+  void returnActivity(id,token) async{
+    var response = await ActivityController().getActivity(id,token);
+    print("aquiiiiiiiii manoooo" + response);
+    this.activity = Activity.fromJson(response);
+    print(this.activity);
   }
 }
