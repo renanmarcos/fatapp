@@ -5,6 +5,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/controllers/eventController.dart';
+import 'package:fatapp/pages/models/acitivity.dart';
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/eventDetail.dart';
@@ -78,9 +79,12 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
-
+            
+        var responseActivity = await ActivityController().getActivity(activityId, widget.user.token);
+        Activity activity = Activity.fromJson(responseActivity);
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => RatingStar(activityId: activityId, token: widget.user.token, userId: widget.user.id))); 
+            MaterialPageRoute(builder: (context) => RatingStar(activity: activity, user: widget.user))); 
+      
       } else {
         this.saveUrl(barcode);
         Fluttertoast.showToast(
