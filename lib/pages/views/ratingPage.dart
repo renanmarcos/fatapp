@@ -1,6 +1,7 @@
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/home.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/models/acitivity.dart';
@@ -35,9 +36,9 @@ class _RatingStarState extends State<RatingStar> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
           appBar: AppBar(
-          title: Text(''),
+          backgroundColor: const Color(0xFFCE0000),
+          title: Text('Avaliação'),
           elevation: 0,
-          backgroundColor: Colors.red,
         ),
         body: Center(
           child: new ListView(
@@ -50,6 +51,9 @@ class _RatingStarState extends State<RatingStar> {
               style: TextStyle(fontSize: 24.0),
               textAlign: TextAlign.center,
              ),
+             SizedBox(height: 45.0),
+             Center(
+              child: 
                  SmoothStarRating(
                   rating: rating,
                   size: 45,
@@ -63,7 +67,7 @@ class _RatingStarState extends State<RatingStar> {
                     this.rateActivity(rating, widget.user.id, widget.user.token);
                   });
                 },
-             ),
+             )),
             ]
           )
         )
@@ -71,11 +75,19 @@ class _RatingStarState extends State<RatingStar> {
     );
   }
 
-  void rateActivity(ratingValue, userId, token) async {
-    var userId = widget.user.id;
+  void rateActivity(ratingValue, userId, token) {
     var jsonRate = '{ "userId" : "$userId", "numberOfStars" : "$ratingValue"}';
-    await ActivityController().rateActivity(widget.activity.id, jsonRate, token);
+    ActivityController().rateActivity(widget.activity.id, jsonRate, token);
     Navigator.pushReplacement(context,
       MaterialPageRoute(builder: (context) => HomePage(user: widget.user))); 
+    Fluttertoast.showToast(
+      msg:
+        "Avaliação enviada com sucesso!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 5,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 }

@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
         await ActivityController().attendee(activityId, jsonData, widget.user.token);
         Fluttertoast.showToast(
             msg:
-                "O certificado da atividade participada sera enviada em seu email",
+                "O certificado da atividade participada será enviada em seu email",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIos: 5,
