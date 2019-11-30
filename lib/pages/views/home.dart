@@ -5,6 +5,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/controllers/eventController.dart';
+import 'package:fatapp/pages/models/acitivity.dart';
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/eventDetail.dart';
@@ -19,6 +20,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './common/CustomShapeClipper.dart';
+import 'package:fatapp/pages/views/ratingPage.dart';
 import './eventsList2.dart';
 
 class HomePage extends StatefulWidget {
@@ -70,13 +72,19 @@ class _HomePageState extends State<HomePage> {
         await ActivityController().attendee(activityId, jsonData, widget.user.token);
         Fluttertoast.showToast(
             msg:
-                "O certificado da atividade participada sera enviada em seu email",
+                "O certificado da atividade participada será enviada em seu email",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIos: 5,
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
+            
+        var responseActivity = await ActivityController().getActivity(activityId, widget.user.token);
+        Activity activity = Activity.fromJson(responseActivity);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => RatingStar(activity: activity, user: widget.user))); 
+      
       } else {
         this.saveUrl(barcode);
         Fluttertoast.showToast(
