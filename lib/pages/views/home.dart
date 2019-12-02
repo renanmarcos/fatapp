@@ -238,7 +238,12 @@ class _HomePageState extends State<HomePage> {
                       ));
                     } else {
                       eventList = snapshot.data;
-                      if (eventList.isEmpty) {
+                      eventList = eventList
+                          .where((event) => event.initialDate
+                              .toLocal()
+                              .isAfter(DateTime.now().toLocal()))
+                          .toList();
+                    if (eventList.isEmpty) {
                         return Text(
                           "Não há eventos ativos no momento",
                           style: TextStyle(
@@ -249,12 +254,6 @@ class _HomePageState extends State<HomePage> {
                           ),
                         );
                       }
-
-                      eventList = eventList
-                          .where((event) => event.initialDate
-                              .toLocal()
-                              .isBefore(DateTime.now().toLocal()))
-                          .toList();
                       return CarouselSlider(
                         height: 300.0,
                         initialPage: 0,

@@ -118,7 +118,9 @@ class _ActivitiesContainerState extends State<ActivitiesContainer> {
     _fetchData();
 
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)
+      ));
     }
 
     if (_activities.isEmpty) {
