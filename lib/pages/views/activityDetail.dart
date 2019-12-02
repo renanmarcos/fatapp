@@ -272,7 +272,12 @@ class _ActivityActionsState extends State<ActivityActions> {
   dynamic share() async {
     final RenderBox box = context.findRenderObject();
     var address = DotEnv().env['FATAPP_ADDRESS'];
-    var date  = DateFormat("dd/MM 'às' HH:mm").format(widget.activity.initialDate.toLocal());
+    var date  = DateFormat("dd/MM 'às' HH:mm").format(widget.activity.
+      initialDate.
+      toLocal().
+      add(Duration(hours: 1))
+    );
+    
     Share.share('Venha participar da atividade "${widget.activity.title}", que ocorrerá dia $date na $address',
       subject: widget.activity.description,
       sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
