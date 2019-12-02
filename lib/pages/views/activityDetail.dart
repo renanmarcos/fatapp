@@ -5,7 +5,9 @@ import 'package:fatapp/pages/models/acitivity.dart';
 import 'package:fatapp/pages/models/subscription.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:share/share.dart';
 import 'common/CustomShapeClipper.dart';
 import 'package:intl/intl.dart';
 
@@ -111,14 +113,12 @@ class ActivityDetail extends StatelessWidget {
                   DateFormat("dd/MM 'às' HH:mm").format(this
                           .activity
                           .initialDate
-                          .toLocal()
-                          .add(Duration(hours: 1))) +
+                          .toLocal()) +
                       " até " +
                       DateFormat("dd/MM 'às' HH:mm").format(this
                           .activity
                           .finalDate
-                          .toLocal()
-                          .add(Duration(hours: 1))),
+                          .toLocal()),
                   style: TextStyle(
                     color: Colors.grey[500],
                   ),
@@ -206,7 +206,9 @@ class _ActivityActionsState extends State<ActivityActions> {
     _fetchData();
 
     if (isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)
+      ));
     }
 
     Color color = Theme.of(context).primaryColor;
@@ -266,14 +268,16 @@ class _ActivityActionsState extends State<ActivityActions> {
   }
 
   dynamic share() async {
-    Fluttertoast.showToast(
-        msg: "Ola",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    final RenderBox box = context.findRenderObject();
+    var address = DotEnv().env['FATAPP_ADDRESS'];
+    var date  = DateFormat("dd/MM 'às' HH:mm").format(widget.activity.
+      initialDate.
+      toLocal()
+    );
+
+    Share.share('Venha participar da atividade "${widget.activity.title}", que ocorrerá dia $date na $address',
+      subject: widget.activity.description,
+      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
   dynamic subscribe() async {
