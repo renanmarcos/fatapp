@@ -1,3 +1,4 @@
+import 'dart:core';
 import 'package:fatapp/pages/models/acitivity.dart';
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
@@ -15,14 +16,15 @@ class ActivitiesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: new AppBar(
         elevation: 0,
         backgroundColor: const Color(0xFFCE0000),
       ),
-      body: Column(children: <Widget>[
+      body: SingleChildScrollView(child: Column(children: <Widget>[
         ActivitiesListTopPart(),
         ActivitiesContainer(this.user, this.event)
-      ]),
+      ])),
     );
   }
 }
@@ -137,7 +139,7 @@ class ActivityFilter extends StatefulWidget {
 }
 
 class _ActivityFilterState extends State<ActivityFilter> {
-  List _dates;
+  Set _dates;
   List _filteredActivities;
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _currentDate;
@@ -145,8 +147,7 @@ class _ActivityFilterState extends State<ActivityFilter> {
   @override
   void initState() {
     _dates = widget.activities
-        .map((activity) => DateFormat("dd/MM").format(activity.initialDate))
-        .toList();
+        .map((activity) => DateFormat("dd/MM").format(activity.initialDate)).toSet();
     _dropDownMenuItems = getDropDownMenuItems();
     _currentDate = _dropDownMenuItems[0].value;
     _filteredActivities = widget.activities
@@ -168,7 +169,7 @@ class _ActivityFilterState extends State<ActivityFilter> {
   Widget build(BuildContext context) {
     return Column(children: [
       Container(
-        padding: EdgeInsets.fromLTRB(0.0, 0.0, 40.0, 30.0),
+        padding: EdgeInsets.fromLTRB(0.0, 0.0, 40.0, 10.0),
         child: Center(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -219,6 +220,8 @@ class _ActivitiesListContentState extends State<ActivitiesListContent> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      padding: EdgeInsets.only(bottom: 20.0),
+      physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: widget.activities.length,
       itemBuilder: (BuildContext context, int index) {
