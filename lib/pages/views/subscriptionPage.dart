@@ -39,10 +39,8 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
   _fetchData() async {
     _subscriptions = await UserController().subscriptions(widget.user);
     _subscriptions = _subscriptions
-        .where((subscription) => DateTime.now().isBefore(subscription
-            .activity.initialDate
-            .toLocal()
-            .add(Duration(hours: 1))))
+        .where((subscription) => DateTime.now()
+            .isBefore(subscription.activity.initialDate.toLocal()))
         .toList();
     if (_isLoading) {
       setState(() {
@@ -56,9 +54,9 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
     _fetchData();
 
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)
-      ));
+      return Center(
+          child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)));
     }
 
     if (_subscriptions.length == 0) {
