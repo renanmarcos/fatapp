@@ -21,7 +21,6 @@ class PastEvents extends StatelessWidget {
             eventList = eventList
                 .where((event) => event.finalDate
                     .toLocal()
-                    .add(Duration(hours: 1))
                     .isBefore(DateTime.now().toLocal()))
                 .toList();
           }
