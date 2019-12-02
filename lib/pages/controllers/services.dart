@@ -50,10 +50,11 @@ class Services {
     return ResponseHandling().handling(response);
   }
 
-  postData(resource, dataToPost, token,[complement=""]) async {
+  postData(resource, dataToPost, token, [complement = ""]) async {
     var response;
     try {
-      response = await http.Client().post(Uri.encodeFull(baseUri + resource + complement),
+      response = await http.Client().post(
+          Uri.encodeFull(baseUri + resource + complement),
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
