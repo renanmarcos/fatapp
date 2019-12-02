@@ -89,7 +89,7 @@ class _RatingStarState extends State<RatingStar> {
                                   },
                                   child: Center(
                                     child: Text(
-                                      'Cadastre-se',
+                                      'Confirmar',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
