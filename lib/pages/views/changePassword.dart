@@ -90,7 +90,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     var _password = _textPasswordController.text,
         _newPassword = _textNewPasswordController.text;
 
-    if(!ResponseHandling().validatePassword(_newPassword)) {
+    if (!ResponseHandling().validatePassword(_newPassword)) {
       return;
     }
     try {

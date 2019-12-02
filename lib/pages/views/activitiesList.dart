@@ -21,7 +21,8 @@ class ActivitiesList extends StatelessWidget {
         elevation: 0,
         backgroundColor: const Color(0xFFCE0000),
       ),
-      body: SingleChildScrollView(child: Column(children: <Widget>[
+      body: SingleChildScrollView(
+          child: Column(children: <Widget>[
         ActivitiesListTopPart(),
         ActivitiesContainer(this.user, this.event)
       ])),
@@ -118,9 +119,9 @@ class _ActivitiesContainerState extends State<ActivitiesContainer> {
     _fetchData();
 
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)
-      ));
+      return Center(
+          child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)));
     }
 
     if (_activities.isEmpty) {
@@ -149,7 +150,8 @@ class _ActivityFilterState extends State<ActivityFilter> {
   @override
   void initState() {
     _dates = widget.activities
-        .map((activity) => DateFormat("dd/MM").format(activity.initialDate)).toSet();
+        .map((activity) => DateFormat("dd/MM").format(activity.initialDate))
+        .toSet();
     _dropDownMenuItems = getDropDownMenuItems();
     _currentDate = _dropDownMenuItems[0].value;
     _filteredActivities = widget.activities

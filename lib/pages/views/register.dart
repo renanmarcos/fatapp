@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:fatapp/pages/controllers/courseController.dart';
 import 'package:fatapp/pages/controllers/responseHandling.dart';
 import 'package:fatapp/pages/controllers/studentController.dart';
@@ -40,172 +39,171 @@ class _SignupPageState extends State<SignupPage> {
         ),
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-              RegisterTopPart(),
-              Container(
-                  padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-                  child: Column(children: <Widget>[
-                    TextField(
-                      controller: _textNameController,
-                      decoration: InputDecoration(
-                          labelText: 'Nome Completo',
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                          border: InputBorder.none,
-                          fillColor: Colors.white,
-                          filled: true,
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white))),
-                    ),
-                    SizedBox(height: 10.0),
-                    TextField(
-                      controller: _textEmailController,
-                      decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                          border: InputBorder.none,
-                          fillColor: Colors.white,
-                          filled: true,
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white))),
-                    ),
-                    SizedBox(height: 10.0),
-                    TextField(
-                      controller: _textPasswordController,
-                      decoration: InputDecoration(
-                          labelText: 'Senha',
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                          border: InputBorder.none,
-                          fillColor: Colors.white,
-                          filled: true,
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white))),
-                      obscureText: true,
-                    ),
-                    SizedBox(height: 10.0),
-                    MaskedTextField(
-                      maskedTextFieldController: _textCPFController,
-                      mask: "xxx.xxx.xxx-xx",
-                      maxLength: 14,
-                      keyboardType: TextInputType.number,
-                      inputDecoration: new InputDecoration(
-                          labelText: 'CPF',
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                          border: InputBorder.none,
-                          fillColor: Colors.white,
-                          filled: true,
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white))),
-                    ),
-                    CheckboxListTile(
-                        title: Text("Você é um estudante da FATEC?"),
-                        value: _isChecked,
-                        activeColor: const Color(0xFFCE0000),
-                        onChanged: (val) {
-                          setState(() {
-                            _isChecked = val;
-                            if (val == true) {
-                              visibilityRA = true;
-                              visibilityCourse = true;
-                            } else {
-                              visibilityRA = false;
-                              visibilityCourse = false;
-                            }
-                          });
-                        }),
-                    FutureBuilder<List<Course>>(
-                        future: CourseController().getCourses(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          if (!snapshot.hasData) {
-                            return Center(child: CircularProgressIndicator(
-                              valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+                    Widget>[
+          RegisterTopPart(),
+          Container(
+              padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+              child: Column(children: <Widget>[
+                TextField(
+                  controller: _textNameController,
+                  decoration: InputDecoration(
+                      labelText: 'Nome Completo',
+                      labelStyle: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey),
+                      border: InputBorder.none,
+                      fillColor: Colors.white,
+                      filled: true,
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white))),
+                ),
+                SizedBox(height: 10.0),
+                TextField(
+                  controller: _textEmailController,
+                  decoration: InputDecoration(
+                      labelText: 'Email',
+                      labelStyle: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey),
+                      border: InputBorder.none,
+                      fillColor: Colors.white,
+                      filled: true,
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white))),
+                ),
+                SizedBox(height: 10.0),
+                TextField(
+                  controller: _textPasswordController,
+                  decoration: InputDecoration(
+                      labelText: 'Senha',
+                      labelStyle: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey),
+                      border: InputBorder.none,
+                      fillColor: Colors.white,
+                      filled: true,
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white))),
+                  obscureText: true,
+                ),
+                SizedBox(height: 10.0),
+                MaskedTextField(
+                  maskedTextFieldController: _textCPFController,
+                  mask: "xxx.xxx.xxx-xx",
+                  maxLength: 14,
+                  keyboardType: TextInputType.number,
+                  inputDecoration: new InputDecoration(
+                      labelText: 'CPF',
+                      labelStyle: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey),
+                      border: InputBorder.none,
+                      fillColor: Colors.white,
+                      filled: true,
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white))),
+                ),
+                CheckboxListTile(
+                    title: Text("Você é um estudante da FATEC?"),
+                    value: _isChecked,
+                    activeColor: const Color(0xFFCE0000),
+                    onChanged: (val) {
+                      setState(() {
+                        _isChecked = val;
+                        if (val == true) {
+                          visibilityRA = true;
+                          visibilityCourse = true;
+                        } else {
+                          visibilityRA = false;
+                          visibilityCourse = false;
+                        }
+                      });
+                    }),
+                FutureBuilder<List<Course>>(
+                    future: CourseController().getCourses(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                            child: CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Colors.red)));
+                      } else {
+                        courseList = snapshot.data;
+                        return Visibility(
+                            visible: visibilityCourse,
+                            child: DropdownButton<String>(
+                              hint: Text('Escolha seu curso'),
+                              value: _course,
+                              onChanged: (String course) {
+                                setState(() {
+                                  _course = course;
+                                });
+                              },
+                              items: courseList.map((Course course) {
+                                return DropdownMenuItem<String>(
+                                  value: course.acronym,
+                                  child: Text(course.acronym),
+                                );
+                              }).toList(),
                             ));
-                          } else {
-                            courseList = snapshot.data;
-                            return Visibility(
-                                visible: visibilityCourse,
-                                child: DropdownButton<String>(
-                                  hint: Text('Escolha seu curso'),
-                                  value: _course,
-                                  onChanged: (String course) {
-                                    setState(() {
-                                      _course = course;
-                                    });
-                                  },
-                                  items: courseList.map((Course course) {
-                                    return DropdownMenuItem<String>(
-                                      value: course.acronym,
-                                      child: Text(course.acronym),
-                                    );
-                                  }).toList(),
-                                ));
-                          }
-                        }),
-                    Visibility(
-                        visible: visibilityRA,
-                        child: MaskedTextField(
-                            maskedTextFieldController: _textRAController,
-                            maxLength: 13,
-                            keyboardType: TextInputType.number,
-                            inputDecoration: new InputDecoration(
-                              labelText: 'RA',
-                              labelStyle: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey),
-                              border: InputBorder.none,
-                              fillColor: Colors.white,
-                              filled: true,
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
-                            ))),
-                    SizedBox(height: 10.0),
-                    Container(
-                        height: 50.0,
-                        child: Material(
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: GradientButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            increaseWidthBy: 50.0,
-                            increaseHeightBy: 10.0,
-                            gradient: Gradients.buildGradient(
-                                Alignment.topLeft, Alignment.bottomRight, [
-                              const Color(0xFFCE0000),
-                              const Color(0xFFB71C1C)
-                            ]),
-                            callback: () {
-                              register();
-                            },
-                            child: Center(
-                              child: Text(
-                                'Cadastre-se',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Montserrat'),
-                              ),
-                            ),
+                      }
+                    }),
+                Visibility(
+                    visible: visibilityRA,
+                    child: MaskedTextField(
+                        maskedTextFieldController: _textRAController,
+                        maxLength: 13,
+                        keyboardType: TextInputType.number,
+                        inputDecoration: new InputDecoration(
+                          labelText: 'RA',
+                          labelStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                          border: InputBorder.none,
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white)),
+                        ))),
+                SizedBox(height: 10.0),
+                Container(
+                    height: 50.0,
+                    child: Material(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: GradientButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        increaseWidthBy: 50.0,
+                        increaseHeightBy: 10.0,
+                        gradient: Gradients.buildGradient(
+                            Alignment.topLeft,
+                            Alignment.bottomRight,
+                            [const Color(0xFFCE0000), const Color(0xFFB71C1C)]),
+                        callback: () {
+                          register();
+                        },
+                        child: Center(
+                          child: Text(
+                            'Cadastre-se',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Montserrat'),
                           ),
-                        )),
-                    SizedBox(height: 30.0)
-                  ]))
-            ])));
+                        ),
+                      ),
+                    )),
+                SizedBox(height: 30.0)
+              ]))
+        ])));
   }
 
   Future<void> register() async {
@@ -229,7 +227,7 @@ class _SignupPageState extends State<SignupPage> {
             courseId = course.id;
           }
         }
-        if(!ResponseHandling().validateRA(_ra)) {
+        if (!ResponseHandling().validateRA(_ra)) {
           return;
         }
         var jsonStudent =

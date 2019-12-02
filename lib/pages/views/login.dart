@@ -72,14 +72,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final forgotLabel = FlatButton(
-      child: Text(
-        'Esqueceu a senha?',
-        style: TextStyle(color: Colors.black54),
-      ),
-      onPressed: () {},
-    );
-
     final registerLabel = FlatButton(
         child: Text(
           'Não tem uma conta? Cadastre-se',
@@ -105,7 +97,6 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 8.0),
             password,
             SizedBox(height: 24.0),
-            forgotLabel,
             loginButton,
             registerLabel
           ],

@@ -110,15 +110,11 @@ class ActivityDetail extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  DateFormat("dd/MM 'às' HH:mm").format(this
-                          .activity
-                          .initialDate
-                          .toLocal()) +
+                  DateFormat("dd/MM 'às' HH:mm")
+                          .format(this.activity.initialDate.toLocal()) +
                       " até " +
-                      DateFormat("dd/MM 'às' HH:mm").format(this
-                          .activity
-                          .finalDate
-                          .toLocal()),
+                      DateFormat("dd/MM 'às' HH:mm")
+                          .format(this.activity.finalDate.toLocal()),
                   style: TextStyle(
                     color: Colors.grey[500],
                   ),
@@ -206,9 +202,9 @@ class _ActivityActionsState extends State<ActivityActions> {
     _fetchData();
 
     if (isLoading) {
-      return Center(child: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)
-      ));
+      return Center(
+          child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)));
     }
 
     Color color = Theme.of(context).primaryColor;
@@ -226,8 +222,7 @@ class _ActivityActionsState extends State<ActivityActions> {
   }
 
   GestureDetector _buildSubscribeButton(bool subscribed, Color color) {
-    if (DateTime.now().isAfter(
-        widget.activity.initialDate.toLocal().add(Duration(hours: 1)))) {
+    if (DateTime.now().isAfter(widget.activity.initialDate.toLocal())) {
       return _buildButtonColumn(
           color, Icons.warning, 'Atividade encerrada', null);
     }
@@ -270,14 +265,13 @@ class _ActivityActionsState extends State<ActivityActions> {
   dynamic share() async {
     final RenderBox box = context.findRenderObject();
     var address = DotEnv().env['FATAPP_ADDRESS'];
-    var date  = DateFormat("dd/MM 'às' HH:mm").format(widget.activity.
-      initialDate.
-      toLocal()
-    );
+    var date = DateFormat("dd/MM 'às' HH:mm")
+        .format(widget.activity.initialDate.toLocal());
 
-    Share.share('Venha participar da atividade "${widget.activity.title}", que ocorrerá dia $date na $address',
-      subject: widget.activity.description,
-      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    Share.share(
+        'Venha participar da atividade "${widget.activity.title}", que ocorrerá dia $date na $address',
+        subject: widget.activity.description,
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
   dynamic subscribe() async {
