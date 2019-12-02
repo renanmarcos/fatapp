@@ -11,10 +11,6 @@ class EventDetailTopPart extends StatefulWidget {
 }
 
 class _EventDetailTopPartState extends State<EventDetailTopPart> {
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -131,32 +127,26 @@ class EventDetail extends StatelessWidget {
           ),
         )));
 
-    return WillPopScope(
-        onWillPop: () async {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => EventsList(user: user)));
-          return true;
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            title: new Text(this.event.title),
-            backgroundColor: const Color(0xFFCE0000),
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        title: new Text(this.event.title),
+        backgroundColor: const Color(0xFFCE0000),
+      ),
+      body: ListView(
+        children: <Widget>[
+          Image.network(
+            this.event.imageUrl,
+            headers: {"Token": this.user.token},
+            width: 600,
+            height: 240,
+            fit: BoxFit.contain,
           ),
-          body: ListView(
-            children: <Widget>[
-              Image.network(
-                this.event.imageUrl,
-                headers: {"Token": this.user.token},
-                width: 600,
-                height: 240,
-                fit: BoxFit.cover,
-              ),
-              titleSection,
-              textSection,
-            ],
-          ),
-        ));
+          titleSection,
+          textSection,
+        ],
+      ),
+    );
   }
 
   Column _buildButtonColumn(Color color, IconData icon, String label) {

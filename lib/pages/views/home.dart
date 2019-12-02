@@ -261,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                         autoPlayCurve: Curves.fastOutSlowIn,
                         autoPlay: false,
                         reverse: false,
-                        enableInfiniteScroll: true,
+                        enableInfiniteScroll: false,
                         autoPlayInterval: Duration(seconds: 2),
                         autoPlayAnimationDuration: Duration(milliseconds: 2000),
                         pauseAutoPlayOnTouch: Duration(seconds: 10),
@@ -278,6 +278,7 @@ class _HomePageState extends State<HomePage> {
                                       headers: {"Token": widget.user.token},
                                       width: 500,
                                       height: 300,
+                                      fit: BoxFit.contain
                                     ),
                                     onTap: () {
                                       Navigator.push(
