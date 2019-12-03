@@ -29,11 +29,11 @@ class EventsList extends StatelessWidget {
                         fontSize: 16.0),
                     tabs: [
                       Tab(
-                        // icon: Icon(Icons.check_box),
-                        text: 'Evento Atual',
+                        icon: Icon(Icons.access_time),
+                        text: 'Eventos Atuais',
                       ),
                       Tab(
-                        // icon: Icon(Icons.history),
+                        icon: Icon(Icons.history),
                         text: 'Eventos Passados',
                       ),
                     ],

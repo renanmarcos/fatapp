@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/controllers/eventController.dart';
@@ -22,6 +23,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './common/CustomShapeClipper.dart';
 import 'package:fatapp/pages/views/ratingPage.dart';
 import './eventsList2.dart';
+import 'about.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({this.user});
@@ -209,6 +211,12 @@ class _HomePageState extends State<HomePage> {
                     }),
                 new Divider(),
                 new ListTile(
+                  title: new Text('Sobre a FATEC'),
+                  trailing: new Icon(Icons.map),
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AboutPage())),
+                ),
+                new ListTile(
                   title: new Text('Perfil'),
                   trailing: new Icon(Icons.person),
                   onTap: () => Navigator.push(
@@ -277,10 +285,16 @@ class _HomePageState extends State<HomePage> {
                               margin: EdgeInsets.symmetric(
                                   vertical: 18.0, horizontal: 4.0),
                               child: GestureDetector(
-                                  child: Image.network(event.imageUrl,
-                                      headers: {"Token": widget.user.token},
-                                      width: 500,
-                                      height: 300,
+                                  child: CachedNetworkImage(
+                                      imageUrl: event.imageUrl,
+                                      placeholder: (context, url) => Center(
+                                          child: CircularProgressIndicator(
+                                              valueColor:
+                                                  new AlwaysStoppedAnimation<
+                                                      Color>(Colors.red))),
+                                      errorWidget: (context, url, error) =>
+                                          new Icon(Icons.error),
+                                      httpHeaders: {"Token": widget.user.token},
                                       fit: BoxFit.contain),
                                   onTap: () {
                                     Navigator.push(

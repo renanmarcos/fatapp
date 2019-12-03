@@ -73,10 +73,15 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final registerLabel = FlatButton(
-        child: Text(
-          'Não tem uma conta? Cadastre-se',
-          style: TextStyle(color: Colors.black54),
-        ),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+          Text("Não tem uma conta? ", style: TextStyle(color: Colors.black54)),
+          Text(
+            "Cadastre-se",
+            style:
+                TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+          )
+        ]),
         onPressed: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => SignupPage()));

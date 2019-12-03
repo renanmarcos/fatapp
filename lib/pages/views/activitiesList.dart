@@ -36,6 +36,10 @@ class ActivitiesListTopPart extends StatefulWidget {
 }
 
 class _ActivitiesListTopPartState extends State<ActivitiesListTopPart> {
+  void initState() {
+    super.initState();
+  }
+
   final String title = "Atividades";
   @override
   Widget build(BuildContext context) {
