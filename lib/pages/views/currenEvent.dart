@@ -21,8 +21,9 @@ class CurrentEvent extends StatelessWidget {
           } else {
             eventList = snapshot.data;
             eventList = eventList
-                .where((event) =>
-                    event.finalDate.toLocal().isAfter(DateTime.now().toLocal()))
+                .where((event) => event.initialDate
+                    .toLocal()
+                    .isAfter(DateTime.now().toLocal()))
                 .toList();
           }
 
