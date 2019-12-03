@@ -20,10 +20,6 @@ class ActivityDetailTopPart extends StatefulWidget {
 }
 
 class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -39,8 +35,8 @@ class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
                   height: 5.0,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(60.0, 5.0, 60.0, 10.0),
-                  child: Wrap(
+                  padding: const EdgeInsets.fromLTRB(20.0, 2.0, 20.0, 20.0),
+                  child: Flex(direction: Axis.horizontal, children: <Widget>[Expanded(child:Wrap(
                     spacing: 8.0,
                     runSpacing: 4.0,
                     direction: Axis.horizontal,
@@ -63,8 +59,8 @@ class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
                         ),
                       ),
                     ],
-                  ),
-                )
+                  )),]
+                ))
               ],
             ),
           ),

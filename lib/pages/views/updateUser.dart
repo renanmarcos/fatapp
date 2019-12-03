@@ -184,7 +184,10 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                     future: CourseController().getCourses(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (!snapshot.hasData) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(
+                            child: CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Colors.red)));
                       } else {
                         courseList = snapshot.data;
                         return DropdownButton<String>(

@@ -1,8 +1,8 @@
 import 'package:fatapp/pages/models/event.dart';
 import 'package:fatapp/pages/models/user.dart';
 import 'package:fatapp/pages/views/activitiesList.dart';
-import 'package:fatapp/pages/views/eventsList2.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'common/CustomShapeClipper.dart';
 
 class EventDetailTopPart extends StatefulWidget {
@@ -11,6 +11,10 @@ class EventDetailTopPart extends StatefulWidget {
 }
 
 class _EventDetailTopPartState extends State<EventDetailTopPart> {
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -135,11 +139,13 @@ class EventDetail extends StatelessWidget {
       ),
       body: ListView(
         children: <Widget>[
-          Image.network(
-            this.event.imageUrl,
-            headers: {"Token": this.user.token},
-            width: 600,
-            height: 240,
+          CachedNetworkImage(
+            imageUrl: this.event.imageUrl,
+            placeholder: (context, url) => Center(
+                child: CircularProgressIndicator(
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.red))),
+            errorWidget: (context, url, error) => new Icon(Icons.error),
+            httpHeaders: {"Token": this.user.token},
             fit: BoxFit.contain,
           ),
           titleSection,
