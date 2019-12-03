@@ -15,7 +15,9 @@ class CurrentEvent extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           List<Event> eventList;
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+                child: CircularProgressIndicator(
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)));
           } else {
             eventList = snapshot.data;
             eventList = eventList
@@ -23,6 +25,10 @@ class CurrentEvent extends StatelessWidget {
                     event.finalDate.toLocal().isAfter(DateTime.now().toLocal()))
                 .toList();
           }
+
+          if (eventList.length == 0)
+            return Center(child: Text("Sem eventos no momento"));
+
           return ListView.builder(
               itemCount: eventList.length,
               itemBuilder: (BuildContext context, int index) {

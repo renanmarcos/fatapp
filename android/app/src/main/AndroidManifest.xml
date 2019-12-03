@@ -7,6 +7,8 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Fatapp"
         android:icon="@mipmap/launcher_icon">
+        <meta-data android:name="com.google.android.geo.API_KEY" 
+            android:value="AIzaSyD0DsEz0HP64uQZy13TJtiCgf4_9xbcO8o"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
