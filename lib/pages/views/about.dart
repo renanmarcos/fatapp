@@ -92,7 +92,7 @@ class _AboutPageState extends State<AboutPage> {
                   child: Center(
                       child: Column(children: <Widget>[
                     Text(
-                        "A Fatec São Caetano, primeira faculdade pública e" +
+                        "A Fatec São Caetano, primeira faculdade pública e " +
                             "gratuita da cidade, iniciou suas atividades no segundo semestre de 2007. " +
                             "Tem capacidade para atender 1.500 alunos nos cursos de Tecnologia em " +
                             "Análise e Desenvolvimento de Sistemas, Jogos Digitais, Segurança da Informação e Comércio Exterior " +

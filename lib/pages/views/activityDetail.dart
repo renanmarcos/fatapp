@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/controllers/userController.dart';
 import 'package:fatapp/pages/models/acitivity.dart';
@@ -35,32 +36,34 @@ class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
                   height: 5.0,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20.0, 2.0, 20.0, 20.0),
-                  child: Flex(direction: Axis.horizontal, children: <Widget>[Expanded(child:Wrap(
-                    spacing: 8.0,
-                    runSpacing: 4.0,
-                    direction: Axis.horizontal,
-                    children: <Widget>[
-                      Text(widget.title,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 24.0,
-                            color: Colors.white,
-                            fontFamily: 'Raleway',
-                          )),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Hero(
-                          tag: "hero",
-                          child: Container(
-                              padding: EdgeInsets.only(top: 50.0),
-                              height: 80.0,
-                              width: 80.0),
-                        ),
-                      ),
-                    ],
-                  )),]
-                ))
+                    padding: const EdgeInsets.fromLTRB(20.0, 2.0, 20.0, 20.0),
+                    child: Flex(direction: Axis.horizontal, children: <Widget>[
+                      Expanded(
+                          child: Wrap(
+                        spacing: 8.0,
+                        runSpacing: 4.0,
+                        direction: Axis.horizontal,
+                        children: <Widget>[
+                          Text(widget.title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 24.0,
+                                color: Colors.white,
+                                fontFamily: 'Raleway',
+                              )),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Hero(
+                              tag: "hero",
+                              child: Container(
+                                  padding: EdgeInsets.only(top: 50.0),
+                                  height: 80.0,
+                                  width: 80.0),
+                            ),
+                          ),
+                        ],
+                      )),
+                    ]))
               ],
             ),
           ),
@@ -139,6 +142,33 @@ class ActivityDetail extends StatelessWidget {
         ),
       )),
     );
+    Widget image = Padding(
+      padding: EdgeInsets.all(0),
+    );
+
+    if (this.activity.speaker.pictureUrl != null) {
+      image = CachedNetworkImage(
+          fit: BoxFit.fitHeight,
+          imageBuilder: (context, imageProvider) => Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 140.0,
+                height: 140.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              )),
+          imageUrl: this.activity.speaker.pictureUrl,
+          placeholder: (context, url) => Center(
+              child: CircularProgressIndicator(
+                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.red))),
+          errorWidget: (context, url, error) => new Icon(Icons.error),
+          httpHeaders: {"Token": this.user.token});
+    }
 
     return new Scaffold(
       appBar: AppBar(
@@ -148,6 +178,7 @@ class ActivityDetail extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           ActivityDetailTopPart(this.activity.title),
+          image,
           titleSection,
           ActivityActions(this.activity, this.user),
           textSection

@@ -117,22 +117,13 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                   decoration: InputDecoration(
                     labelText: 'Nome Completo',
                     border: InputBorder.none,
-                    // border: InputBorder(borderSide: BorderSide(color: Colors.grey, width: 1.0)),
-                    // fillColor: const Color.fromARGB(255, 244, 244, 244),
                     fillColor: Colors.white,
                     filled: true,
                     focusColor: Colors.white,
-                    // border: UnderlineInputBorder(
-                    //     borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                    //     borderRadius: BorderRadius.circular(10.0),
-                    //     ),
                     labelStyle: TextStyle(
                         fontFamily: 'Noto',
                         fontWeight: FontWeight.bold,
-                        color: Colors.black45),
-
-                    // focusedBorder: UnderlineInputBorder(
-                    //     borderSide: BorderSide(color: Colors.white))
+                        color: Colors.black45)
                   ),
                 ),
                 SizedBox(height: 10.0),
@@ -207,6 +198,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                         );
                       }
                     }),
+                    Padding(padding: EdgeInsets.only(bottom: 10),),
                 MaskedTextField(
                     maskedTextFieldController: _textRAController,
                     maxLength: 13,

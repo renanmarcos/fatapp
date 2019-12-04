@@ -22,6 +22,8 @@ Future main() async {
   runApp(new MaterialApp(
     home: home,
     theme: ThemeData(
+      primaryColor: Color(0xFFCE0000),
+      accentColor: Colors.red,
       cursorColor: Color(0xFFCE0000),
       fontFamily: 'Raleway',
     ),

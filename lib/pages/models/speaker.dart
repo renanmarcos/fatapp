@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class Speaker {
   int id;
   String name;
@@ -10,7 +12,9 @@ class Speaker {
     this.id = json['id'];
     this.name = json['speakerName'];
     this.curriculum = json['speakerCurriculum'];
-    this.pictureUrl = json['speakerPicture'];
+    this.pictureUrl = json['speakerPicture'] != null
+        ? DotEnv().env['FATAPP_API'] + 'files/' + json['speakerPicture']
+        : null;
   }
 
   List<Speaker> fromJsonList(body) {
