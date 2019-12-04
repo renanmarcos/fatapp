@@ -47,7 +47,7 @@ class _ActivityDetailTopPartState extends State<ActivityDetailTopPart> {
                           Text(widget.title,
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
-                                fontSize: 24.0,
+                                fontSize: 19.0,
                                 color: Colors.white,
                                 fontFamily: 'Raleway',
                               )),
