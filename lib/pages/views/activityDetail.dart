@@ -305,6 +305,7 @@ class _ActivityActionsState extends State<ActivityActions> {
     var data = jsonEncode({"userId": widget.user.id});
     await ActivityController()
         .subscribe(widget.activity, data, widget.user.token);
+
     Fluttertoast.showToast(
         msg: "Inscrição realizada com sucesso",
         toastLength: Toast.LENGTH_SHORT,
@@ -313,6 +314,7 @@ class _ActivityActionsState extends State<ActivityActions> {
         backgroundColor: Colors.green,
         textColor: Colors.white,
         fontSize: 16.0);
+
     setState(() {
       subscribed = true;
     });
@@ -322,6 +324,7 @@ class _ActivityActionsState extends State<ActivityActions> {
     var data = jsonEncode({"userId": widget.user.id});
     await ActivityController()
         .cancelSubscription(widget.activity, data, widget.user.token);
+    
     Fluttertoast.showToast(
         msg: "Inscrição cancelada com sucesso",
         toastLength: Toast.LENGTH_SHORT,
@@ -330,6 +333,7 @@ class _ActivityActionsState extends State<ActivityActions> {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
+
     setState(() {
       subscribed = false;
     });

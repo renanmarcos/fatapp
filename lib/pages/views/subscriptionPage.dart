@@ -81,7 +81,13 @@ class _SubscriptionsContainerState extends State<SubscriptionsContainer> {
                     MaterialPageRoute(
                         builder: (context) => ActivityDetail(
                             _subscriptions[index].activity, widget.user)),
-                  );
+                  ).whenComplete(() {
+                    setState(() {
+                      _isLoading = true;
+                    });
+
+                    _fetchData();
+                  });
                 },
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
