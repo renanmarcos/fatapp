@@ -1,5 +1,4 @@
 import 'package:fatapp/pages/models/user.dart';
-import 'package:fatapp/pages/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
@@ -7,17 +6,16 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:fatapp/pages/controllers/activityController.dart';
 import 'package:fatapp/pages/models/acitivity.dart';
 
-class RatingStar extends StatefulWidget {
-  const RatingStar({this.activity, this.user});
+class RatePage extends StatefulWidget {
+  const RatePage({this.activity, this.user});
   final Activity activity;
   final User user;
 
   @override
-  _RatingStarState createState() => _RatingStarState();
+  _RatePageState createState() => _RatePageState();
 }
 
-class _RatingStarState extends State<RatingStar> {
-  RatingStar rate = RatingStar();
+class _RatePageState extends State<RatePage> {
   var rating = 0.0;
 
   @override
@@ -46,7 +44,7 @@ class _RatingStarState extends State<RatingStar> {
                         padding: const EdgeInsets.all(50.0),
                         children: <Widget>[
                           Text(
-                            'Dê uma nota para o evento: ' +
+                            'Dê uma nota para a atividade: ' +
                                 widget.activity.title,
                             style: TextStyle(fontSize: 24.0),
                             textAlign: TextAlign.center,
@@ -84,8 +82,21 @@ class _RatingStarState extends State<RatingStar> {
                                     const Color(0xFFB71C1C)
                                   ]),
                                   callback: () async {
-                                    this.rateActivity(this.rating,
-                                        widget.user.id, widget.user.token);
+                                    print(this.rating);
+                                    if (this.rating == 0.0) {
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              "Você precisa escolher uma avaliação",
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIos: 5,
+                                          backgroundColor: Colors.red,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+                                    } else {
+                                      this.rateActivity(this.rating,
+                                          widget.user.id, widget.user.token);
+                                    }
                                   },
                                   child: Center(
                                     child: Text(
@@ -107,8 +118,7 @@ class _RatingStarState extends State<RatingStar> {
     var jsonRate = '{ "userId" : "$userId", "numberOfStars" : "$ratingValue"}';
     await ActivityController()
         .rateActivity(widget.activity.id, jsonRate, token);
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => HomePage(user: widget.user)));
+    Navigator.pop(context);
     Fluttertoast.showToast(
         msg: "Avaliação enviada com sucesso!",
         toastLength: Toast.LENGTH_LONG,

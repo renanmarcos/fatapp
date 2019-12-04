@@ -88,11 +88,11 @@ class _HomePageState extends State<HomePage> {
         var responseActivity = await ActivityController()
             .getActivity(activityId, widget.user.token);
         Activity activity = Activity.fromJson(responseActivity);
-        Navigator.pushReplacement(
+        Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    RatingStar(activity: activity, user: widget.user)));
+                    RatePage(activity: activity, user: widget.user)));
       } else {
         this.saveUrl(barcode);
         Fluttertoast.showToast(
