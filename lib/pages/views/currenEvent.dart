@@ -20,11 +20,14 @@ class CurrentEvent extends StatelessWidget {
                     valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)));
           } else {
             eventList = snapshot.data;
-            eventList = eventList
-                .where((event) => event.initialDate
-                    .toLocal()
-                    .isAfter(DateTime.now().toLocal()))
-                .toList();
+            eventList = eventList.where((event) {
+              var now = DateTime.now().toLocal();
+              var finalDate = event.finalDate.toLocal();
+              var isBeforeNow = finalDate.isAfter(now);
+              var isSameNow = finalDate.isAtSameMomentAs(now);
+
+              return isBeforeNow || isSameNow;
+            }).toList();
           }
 
           if (eventList.length == 0)

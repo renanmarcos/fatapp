@@ -303,21 +303,32 @@ class _ActivityActionsState extends State<ActivityActions> {
 
   dynamic subscribe() async {
     var data = jsonEncode({"userId": widget.user.id});
-    await ActivityController()
-        .subscribe(widget.activity, data, widget.user.token);
+    try {
+      await ActivityController()
+          .subscribe(widget.activity, data, widget.user.token);
 
-    Fluttertoast.showToast(
-        msg: "Inscrição realizada com sucesso",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0);
+      Fluttertoast.showToast(
+          msg: "Inscrição realizada com sucesso",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
 
-    setState(() {
-      subscribed = true;
-    });
+      setState(() {
+        subscribed = true;
+      });
+    } catch(e) {
+        Fluttertoast.showToast(
+          msg: e.toString(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 
   dynamic cancelSubscription() async {

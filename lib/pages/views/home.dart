@@ -264,22 +264,27 @@ class _HomePageState extends State<HomePage> {
                                                 Colors.red))));
                           } else {
                             eventList = snapshot.data;
-                            eventList = eventList
-                                .where((event) => event.initialDate
-                                    .toLocal()
-                                    .isAfter(DateTime.now().toLocal()))
-                                .toList();
+                            eventList = eventList.where((event) {
+                              var now = DateTime.now().toLocal();
+                              var finalDate = event.finalDate.toLocal();
+                              var isBeforeNow = finalDate.isAfter(now);
+                              var isSameNow = finalDate.isAtSameMomentAs(now);
+
+                              return isBeforeNow || isSameNow;
+                            }).toList();
+
                             if (eventList.isEmpty) {
                               return Text(
                                 "Não há eventos ativos no momento",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 24.0,
-                                  color: Colors.white,
+                                  fontSize: 20.0,
+                                  color: Colors.black,
                                   fontFamily: 'Raleway',
                                 ),
                               );
                             }
+
                             return CarouselSlider(
                               height: 300.0,
                               initialPage: 0,
