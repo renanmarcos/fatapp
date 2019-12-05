@@ -82,7 +82,6 @@ class _RatePageState extends State<RatePage> {
                                     const Color(0xFFB71C1C)
                                   ]),
                                   callback: () async {
-                                    print(this.rating);
                                     if (this.rating == 0.0) {
                                       Fluttertoast.showToast(
                                           msg:
